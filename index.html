@@ -153,14 +153,12 @@
 
   /* ---------------- Hero ---------------- */
   /* One statement, plenty of air. No competing column. */
-  .hero{padding:clamp(64px,10vw,124px) 0 clamp(56px,8vw,96px)}
+  .hero{padding:clamp(44px,7vw,84px) 0 clamp(36px,5vw,60px)}
   .hero-grid{display:block}
   .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.4rem,5.6vw,4.4rem);line-height:1.06;letter-spacing:-.02em;margin:18px 0 26px;max-width:26ch}
-  /* The word sits in a deep maroon block — cream on maroon, 7.33:1.
-     box-decoration-break keeps the padding intact if the line wraps. */
-  .hero h1 em{font-style:italic;color:var(--cream);background:var(--maroon);
-    padding:.02em .2em .1em;margin:0 -.04em;
-    -webkit-box-decoration-break:clone;box-decoration-break:clone}
+  /* Emphasis carried by the italic alone. No block, no colour — the restraint
+     is the point, and it stops the headline competing with the simulator. */
+  .hero h1 em{font-style:italic}
   .hero .deck{font-size:clamp(1.02rem,1.6vw,1.2rem);color:var(--ink-soft);max-width:46ch;margin-bottom:36px}
   .hero-cta{display:flex;gap:24px;flex-wrap:wrap;align-items:center}
   .link-quiet{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink-soft);
@@ -172,21 +170,21 @@
   .btn-solid{background:var(--accent);border-color:var(--accent);color:var(--paper)}
   .btn-solid:hover{background:var(--ink);border-color:var(--ink)}
   /* A quiet detail line under the statement, not a stat panel beside it. */
-  .promise{margin-top:clamp(52px,8vw,88px);border-top:1px solid var(--rule);
+  .promise{margin-top:clamp(34px,5vw,56px);border-top:1px solid var(--rule);
     display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,3.5vw,44px)}
-  .promise-row{display:flex;align-items:baseline;gap:11px;padding:20px 0 0}
-  .promise-row .n{font-family:var(--serif);font-size:1.55rem;line-height:1;color:var(--accent)}
+  .promise-row{display:flex;align-items:baseline;gap:11px;padding:18px 0 0}
+  .promise-row .n{font-family:var(--serif);font-size:1.45rem;line-height:1;color:var(--accent)}
   .promise-row .t{font-size:13px;color:var(--ink-soft);line-height:1.5}
-  .promise-row .t b{color:var(--ink);font-weight:600;display:block;font-size:11px;
-    letter-spacing:.13em;text-transform:uppercase;margin-bottom:4px}
+  .promise-row .t b{color:var(--ink);font-weight:600;display:inline;font-size:11px;
+    letter-spacing:.13em;text-transform:uppercase}
   @media(max-width:700px){
     .promise{grid-template-columns:1fr;gap:0}
     .promise-row{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
     .promise-row:last-child{border-bottom:none}}
 
   /* ---------------- Market line (ornament) ---------------- */
-  .zig{padding:clamp(30px,5vw,56px) 0 clamp(4px,1vw,10px);line-height:0}
-  .zig svg{display:block;width:100%;height:clamp(66px,9vw,130px);overflow:visible}
+  .zig{padding:clamp(20px,3.5vw,38px) 0 clamp(2px,.6vw,8px);line-height:0}
+  .zig svg{display:block;width:100%;height:clamp(54px,7vw,104px);overflow:visible}
   .zig polyline{fill:none;stroke-width:1.25;stroke-linejoin:round;stroke-linecap:round;
     vector-effect:non-scaling-stroke}
   .zig .zig-run{stroke:var(--ink);stroke-opacity:.26}
@@ -199,7 +197,10 @@
   .sec-head .note{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
 
   /* ---------------- Simulator ---------------- */
-  .sim{background:var(--ink);color:var(--paper);border-top:none}
+  /* The centrepiece. Understated, but given more vertical room than any other
+     section so the eye settles here rather than on the copy above it. */
+  .sim{background:var(--ink);color:var(--paper);border-top:none;
+    padding:clamp(66px,9vw,116px) 0}
   .sim .sec-head{border-bottom-color:rgba(246,242,234,.28)}
   .sim .sec-head h2{color:var(--paper)}
   .sim .sec-head .note,.sim .label.quiet{color:rgba(246,242,234,.5)}
@@ -431,16 +432,16 @@
         <div>
           <span class="label">The weekly column</span>
           <h1>You don't need more finance news. You need someone to say which parts <em>mattered.</em></h1>
-          <p class="deck">Five hundred words, once a week, on markets, money, and the companies quietly running your life. Written for people who can already read a balance sheet and still can't work out why the market cared.</p>
+          <p class="deck">Five hundred words, once a week, on markets, money, and the companies quietly running your life.</p>
           <div class="hero-cta">
             <a class="btn btn-solid" href="#subscribe">Get it weekly</a>
             <a class="link-quiet" href="#simulator">Try the simulator</a>
           </div>
         </div>
         <aside class="promise" aria-label="What you get">
-          <div class="promise-row"><span class="n">500</span><span class="t"><b>words</b>Long enough to say something. Short enough to finish.</span></div>
-          <div class="promise-row"><span class="n">1</span><span class="t"><b>issue a week</b>Same day, every week. That's the whole deal.</span></div>
-          <div class="promise-row"><span class="n">0</span><span class="t"><b>hot takes</b>No predictions dressed up as analysis.</span></div>
+          <div class="promise-row"><span class="n">500</span><span class="t"><b>words</b></span></div>
+          <div class="promise-row"><span class="n">1</span><span class="t"><b>issue a week</b></span></div>
+          <div class="promise-row"><span class="n">0</span><span class="t"><b>hot takes</b></span></div>
         </aside>
       </div>
     </section>
