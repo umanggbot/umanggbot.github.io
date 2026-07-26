@@ -327,9 +327,17 @@
   .about-def b{color:var(--accent);font-weight:400;font-style:italic}
   .about-grid p{color:var(--ink-soft);margin-bottom:18px;max-width:52ch}
   .about-grid p:last-child{margin-bottom:0}
-  /* Full-bleed white band. Paper elsewhere is bone; About is true white so the
-     section reads as its own gallery-like space. */
+  /* Full-bleed white band, and white all the way through — no bone tint and no
+     oxblood anywhere inside it. Black on white, hairlines only. */
   .about-band{background:#FFFFFF;border-top:1px solid var(--rule)}
+  .about-band .colophon{background:#FFFFFF}
+  .about-band .about-def b{color:var(--ink)}
+  .about-band .colophon dt{color:var(--ink)}
+  .about-band .colophon dd{color:#4A443C}
+  .about-band .about-grid p{color:#4A443C}
+  .about-band .label.quiet{color:#6B645A}
+  .about-band .colophon a{color:var(--ink);border-bottom:1px solid var(--rule);padding-bottom:1px}
+  .about-band .colophon a:hover{border-bottom-color:var(--ink)}
   /* Colophon as a factsheet panel — the spec, stated plainly. This is the part
      that signals the work is edited rather than posted. On white it takes the
      faint bone tint so the panel still separates from the band. */
@@ -677,7 +685,7 @@
           <dt>Coverage</dt><dd>Global markets, macro, large-cap technology, and the occasional filing nobody else read.</dd>
           <dt>Byline</dt><dd>Anonymous, for now — I'd rather the work be worth reading before the name is.</dd>
           <dt>Corrections</dt><dd>Issued in the following week's edition, in full, at the top.</dd>
-          <dt>Contact</dt><dd><a href="#" id="aboutMail" style="color:var(--accent);font-weight:500">—</a></dd>
+          <dt>Contact</dt><dd><a href="#" id="aboutMail">—</a></dd>
         </dl>
       </div>
     </div>
