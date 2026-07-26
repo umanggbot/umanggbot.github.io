@@ -305,10 +305,14 @@
   .about-def b{color:var(--accent);font-weight:400;font-style:italic}
   .about-grid p{color:var(--ink-soft);margin-bottom:18px;max-width:52ch}
   .about-grid p:last-child{margin-bottom:0}
+  /* Full-bleed white band. Paper elsewhere is bone; About is true white so the
+     section reads as its own gallery-like space. */
+  .about-band{background:#FFFFFF;border-top:1px solid var(--rule)}
   /* Colophon as a factsheet panel — the spec, stated plainly. This is the part
-     that signals the work is edited rather than posted. */
+     that signals the work is edited rather than posted. On white it takes the
+     faint bone tint so the panel still separates from the band. */
   .colophon{border:1px solid var(--rule);border-top:2px solid var(--ink);
-    background:var(--paper-2);padding:clamp(20px,3vw,26px) clamp(18px,2.6vw,24px)}
+    background:var(--paper);padding:clamp(20px,3vw,26px) clamp(18px,2.6vw,24px)}
   .colophon dt{font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);
     margin-top:16px;padding-top:14px;border-top:1px solid var(--rule-soft)}
   .colophon dt:first-child{margin-top:0;padding-top:0;border-top:none}
@@ -398,10 +402,14 @@
   /* crisp edge where olive meets the near-black simulator */
   .sim{border-top:1px solid var(--olive-line)}
 
-  .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
-  .reveal.in{opacity:1;transform:none}
+  /* Scoped to .js so that if the script never runs, nothing is ever hidden.
+     Without this guard a single early error leaves whole sections invisible. */
+  .js .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
+  .js .reveal.in{opacity:1;transform:none}
   @media(prefers-reduced-motion:reduce){
-    .reveal{transition:none;opacity:1;transform:none}
+    /* .js-scoped to outrank ".js .reveal" above, so reduced-motion users see
+       content immediately rather than waiting on the observer. */
+    .js .reveal,.reveal{transition:none;opacity:1;transform:none}
     .tape-track{animation:none}
     html{scroll-behavior:auto}
   }
@@ -613,9 +621,12 @@
     </section>
   </div>
 
-  <!-- ================= ABOUT ================= -->
-  <div class="wrap">
-    <section id="about" class="reveal">
+  <!-- ================= ABOUT =================
+       Full-bleed white band. Structured like .sim and .subscribe — the section
+       holds the .wrap rather than sitting inside one — so the white reaches the
+       page edges instead of being inset. -->
+  <section id="about" class="about-band reveal">
+    <div class="wrap">
       <div class="sec-head">
         <div>
           <span class="label quiet">Why this exists</span>
@@ -641,8 +652,8 @@
           <dt>Contact</dt><dd><a href="#" id="aboutMail" style="color:var(--accent);font-weight:500">—</a></dd>
         </dl>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 
   <!-- ================= SUBSCRIBE ================= -->
   <section id="subscribe" class="subscribe">
@@ -713,6 +724,7 @@ const CONFIG = {
    means a later error can never hide The Column, Inside an Issue or About.
    The .js guard in the CSS covers the case where this script never runs at all,
    and browsers without IntersectionObserver just show everything. */
+document.documentElement.classList.add('js');
 try{
   if('IntersectionObserver' in window){
     const io = new IntersectionObserver(es => {
