@@ -95,7 +95,10 @@
     --cream:#F2ECDC; --cream-mid:rgba(242,236,220,.70); --cream-dim:rgba(242,236,220,.60);
     --olive-line:rgba(242,236,220,.17); --olive-line-soft:rgba(242,236,220,.10);
     --rose-lift:#E09AA4;
-    --up:#1F5D3F; --down:#9E2B2B;
+    /* Electric pair. Terminal-screen green, used for the dateline flash and for
+       anything reading as a gain; coral for a loss. Both clear AA on the tape
+       (12.46:1 and 6.47:1) and on the olive. */
+    --electric:#00F5A0; --up:#00F5A0; --down:#FF6B6B;
     --rule:rgba(20,17,14,.14); --rule-soft:rgba(20,17,14,.08);
     --serif:"Instrument Serif", Georgia, "Times New Roman", serif;
     --sans:"Inter", -apple-system, system-ui, sans-serif;
@@ -127,7 +130,7 @@
   .tape:hover .tape-track{animation-play-state:paused}
   .tk{padding:0 20px;color:rgba(246,242,234,.55);font-variant-numeric:tabular-nums}
   .tk b{color:var(--paper);font-weight:600}
-  .tk .up{color:#5FCF9A}.tk .down{color:#EE8B8B}
+  .tk .up{color:var(--up)}.tk .down{color:var(--down)}
   @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
   @media(max-width:600px){.tape-flag{display:none}.tape-track{padding-left:0}}
 
@@ -185,13 +188,22 @@
     .promise-row{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
     .promise-row:last-child{border-bottom:none}}
 
-  /* ---------------- Market line (ornament) ---------------- */
-  .zig{padding:clamp(20px,3.5vw,38px) 0 clamp(2px,.6vw,8px);line-height:0}
-  .zig svg{display:block;width:100%;height:clamp(54px,7vw,104px);overflow:visible}
-  .zig polyline{fill:none;stroke-width:1.25;stroke-linejoin:round;stroke-linecap:round;
-    vector-effect:non-scaling-stroke}
-  .zig .zig-run{stroke:var(--ink);stroke-opacity:.26}
-  .zig .zig-fall{stroke:var(--accent);stroke-opacity:.85}
+  /* ---------------- Tape chart (real series) ---------------- */
+  .tchart{margin:0;padding:clamp(22px,4vw,44px) 0 clamp(4px,1vw,10px)}
+  .tchart[hidden]{display:none}
+  .tchart-head,.tchart-foot{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    font-size:10.5px;letter-spacing:.18em;text-transform:uppercase}
+  .tchart-head{padding-bottom:12px;border-bottom:1px solid var(--olive-line-soft)}
+  .tchart-foot{padding-top:11px;font-size:10px;letter-spacing:.14em}
+  .tchart-k,.tchart-foot span{color:var(--cream-dim)}
+  .tchart-v{font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.1em}
+  .tchart-v.up{color:var(--up)}
+  .tchart-v.down{color:var(--down)}
+  .tchart-svg{display:block;width:100%;height:clamp(70px,9vw,126px);margin-top:15px;overflow:visible}
+  .tchart-base{stroke:var(--olive-line);stroke-width:1;stroke-dasharray:3 6;vector-effect:non-scaling-stroke}
+  .tchart-line{fill:none;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+  .tchart-line.up{stroke:var(--up)}
+  .tchart-line.down{stroke:var(--down)}
 
   /* ---------------- Sections ---------------- */
   section{padding:clamp(52px,7vw,86px) 0;border-top:1px solid var(--rule)}
@@ -360,7 +372,9 @@
   .overture .masthead{background:var(--olive);border-bottom:1px solid var(--olive-line)}
   .overture .masthead-top{border-bottom-color:var(--olive-line-soft);color:var(--cream-dim)}
   .overture .dateline{color:var(--cream-dim)}
-  .overture .masthead-top .issue{color:var(--rose-lift)}
+  /* "Independent · Weekly" reads as a terminal status flash rather than a
+     newsletter subtitle. Electric green, tighter tracking, tabular feel. */
+  .overture .masthead-top .issue{color:var(--electric);font-weight:600;letter-spacing:.22em}
   .overture .masthead-rule{color:var(--cream-dim)}
   .overture .masthead-rule::before,.overture .masthead-rule::after{background:var(--olive-line)}
   .overture .wordmark{color:var(--cream)}
@@ -391,8 +405,6 @@
   .overture .promise-row .t b{color:var(--cream)}
 
   /* market line, now drawn on olive */
-  .overture .zig .zig-run{stroke:var(--cream);stroke-opacity:.30}
-  .overture .zig .zig-fall{stroke:var(--rose-lift);stroke-opacity:.95}
 
   /* tape sits above the masthead, one shade deeper than the olive. The LIVE
      sticker keeps its deep maroon ground — that chip is the financial vibe. */
@@ -476,18 +488,26 @@
     </section>
   </div>
 
-  <!-- ============ MARKET LINE ============
-       Decorative lead-in to the simulator. Deliberately unlabelled and with no
-       axis or figures — it is an ornament, not a chart, and must never be given
-       numbers that imply real data. The final leg falls, which is the argument
-       the simulator then makes line by line. ============ -->
+  <!-- ============ THE TAPE CHART ============
+       A real graph, not an ornament: bitcoin's actual last 24 hours, fetched
+       live. The dashed rule is the price 24 hours ago, so the line carries
+       information — above or below where the day opened — rather than just
+       sloping decoratively. No axes, no fill, no gradient.
+       If the series can't be fetched the whole figure stays hidden. Same rule
+       as the tape: real numbers or none. ============ -->
   <div class="wrap">
-    <div class="zig" aria-hidden="true">
-      <svg viewBox="0 0 1200 130" preserveAspectRatio="none" focusable="false" role="presentation">
-        <polyline class="zig-run" points="0,96 86,78 172,92 258,56 344,72 430,40 516,54 602,28 688,46 774,22 860,38 946,16"/>
-        <polyline class="zig-fall" points="946,16 1020,62 1094,98 1200,118"/>
+    <figure class="tchart" id="tchart" hidden>
+      <figcaption class="tchart-head">
+        <span class="tchart-k">Bitcoin · last 24 hours</span>
+        <span class="tchart-v" id="tchartChange"></span>
+      </figcaption>
+      <svg class="tchart-svg" id="tchartSvg" viewBox="0 0 1200 120" preserveAspectRatio="none" role="img" aria-labelledby="tchartTitle" focusable="false">
+        <title id="tchartTitle">Bitcoin price over the last 24 hours</title>
+        <line class="tchart-base" id="tchartBase" x1="0" x2="1200" y1="60" y2="60"/>
+        <path class="tchart-line" id="tchartPath" d=""/>
       </svg>
-    </div>
+      <div class="tchart-foot"><span id="tchartLo"></span><span id="tchartHi"></span></div>
+    </figure>
   </div>
 
 </div><!-- /.overture — olive ends here; the simulator below is untouched -->
@@ -877,6 +897,63 @@ async function loadTape(){
   document.getElementById('tape').classList.add('on');
 }
 loadTape();
+
+
+/* ============================================================================
+   TAPE CHART — bitcoin's real last 24 hours.
+   A genuine series or nothing at all: if the fetch fails, returns too few
+   points, or the numbers don't look like numbers, the figure stays hidden.
+   Never draw a shape that implies data we don't have.
+   ========================================================================= */
+async function loadChart(){
+  const fig = document.getElementById('tchart');
+  if(!fig || !CONFIG.showTape) return;
+  try{
+    const r = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=1');
+    if(!r.ok) throw new Error('status ' + r.status);
+    const d = await r.json();
+    const pts = (d.prices || []).map(p => p && p[1]).filter(v => typeof v === 'number' && isFinite(v));
+    if(pts.length < 12) throw new Error('too few points');
+
+    const open = pts[0], last = pts[pts.length - 1];
+    let lo = pts[0], hi = pts[0];
+    for(const v of pts){ if(v < lo) lo = v; if(v > hi) hi = v; }
+    const span = (hi - lo) || 1;
+    const W = 1200, H = 120, pad = 12;
+    const y = v => (pad + (H - pad * 2) * (1 - (v - lo) / span)).toFixed(1);
+    const x = i => ((i / (pts.length - 1)) * W).toFixed(1);
+
+    let path = '';
+    pts.forEach((v, i) => { path += (i ? 'L' : 'M') + x(i) + ' ' + y(v); });
+
+    const up  = last >= open;
+    const pct = ((last - open) / open) * 100;
+    const money = n => '$' + Math.round(n).toLocaleString('en-US');
+
+    const line = document.getElementById('tchartPath');
+    line.setAttribute('d', path);
+    line.setAttribute('class', 'tchart-line ' + (up ? 'up' : 'down'));
+
+    /* the dashed rule sits at the price 24h ago, so the line means something */
+    const base = document.getElementById('tchartBase');
+    base.setAttribute('y1', y(open));
+    base.setAttribute('y2', y(open));
+
+    const chg = document.getElementById('tchartChange');
+    chg.textContent = (up ? '+' : '−') + Math.abs(pct).toFixed(2) + '%   ' + money(last);
+    chg.className = 'tchart-v ' + (up ? 'up' : 'down');
+
+    document.getElementById('tchartLo').textContent = 'low ' + money(lo);
+    document.getElementById('tchartHi').textContent = 'high ' + money(hi);
+    document.getElementById('tchartTitle').textContent =
+      'Bitcoin over the last 24 hours: opened ' + money(open) + ', now ' + money(last) +
+      ', ' + (up ? 'up ' : 'down ') + Math.abs(pct).toFixed(2) + ' percent. Low ' +
+      money(lo) + ', high ' + money(hi) + '.';
+
+    fig.hidden = false;
+  }catch(e){ /* no real series → the figure stays hidden */ }
+}
+loadChart();
 
 
 /* ============================================================================
