@@ -160,10 +160,13 @@
      is the point, and it stops the headline competing with the simulator. */
   .hero h1 em{font-style:italic}
   .hero .deck{font-size:clamp(1.02rem,1.6vw,1.2rem);color:var(--ink-soft);max-width:46ch;margin-bottom:36px}
-  .hero-cta{display:flex;gap:24px;flex-wrap:wrap;align-items:center}
-  .link-quiet{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink-soft);
-    border-bottom:1px solid var(--rule);padding-bottom:3px;transition:color .18s,border-color .18s}
-  .link-quiet:hover{color:var(--ink);border-bottom-color:var(--accent)}
+  /* Deliberately not buttons. Small-caps, hairline underline, no fill — these
+     read as places to go rather than things demanding to be clicked. */
+  .hero-cta{display:flex;gap:clamp(24px,4vw,40px);flex-wrap:wrap;align-items:center}
+  .quiet-cta{font-family:var(--sans);font-size:11.5px;font-weight:500;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink-soft);padding-bottom:6px;
+    border-bottom:1px solid var(--rule);transition:color .2s,border-color .2s}
+  .quiet-cta:hover{color:var(--ink);border-bottom-color:var(--ink)}
   .btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:13px 26px;border:1px solid var(--ink);
     background:transparent;color:var(--ink);cursor:pointer;transition:all .2s;border-radius:0;display:inline-block;text-align:center}
   .btn:hover{background:var(--ink);color:var(--paper)}
@@ -377,10 +380,8 @@
   .overture .label{color:var(--rose-lift)}
   .overture .hero h1{color:var(--cream)}
   .overture .hero .deck{color:var(--cream-mid)}
-  .overture .btn-solid{background:var(--cream);border-color:var(--cream);color:var(--olive)}
-  .overture .btn-solid:hover{background:var(--rose-lift);border-color:var(--rose-lift);color:var(--olive-deep)}
-  .overture .link-quiet{color:var(--cream-mid);border-bottom-color:var(--olive-line)}
-  .overture .link-quiet:hover{color:var(--cream);border-bottom-color:var(--cream)}
+  .overture .quiet-cta{color:var(--cream-mid);border-bottom-color:var(--olive-line)}
+  .overture .quiet-cta:hover{color:var(--cream);border-bottom-color:var(--cream)}
 
   /* the quiet promise line */
   .overture .promise{border-top-color:var(--olive-line)}
@@ -462,8 +463,8 @@
           <h1>You don't need more finance news. You need someone to say which parts <em>mattered.</em></h1>
           <p class="deck">Once a week, on markets, money, and the companies quietly running your life.</p>
           <div class="hero-cta">
-            <a class="btn btn-solid" href="#subscribe">Get it weekly</a>
-            <a class="link-quiet" href="#simulator">Try the simulator</a>
+            <a class="quiet-cta" href="#subscribe">The weekly list</a>
+            <a class="quiet-cta" href="#simulator">The simulator</a>
           </div>
         </div>
         <aside class="promise" aria-label="What you get">
