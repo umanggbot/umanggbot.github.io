@@ -84,15 +84,16 @@
     --ink:#14110E; --ink-soft:#5A534A;
     --accent:#7A1F2B; --accent-soft:#A8434F; --accent-tint:rgba(122,31,43,.07);
     /* The flourish: the italic word closing the headline, plus the full stop
-       after "Value". A deep crimson-maroon. This is about as dark as it can go
-       and stay readable on the olive — 3.37:1, which is AA for display sizes.
-       True maroon (#8C2340) only reaches 1.83:1 here and is illegible.
+       after "Value". A deep crimson-maroon. Deepening the olive bought contrast
+       headroom, so this dropped a step further to #CA3560 — 3.25:1, still AA
+       for display sizes. True maroon (#8C2340) reaches only 2.04:1 here and is
+       illegible; #C22E57 falls to 2.97 and misses. This is the floor.
        --maroon is the deeper tone, used only as a ground behind cream text,
        where dark works properly (cream on it is 6.73:1). */
-    --hot:#D03A66; --maroon:#96263F;
+    --hot:#CA3560; --maroon:#96263F;
     /* The overture — everything above the simulator. Deep olive, cream, rose.
        Same logic as the subscribe band: dark ground, cream type, rose accent. */
-    --olive:#1E2510; --olive-deep:#151A09; --olive-lift:#2A331A;
+    --olive:#1A2308; --olive-deep:#12190A; --olive-lift:#25301A;
     --cream:#F2ECDC; --cream-mid:rgba(242,236,220,.70); --cream-dim:rgba(242,236,220,.60);
     --olive-line:rgba(242,236,220,.17); --olive-line-soft:rgba(242,236,220,.10);
     --rose-lift:#E09AA4;
