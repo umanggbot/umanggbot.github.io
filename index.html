@@ -83,14 +83,12 @@
     --paper:#F6F2EA; --paper-2:#EFE9DD; --paper-3:#E7DFD1;
     --ink:#14110E; --ink-soft:#5A534A;
     --accent:#7A1F2B; --accent-soft:#A8434F; --accent-tint:rgba(122,31,43,.07);
-    /* The flourish: the italic word closing the headline, plus the full stop
-       after "Value". A deep crimson-maroon. Deepening the olive bought contrast
-       headroom, so this dropped a step further to #CA3560 — 3.25:1, still AA
-       for display sizes. True maroon (#8C2340) reaches only 2.04:1 here and is
-       illegible; #C22E57 falls to 2.97 and misses. This is the floor.
-       --maroon is the deeper tone, used only as a ground behind cream text,
-       where dark works properly (cream on it is 6.73:1). */
-    --hot:#CA3560; --maroon:#96263F;
+    /* The flourish is a deep maroon GROUND, not maroon type. A dark tone as text
+       on this olive can never be both deep and legible — #8C2340 reads 2.04:1 and
+       anything that passes drifts pink. Behind cream text the same maroon gives
+       7.33:1, so the word sits in a maroon block instead. Also the LIVE chip and
+       the full stop after "Value". */
+    --maroon:#8C2340;
     /* The overture — everything above the simulator. Deep olive, cream, rose.
        Same logic as the subscribe band: dark ground, cream type, rose accent. */
     --olive:#1A2308; --olive-deep:#12190A; --olive-lift:#25301A;
@@ -158,7 +156,11 @@
   .hero{padding:clamp(64px,10vw,124px) 0 clamp(56px,8vw,96px)}
   .hero-grid{display:block}
   .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.4rem,5.6vw,4.4rem);line-height:1.06;letter-spacing:-.02em;margin:18px 0 26px;max-width:26ch}
-  .hero h1 em{font-style:italic;color:var(--hot)}
+  /* The word sits in a deep maroon block — cream on maroon, 7.33:1.
+     box-decoration-break keeps the padding intact if the line wraps. */
+  .hero h1 em{font-style:italic;color:var(--cream);background:var(--maroon);
+    padding:.02em .2em .1em;margin:0 -.04em;
+    -webkit-box-decoration-break:clone;box-decoration-break:clone}
   .hero .deck{font-size:clamp(1.02rem,1.6vw,1.2rem);color:var(--ink-soft);max-width:46ch;margin-bottom:36px}
   .hero-cta{display:flex;gap:24px;flex-wrap:wrap;align-items:center}
   .link-quiet{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink-soft);
@@ -334,13 +336,16 @@
   .overture .masthead-rule{color:var(--cream-dim)}
   .overture .masthead-rule::before,.overture .masthead-rule::after{background:var(--olive-line)}
   .overture .wordmark{color:var(--cream)}
-  .overture .wordmark .tv-dot{color:var(--hot)}
+  /* Deep maroon full stop. At 2.04:1 on olive this reads as a tonal mark rather
+     than a pop — deliberate, since a maroon dark enough to satisfy "deep" cannot
+     also be bright here. It is decorative punctuation in the logotype. */
+  .overture .wordmark .tv-dot{color:var(--maroon)}
 
   /* nav band */
   .overture nav.sections{background:var(--olive-lift);border-top:1px solid var(--olive-line-soft);
     border-bottom:1px solid var(--olive-line-soft)}
   .overture nav.sections a{color:var(--cream-mid)}
-  .overture nav.sections a:hover{color:var(--cream);border-bottom-color:var(--hot)}
+  .overture nav.sections a:hover{color:var(--cream);border-bottom-color:var(--cream)}
   .overture nav.sections a.cta{color:var(--rose-lift)}
 
   /* hero */
@@ -350,7 +355,7 @@
   .overture .btn-solid{background:var(--cream);border-color:var(--cream);color:var(--olive)}
   .overture .btn-solid:hover{background:var(--rose-lift);border-color:var(--rose-lift);color:var(--olive-deep)}
   .overture .link-quiet{color:var(--cream-mid);border-bottom-color:var(--olive-line)}
-  .overture .link-quiet:hover{color:var(--cream);border-bottom-color:var(--hot)}
+  .overture .link-quiet:hover{color:var(--cream);border-bottom-color:var(--cream)}
 
   /* the quiet promise line */
   .overture .promise{border-top-color:var(--olive-line)}
@@ -425,7 +430,7 @@
       <div class="hero-grid">
         <div>
           <span class="label">The weekly column</span>
-          <h1>You don't need more finance news. You need someone to say which parts <em>mattered</em>.</h1>
+          <h1>You don't need more finance news. You need someone to say which parts <em>mattered.</em></h1>
           <p class="deck">Five hundred words, once a week, on markets, money, and the companies quietly running your life. Written for people who can already read a balance sheet and still can't work out why the market cared.</p>
           <div class="hero-cta">
             <a class="btn btn-solid" href="#subscribe">Get it weekly</a>
