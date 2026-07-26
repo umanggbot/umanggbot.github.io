@@ -84,12 +84,12 @@
     --ink:#14110E; --ink-soft:#5A534A;
     --accent:#7A1F2B; --accent-soft:#A8434F; --accent-tint:rgba(122,31,43,.07);
     /* One deliberate flourish: the italic word closing the headline, plus the
-       wordmark's full stop. Lightened to #FF7EB0 so it clears WCAG AA (5.05:1)
-       against the olive ground — the original #D81B60 only managed 2.42. */
-    --hot:#FF7EB0;
+       wordmark's full stop. A hot magenta rather than anything red-leaning.
+       Clears WCAG AA at 4.52:1 on the deep olive below. */
+    --hot:#FF2E88;
     /* The overture — everything above the simulator. Deep olive, cream, rose.
        Same logic as the subscribe band: dark ground, cream type, rose accent. */
-    --olive:#313A1D; --olive-deep:#252D13; --olive-lift:#3A4425;
+    --olive:#1E2510; --olive-deep:#151A09; --olive-lift:#2A331A;
     --cream:#F2ECDC; --cream-mid:rgba(242,236,220,.70); --cream-dim:rgba(242,236,220,.60);
     --olive-line:rgba(242,236,220,.17); --olive-line-soft:rgba(242,236,220,.10);
     --rose-lift:#E09AA4;
@@ -155,7 +155,6 @@
   .hero-grid{display:block}
   .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.4rem,5.6vw,4.4rem);line-height:1.06;letter-spacing:-.02em;margin:18px 0 26px;max-width:26ch}
   .hero h1 em{font-style:italic;color:var(--hot)}
-  .hero h1 .pause{color:var(--ink-soft);font-style:normal;letter-spacing:.02em;padding:0 .06em}
   .hero .deck{font-size:clamp(1.02rem,1.6vw,1.2rem);color:var(--ink-soft);max-width:46ch;margin-bottom:36px}
   .hero-cta{display:flex;gap:24px;flex-wrap:wrap;align-items:center}
   .link-quiet{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink-soft);
@@ -421,7 +420,7 @@
       <div class="hero-grid">
         <div>
           <span class="label">The weekly column</span>
-          <h1>You don't need more finance news. You need someone to say which parts <span class="pause">…</span> <em>mattered</em>.</h1>
+          <h1>You don't need more finance news. You need someone to say which parts <em>mattered</em>.</h1>
           <p class="deck">Five hundred words, once a week, on markets, money, and the companies quietly running your life. Written for people who can already read a balance sheet and still can't work out why the market cared.</p>
           <div class="hero-cta">
             <a class="btn btn-solid" href="#subscribe">Get it weekly</a>
