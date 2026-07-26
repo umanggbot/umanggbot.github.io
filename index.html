@@ -94,17 +94,15 @@
     --olive:#1A2308; --olive-deep:#12190A; --olive-lift:#25301A;
     --cream:#F2ECDC; --cream-mid:rgba(242,236,220,.70); --cream-dim:rgba(242,236,220,.60);
     --olive-line:rgba(242,236,220,.17); --olive-line-soft:rgba(242,236,220,.10);
-    /* Terminal-screen green, now reserved for MARKET DATA ONLY — the ticker and
-       the chart — so it never competes with the crimson identity chip. Coral for
-       a loss. Both clear AA on the tape (12.46:1 and 6.47:1). */
+    /* Terminal-screen green: the overture accent AND the market-up tone — the
+       HUD chip, the nav CTA, the ticker and the chart. Approved from the live
+       page (screenshot, 2026-07-26); a deep crimson chip was tried and rejected.
+       Coral for a loss. Both clear AA on the tape (12.46:1 and 6.47:1). */
     --electric:#00F5A0; --up:var(--electric); --down:#FF6B6B;
-    /* Neon crimson for the identity chip. Note the type on it stays near-black:
-       cream on this only reaches 3.21:1, near-black reaches 4.75:1. */
-    --neon:#FF1E4E;
-    /* Deep yellow, saturation dialled back 10% from #FFE04A so it stops
-       shouting. Hue and lightness held, so it stays deep rather than sliding
-       into the muddy mid-yellow zone. */
-    --butter:#F6DA53;
+    /* The pale butter the editor approved from the live page (screenshot,
+       2026-07-26). Deeper variants (#FFE04A, #F6DA53, #F9E483) were all tried
+       and rejected as too bright — do not "improve" this one. Ink 16.70:1. */
+    --butter:#FBF2C9;
     --rule:rgba(20,17,14,.14); --rule-soft:rgba(20,17,14,.08);
     --serif:"Instrument Serif", Georgia, "Times New Roman", serif;
     --sans:"Inter", -apple-system, system-ui, sans-serif;
@@ -408,8 +406,8 @@
   /* GTA TEST — one element only, deliberately reversible.
      "Independent · Weekly" becomes a hard-edged neon HUD chip: filled electric
      green, near-black type, no radius. If the direction is wrong, replace this
-     rule with `color:var(--neon)` and it returns to plain neon text. */
-  .overture .masthead-top .issue{background:var(--neon);color:var(--olive-deep);
+     rule with `color:var(--electric)` and it returns to plain neon text. */
+  .overture .masthead-top .issue{background:var(--electric);color:var(--olive-deep);
     font-weight:700;letter-spacing:.2em;font-size:10px;line-height:1;
     padding:6px 11px 5px;border-radius:0;display:inline-block}
   .overture .masthead-rule{color:var(--cream-dim)}
@@ -425,7 +423,7 @@
     border-bottom:1px solid var(--olive-line-soft)}
   .overture nav.sections a{color:var(--cream-mid)}
   .overture nav.sections a:hover{color:var(--cream);border-bottom-color:var(--cream)}
-  .overture nav.sections a.cta{color:var(--cream)}
+  .overture nav.sections a.cta{color:var(--electric)}
 
   /* hero */
   .overture .label{color:var(--cream-mid)}
