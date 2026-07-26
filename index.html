@@ -140,23 +140,33 @@
   nav.sections a.cta{color:var(--accent);font-weight:600}
 
   /* ---------------- Hero ---------------- */
-  .hero{padding:clamp(52px,8vw,92px) 0 clamp(44px,6vw,72px)}
-  .hero-grid{display:grid;grid-template-columns:1.55fr .95fr;gap:clamp(32px,6vw,72px);align-items:start}
-  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:44px}}
-  .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.4rem,5.6vw,4.4rem);line-height:1.04;letter-spacing:-.02em;margin:16px 0 24px;max-width:19ch}
+  /* One statement, plenty of air. No competing column. */
+  .hero{padding:clamp(64px,10vw,124px) 0 clamp(56px,8vw,96px)}
+  .hero-grid{display:block}
+  .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.4rem,5.6vw,4.4rem);line-height:1.06;letter-spacing:-.02em;margin:18px 0 26px;max-width:26ch}
   .hero h1 em{font-style:italic;color:var(--accent)}
-  .hero .deck{font-size:clamp(1.02rem,1.6vw,1.2rem);color:var(--ink-soft);max-width:50ch;margin-bottom:32px}
-  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .hero .deck{font-size:clamp(1.02rem,1.6vw,1.2rem);color:var(--ink-soft);max-width:46ch;margin-bottom:36px}
+  .hero-cta{display:flex;gap:24px;flex-wrap:wrap;align-items:center}
+  .link-quiet{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink-soft);
+    border-bottom:1px solid var(--rule);padding-bottom:3px;transition:color .18s,border-color .18s}
+  .link-quiet:hover{color:var(--ink);border-bottom-color:var(--accent)}
   .btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:13px 26px;border:1px solid var(--ink);
     background:transparent;color:var(--ink);cursor:pointer;transition:all .2s;border-radius:0;display:inline-block;text-align:center}
   .btn:hover{background:var(--ink);color:var(--paper)}
   .btn-solid{background:var(--accent);border-color:var(--accent);color:var(--paper)}
   .btn-solid:hover{background:var(--ink);border-color:var(--ink)}
-  .promise{border-top:2px solid var(--ink);padding-top:4px}
-  .promise-row{display:flex;align-items:baseline;gap:16px;padding:15px 0;border-bottom:1px solid var(--rule-soft)}
-  .promise-row .n{font-family:var(--serif);font-size:2.3rem;line-height:1;min-width:2.4ch;color:var(--accent)}
-  .promise-row .t{font-size:14px;color:var(--ink-soft)}
-  .promise-row .t b{color:var(--ink);font-weight:600;display:block}
+  /* A quiet detail line under the statement, not a stat panel beside it. */
+  .promise{margin-top:clamp(52px,8vw,88px);border-top:1px solid var(--rule);
+    display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,3.5vw,44px)}
+  .promise-row{display:flex;align-items:baseline;gap:11px;padding:20px 0 0}
+  .promise-row .n{font-family:var(--serif);font-size:1.55rem;line-height:1;color:var(--accent)}
+  .promise-row .t{font-size:13px;color:var(--ink-soft);line-height:1.5}
+  .promise-row .t b{color:var(--ink);font-weight:600;display:block;font-size:11px;
+    letter-spacing:.13em;text-transform:uppercase;margin-bottom:4px}
+  @media(max-width:700px){
+    .promise{grid-template-columns:1fr;gap:0}
+    .promise-row{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
+    .promise-row:last-child{border-bottom:none}}
 
   /* ---------------- Sections ---------------- */
   section{padding:clamp(52px,7vw,86px) 0;border-top:1px solid var(--rule)}
@@ -339,7 +349,7 @@
           <p class="deck">Five hundred words, once a week, on markets, money, and the companies quietly running your life. Written for people who can already read a balance sheet and still can't work out why the market cared.</p>
           <div class="hero-cta">
             <a class="btn btn-solid" href="#subscribe">Get it weekly</a>
-            <a class="btn" href="#simulator">Try the simulator</a>
+            <a class="link-quiet" href="#simulator">Try the simulator</a>
           </div>
         </div>
         <aside class="promise" aria-label="What you get">
