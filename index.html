@@ -284,15 +284,24 @@
   .specimen .sp-foot{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);padding-top:16px;border-top:1px solid var(--rule)}
 
   /* ---------------- About ---------------- */
-  .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(32px,6vw,72px);align-items:start}
+  .about-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(30px,5vw,60px);align-items:start}
   @media(max-width:900px){.about-grid{grid-template-columns:1fr;gap:40px}}
-  .about-grid .lede{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2.15rem);line-height:1.26;margin-bottom:22px}
-  .about-grid .lede b{color:var(--accent);font-weight:400;font-style:italic}
+  /* The definition, set as a statement rather than a paragraph. */
+  .about-def{font-family:var(--serif);font-size:clamp(1.75rem,4vw,2.9rem);line-height:1.18;
+    letter-spacing:-.015em;max-width:32ch;
+    margin:0 0 clamp(32px,5vw,52px);padding-bottom:clamp(26px,4vw,42px);
+    border-bottom:1px solid var(--rule)}
+  .about-def b{color:var(--accent);font-weight:400;font-style:italic}
   .about-grid p{color:var(--ink-soft);margin-bottom:18px;max-width:52ch}
-  .colophon{border-top:2px solid var(--ink);padding-top:20px}
-  .colophon dt{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-top:18px}
-  .colophon dt:first-child{margin-top:0}
-  .colophon dd{font-size:14.5px;color:var(--ink-soft);margin-top:5px}
+  .about-grid p:last-child{margin-bottom:0}
+  /* Colophon as a factsheet panel — the spec, stated plainly. This is the part
+     that signals the work is edited rather than posted. */
+  .colophon{border:1px solid var(--rule);border-top:2px solid var(--ink);
+    background:var(--paper-2);padding:clamp(20px,3vw,26px) clamp(18px,2.6vw,24px)}
+  .colophon dt{font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);
+    margin-top:16px;padding-top:14px;border-top:1px solid var(--rule-soft)}
+  .colophon dt:first-child{margin-top:0;padding-top:0;border-top:none}
+  .colophon dd{font-size:14px;color:var(--ink-soft);margin-top:5px;line-height:1.5}
 
   /* ---------------- Subscribe ---------------- */
   .subscribe{text-align:center;background:var(--ink);color:var(--paper);border-top:none}
@@ -602,10 +611,13 @@
           <h2>About</h2>
         </div>
       </div>
+      <!-- The definition carries the credibility: it states the actual valuation
+           term the publication is named after, correctly and without hedging.
+           Set large, on its own, because it is the strongest line here. -->
+      <p class="about-def">Terminal value is what a business is worth after the forecast runs out — <b>the part that's left when the noise stops.</b></p>
+
       <div class="about-grid">
         <div>
-          <p class="lede">Terminal value is what a business is worth after the forecast runs out — <b>the part that's left when the noise stops.</b></p>
-          <p>That's the job here. Markets generate an enormous amount of noise every single day, almost none of which survives contact with the following Tuesday. This column ignores nearly all of it and writes about the small number of things that will still matter in a year.</p>
           <p>No predictions. No tickers to buy. No breathless thread about a company we'd never heard of last week. Just one thing that moved, explained properly, by someone doing the reading so you don't have to.</p>
           <p>It's written for the person who already knows what a bond is, follows the market on and off, and is quietly tired of choosing between coverage that assumes you know nothing and coverage that assumes you do this for a living.</p>
         </div>
