@@ -105,8 +105,15 @@
     --wrap:1180px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  /* overflow-x MUST live on html, not body. On body it makes body a scroll
+     container, which silently breaks every in-page anchor link — clicking
+     "The simulator" changed the hash but never scrolled. clip is preferred
+     because it doesn't create a scroll container at all; hidden is the fallback. */
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+  @supports (overflow-x:clip){html{overflow-x:clip}}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  /* so an anchored section never lands jammed against the very top edge */
+  section[id],[id]{scroll-margin-top:18px}
   a{color:inherit;text-decoration:none}
   ::selection{background:var(--accent);color:var(--paper)}
   :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
