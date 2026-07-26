@@ -83,10 +83,13 @@
     --paper:#F6F2EA; --paper-2:#EFE9DD; --paper-3:#E7DFD1;
     --ink:#14110E; --ink-soft:#5A534A;
     --accent:#7A1F2B; --accent-soft:#A8434F; --accent-tint:rgba(122,31,43,.07);
-    /* One deliberate flourish: the italic word closing the headline, plus the
-       wordmark's full stop. A hot magenta rather than anything red-leaning.
-       Clears WCAG AA at 4.52:1 on the deep olive below. */
-    --hot:#FF2E88;
+    /* The flourish: the italic word closing the headline, plus the full stop
+       after "Value". A deep crimson-maroon. This is about as dark as it can go
+       and stay readable on the olive — 3.37:1, which is AA for display sizes.
+       True maroon (#8C2340) only reaches 1.83:1 here and is illegible.
+       --maroon is the deeper tone, used only as a ground behind cream text,
+       where dark works properly (cream on it is 6.73:1). */
+    --hot:#D03A66; --maroon:#96263F;
     /* The overture — everything above the simulator. Deep olive, cream, rose.
        Same logic as the subscribe band: dark ground, cream type, rose accent. */
     --olive:#1E2510; --olive-deep:#151A09; --olive-lift:#2A331A;
@@ -359,10 +362,11 @@
   .overture .zig .zig-run{stroke:var(--cream);stroke-opacity:.30}
   .overture .zig .zig-fall{stroke:var(--rose-lift);stroke-opacity:.95}
 
-  /* tape sits above the masthead, one shade deeper than the olive */
+  /* tape sits above the masthead, one shade deeper than the olive. The LIVE
+     sticker keeps its deep maroon ground — that chip is the financial vibe. */
   .tape{background:var(--olive-deep);color:var(--cream)}
-  .tape-flag{background:var(--olive-lift);color:var(--cream)}
-  .tape-flag i{background:var(--rose-lift)}
+  .tape-flag{background:var(--maroon);color:var(--cream)}
+  .tape-flag i{background:var(--cream)}
 
   /* crisp edge where olive meets the near-black simulator */
   .sim{border-top:1px solid var(--olive-line)}
