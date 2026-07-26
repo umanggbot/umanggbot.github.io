@@ -83,8 +83,16 @@
     --paper:#F6F2EA; --paper-2:#EFE9DD; --paper-3:#E7DFD1;
     --ink:#14110E; --ink-soft:#5A534A;
     --accent:#7A1F2B; --accent-soft:#A8434F; --accent-tint:rgba(122,31,43,.07);
-    /* One deliberate flourish, used on a single word in the headline. Nothing else. */
-    --hot:#D81B60;
+    /* One deliberate flourish: the italic word closing the headline, plus the
+       wordmark's full stop. Lightened to #FF7EB0 so it clears WCAG AA (5.05:1)
+       against the olive ground — the original #D81B60 only managed 2.42. */
+    --hot:#FF7EB0;
+    /* The overture — everything above the simulator. Deep olive, cream, rose.
+       Same logic as the subscribe band: dark ground, cream type, rose accent. */
+    --olive:#313A1D; --olive-deep:#252D13; --olive-lift:#3A4425;
+    --cream:#F2ECDC; --cream-mid:rgba(242,236,220,.70); --cream-dim:rgba(242,236,220,.60);
+    --olive-line:rgba(242,236,220,.17); --olive-line-soft:rgba(242,236,220,.10);
+    --rose-lift:#E09AA4;
     --up:#1F5D3F; --down:#9E2B2B;
     --rule:rgba(20,17,14,.14); --rule-soft:rgba(20,17,14,.08);
     --serif:"Instrument Serif", Georgia, "Times New Roman", serif;
@@ -307,6 +315,59 @@
   .foot-grid a:hover{color:var(--paper)}
   .foot-base{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding-top:22px;border-top:1px solid rgba(246,242,234,.14);font-size:12px;letter-spacing:.06em}
 
+  /* ================= THE OVERTURE =================
+     Everything before the simulator sits on deep olive. Cream type, rose
+     small-caps, and pink kept to two deliberate marks: the wordmark's full
+     stop and the one italic word closing the headline. Nothing below the
+     simulator changes. ================================================== */
+  .overture{background:var(--olive);color:var(--cream)}
+  .overture .hero{border-top:none}
+
+  /* dateline / masthead rules */
+  .overture .masthead{background:var(--olive);border-bottom:1px solid var(--olive-line)}
+  .overture .masthead-top{border-bottom-color:var(--olive-line-soft);color:var(--cream-dim)}
+  .overture .dateline{color:var(--cream-dim)}
+  .overture .masthead-top .issue{color:var(--rose-lift)}
+  .overture .masthead-rule{color:var(--cream-dim)}
+  .overture .masthead-rule::before,.overture .masthead-rule::after{background:var(--olive-line)}
+  .overture .wordmark{color:var(--cream)}
+  .overture .wordmark .tv-dot{color:var(--hot)}
+
+  /* nav band */
+  .overture nav.sections{background:var(--olive-lift);border-top:1px solid var(--olive-line-soft);
+    border-bottom:1px solid var(--olive-line-soft)}
+  .overture nav.sections a{color:var(--cream-mid)}
+  .overture nav.sections a:hover{color:var(--cream);border-bottom-color:var(--hot)}
+  .overture nav.sections a.cta{color:var(--rose-lift)}
+
+  /* hero */
+  .overture .label{color:var(--rose-lift)}
+  .overture .hero h1{color:var(--cream)}
+  .overture .hero .deck{color:var(--cream-mid)}
+  .overture .btn-solid{background:var(--cream);border-color:var(--cream);color:var(--olive)}
+  .overture .btn-solid:hover{background:var(--rose-lift);border-color:var(--rose-lift);color:var(--olive-deep)}
+  .overture .link-quiet{color:var(--cream-mid);border-bottom-color:var(--olive-line)}
+  .overture .link-quiet:hover{color:var(--cream);border-bottom-color:var(--hot)}
+
+  /* the quiet promise line */
+  .overture .promise{border-top-color:var(--olive-line)}
+  .overture .promise-row{border-bottom-color:var(--olive-line-soft)}
+  .overture .promise-row .n{color:var(--rose-lift)}
+  .overture .promise-row .t{color:var(--cream-dim)}
+  .overture .promise-row .t b{color:var(--cream)}
+
+  /* market line, now drawn on olive */
+  .overture .zig .zig-run{stroke:var(--cream);stroke-opacity:.30}
+  .overture .zig .zig-fall{stroke:var(--rose-lift);stroke-opacity:.95}
+
+  /* tape sits above the masthead, one shade deeper than the olive */
+  .tape{background:var(--olive-deep);color:var(--cream)}
+  .tape-flag{background:var(--olive-lift);color:var(--cream)}
+  .tape-flag i{background:var(--rose-lift)}
+
+  /* crisp edge where olive meets the near-black simulator */
+  .sim{border-top:1px solid var(--olive-line)}
+
   .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
   .reveal.in{opacity:1;transform:none}
   @media(prefers-reduced-motion:reduce){
@@ -325,6 +386,10 @@
 </div>
 
 <div class="layer">
+
+<!-- The overture: olive ground, from the masthead down to the market line.
+     Everything from the simulator onward is left exactly as it was. -->
+<div class="overture">
 
   <!-- ================= MASTHEAD ================= -->
   <header class="masthead" id="top">
@@ -385,6 +450,8 @@
       </svg>
     </div>
   </div>
+
+</div><!-- /.overture — olive ends here; the simulator below is untouched -->
 
   <!-- ================= THE SIMULATOR ================= -->
   <section class="sim" id="simulator">
