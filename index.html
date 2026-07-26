@@ -94,7 +94,6 @@
     --olive:#1A2308; --olive-deep:#12190A; --olive-lift:#25301A;
     --cream:#F2ECDC; --cream-mid:rgba(242,236,220,.70); --cream-dim:rgba(242,236,220,.60);
     --olive-line:rgba(242,236,220,.17); --olive-line-soft:rgba(242,236,220,.10);
-    --rose-lift:#E09AA4;
     /* Electric pair. Terminal-screen green, used for the dateline flash and for
        anything reading as a gain; coral for a loss. Both clear AA on the tape
        (12.46:1 and 6.47:1) and on the olive. */
@@ -330,6 +329,15 @@
   /* Full-bleed white band, and white all the way through — no bone tint and no
      oxblood anywhere inside it. Black on white, hairlines only. */
   .about-band{background:#FFFFFF;border-top:1px solid var(--rule)}
+  /* "Inside an issue" on the same plain white. The oxblood keys go black so the
+     type carries it rather than the colour. The specimen card keeps its hairline
+     and soft shadow so it still reads as a page laid on the white. */
+  .issue-band{background:#FFFFFF;border-top:1px solid var(--rule)}
+  .issue-band .specimen .sp-k{color:var(--ink)}
+  .issue-band .issue-copy p{color:#4A443C}
+  .issue-band .specimen .sp-sec p{color:#4A443C}
+  .issue-band .label.quiet,.issue-band .sec-head .note{color:#6B645A}
+  .issue-band .specimen .sp-no,.issue-band .specimen .sp-foot{color:#6B645A}
   .about-band .colophon{background:#FFFFFF}
   .about-band .about-def b{color:var(--ink)}
   .about-band .colophon dt{color:var(--ink)}
@@ -387,9 +395,13 @@
   .overture .masthead{background:var(--olive);border-bottom:1px solid var(--olive-line)}
   .overture .masthead-top{border-bottom-color:var(--olive-line-soft);color:var(--cream-dim)}
   .overture .dateline{color:var(--cream-dim)}
-  /* "Independent · Weekly" reads as a terminal status flash rather than a
-     newsletter subtitle. Electric green, tighter tracking, tabular feel. */
-  .overture .masthead-top .issue{color:var(--electric);font-weight:600;letter-spacing:.22em}
+  /* GTA TEST — one element only, deliberately reversible.
+     "Independent · Weekly" becomes a hard-edged neon HUD chip: filled electric
+     green, near-black type, no radius. If the direction is wrong, replace this
+     rule with `color:var(--electric)` and it returns to plain neon text. */
+  .overture .masthead-top .issue{background:var(--electric);color:var(--olive-deep);
+    font-weight:700;letter-spacing:.2em;font-size:10px;line-height:1;
+    padding:6px 11px 5px;border-radius:0;display:inline-block}
   .overture .masthead-rule{color:var(--cream-dim)}
   .overture .masthead-rule::before,.overture .masthead-rule::after{background:var(--olive-line)}
   .overture .wordmark{color:var(--cream)}
@@ -403,10 +415,10 @@
     border-bottom:1px solid var(--olive-line-soft)}
   .overture nav.sections a{color:var(--cream-mid)}
   .overture nav.sections a:hover{color:var(--cream);border-bottom-color:var(--cream)}
-  .overture nav.sections a.cta{color:var(--rose-lift)}
+  .overture nav.sections a.cta{color:var(--electric)}
 
   /* hero */
-  .overture .label{color:var(--rose-lift)}
+  .overture .label{color:var(--cream-mid)}
   .overture .hero h1{color:var(--cream)}
   .overture .hero .deck{color:var(--cream-mid)}
   .overture .quiet-cta{color:var(--cream-mid);border-bottom-color:var(--olive-line)}
@@ -415,7 +427,7 @@
   /* the quiet promise line */
   .overture .promise{border-top-color:var(--olive-line)}
   .overture .promise-row{border-bottom-color:var(--olive-line-soft)}
-  .overture .promise-row .n{color:var(--rose-lift)}
+  .overture .promise-row .n{color:var(--cream)}
   .overture .promise-row .t{color:var(--cream-dim)}
   .overture .promise-row .t b{color:var(--cream)}
 
@@ -621,9 +633,11 @@
     </section>
   </div>
 
-  <!-- ================= INSIDE AN ISSUE ================= -->
-  <div class="wrap">
-    <section id="issue" class="reveal">
+  <!-- ================= INSIDE AN ISSUE =================
+       Full-bleed white band, same construction as About: the section holds the
+       .wrap so the white reaches the page edges. -->
+  <section id="issue" class="issue-band reveal">
+    <div class="wrap">
       <div class="sec-head">
         <div>
           <span class="label quiet">The format</span>
@@ -654,8 +668,8 @@
           <div class="sp-foot"><span>5 min read</span><span id="spDomain">terminalvalue.com</span></div>
         </div>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 
   <!-- ================= ABOUT =================
        Full-bleed white band. Structured like .sim and .subscribe — the section
