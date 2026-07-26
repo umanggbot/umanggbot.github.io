@@ -3,1150 +3,803 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>FATHOM — Finance, made legible</title>
 
-<!--
-  ============================================================================
-  HELLO, EDITOR — plain-English guide (v2)
-  ============================================================================
-  ► HOW TO LOG IN TO THE ADMIN STUDIO (3 ways):
-      1. Scroll to the footer and click the tiny  "✦ Studio"  link
-      2. Add  #admin  to the address  →  yoursite.com/#admin
-      3. Press  Ctrl/Cmd + Shift + A
-     Then type the admin password. (The password is NOT written in this file —
-     only its SHA-256 "fingerprint" is, so nobody can read it out of the code.)
+<!-- ==========================================================================
+     TERMINAL VALUE
+     One file. No build step. Open in a browser to test.
+     Everything you'd normally change lives in the CONFIG block near the
+     bottom, inside <script>. Look for "EDIT ME".
+     ========================================================================== -->
 
-  ► TO CHANGE THE PASSWORD:
-      Log in → tell the chatbot:  make a hash for MyNewPassword123!
-      It prints a new fingerprint → paste it into CONFIG.adminPassHash below.
+<title>Terminal Value — weekly financial journalism, 500 words</title>
+<meta name="description" content="Terminal Value is a weekly column on markets, money and the companies quietly running your life. Five hundred words, once a week, no jargon and no homework." />
+<link rel="canonical" href="https://terminalvalue.com/" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<meta name="author" content="Terminal Value" />
 
-  ► EVERYTHING YOU'D NORMALLY EDIT lives in the CONFIG block near the top of
-    the <script> at the bottom: brand, headline, colours, RSS feed links,
-    backup stories, glossary. Each has a comment telling you what it does.
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Terminal Value" />
+<meta property="og:title" content="Terminal Value — what it's worth when the noise stops" />
+<meta property="og:description" content="A weekly column on markets, money and the companies quietly running your life. 500 words. Once a week." />
+<meta property="og:url" content="https://terminalvalue.com/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Terminal Value — what it's worth when the noise stops" />
+<meta name="twitter:description" content="A weekly column on markets, money and the companies quietly running your life. 500 words. Once a week." />
+<meta name="theme-color" content="#F6F2EA" />
 
-  ► THE AI CHATBOT works in three tiers (fully automatic):
-      Tier 1 — AI_PROXY_URL set → real Claude via your own tiny server (the
-               claude-proxy-worker.js file I gave you; 10-min free setup).
-      Tier 2 — Running inside Claude.ai preview → real Claude, no setup.
-      Tier 3 — Anywhere else → "Local Brain": a built-in assistant coded right
-               into this page. No internet or key needed. It can edit the site,
-               define finance terms, draft newsletters, run money calculators,
-               and answer questions about how this site itself works.
-  ============================================================================
--->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "NewsMediaOrganization",
+      "@id": "https://terminalvalue.com/#org",
+      "name": "Terminal Value",
+      "url": "https://terminalvalue.com/",
+      "slogan": "What it's worth when the noise stops.",
+      "description": "Terminal Value is an independent weekly column of financial journalism. Each issue explains one thing that actually moved markets, in about five hundred words, without jargon.",
+      "foundingDate": "2026",
+      "knowsAbout": ["equity markets","macroeconomics","company earnings","valuation","central bank policy","technology companies","personal finance"],
+      "publishingPrinciples": "https://terminalvalue.com/#about"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://terminalvalue.com/#website",
+      "url": "https://terminalvalue.com/",
+      "name": "Terminal Value",
+      "publisher": { "@id": "https://terminalvalue.com/#org" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "LearningResource",
+      "@id": "https://terminalvalue.com/#simulator",
+      "name": "The Earnings Simulator",
+      "description": "An interactive teaching model showing why a company can beat on revenue and still see its share price fall — because markets price the revision to expectations, not the quarter itself.",
+      "learningResourceType": "interactive simulation",
+      "educationalLevel": "intermediate",
+      "isPartOf": { "@id": "https://terminalvalue.com/#website" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://terminalvalue.com/#faq",
+      "mainEntity": [
+        {"@type":"Question","name":"What is Terminal Value?","acceptedAnswer":{"@type":"Answer","text":"Terminal Value is an independent weekly column of financial journalism. Each issue takes one thing that actually moved the market — an earnings report, a rate decision, a number buried in a filing — and explains what it meant, in about five hundred words."}},
+        {"@type":"Question","name":"How often does Terminal Value publish?","acceptedAnswer":{"@type":"Answer","text":"Once a week, every week. Around 500 words, a five-minute read."}},
+        {"@type":"Question","name":"Who writes Terminal Value?","acceptedAnswer":{"@type":"Answer","text":"Terminal Value is written anonymously for now. The work is meant to stand on its own before the byline does."}},
+        {"@type":"Question","name":"Why do stocks fall on good earnings?","acceptedAnswer":{"@type":"Answer","text":"Because markets price the revision to expectations rather than the quarter that was reported. A small cut to forward guidance routinely outweighs a solid beat on current revenue. Terminal Value publishes an interactive simulator demonstrating this."}}
+      ]
+    }
+  ]
+}
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Two fonts only. Serif with a spine, one clean sans. -->
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
   :root{
-    --ink:#0C0F1A; --ink-2:#11151F; --paper:#ECE6DA; --muted:#8E94A3;
-    --accent:#E8B14C; --accent-2:#56D3A3; --rose:#F2B8A2;
-    --line:rgba(236,230,218,0.10); --glass:rgba(236,230,218,0.028);
-    --font-display:"Fraunces",Georgia,serif;
-    --font-body:"Inter",system-ui,sans-serif;
-    --font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+    --paper:#F6F2EA; --paper-2:#EFE9DD; --paper-3:#E7DFD1;
+    --ink:#14110E; --ink-soft:#5A534A;
+    --accent:#7A1F2B; --accent-soft:#A8434F; --accent-tint:rgba(122,31,43,.07);
+    --up:#1F5D3F; --down:#9E2B2B;
+    --rule:rgba(20,17,14,.14); --rule-soft:rgba(20,17,14,.08);
+    --serif:"Instrument Serif", Georgia, "Times New Roman", serif;
+    --sans:"Inter", -apple-system, system-ui, sans-serif;
+    --wrap:1180px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{background:var(--ink);color:var(--paper);font-family:var(--font-body);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   a{color:inherit;text-decoration:none}
-  ::selection{background:var(--accent);color:var(--ink)}
-  a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent-2);outline-offset:3px;border-radius:4px}
+  ::selection{background:var(--accent);color:var(--paper)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E")}
+  .layer{position:relative;z-index:1}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 clamp(20px,5vw,56px)}
+  .num{font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .label{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+  .label.quiet{color:var(--ink-soft)}
 
-  #bg{position:fixed;inset:0;z-index:0}
-  .vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:
-    radial-gradient(120% 80% at 50% 0%,transparent 40%,rgba(12,15,26,.55) 100%),
-    linear-gradient(180deg,rgba(12,15,26,.35) 0%,transparent 22%,transparent 60%,var(--ink) 100%)}
-  .grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-  #cursor{position:fixed;z-index:3;width:380px;height:380px;border-radius:50%;pointer-events:none;
-    transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(232,177,76,.10),transparent 60%);transition:opacity .3s;opacity:0}
-  .layer{position:relative;z-index:5}
-
-  .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-  .num{font-family:var(--font-mono);font-feature-settings:"tnum"}
-
-  /* ---------- Admin banner ---------- */
-  .admin-banner{position:fixed;top:0;left:0;right:0;z-index:200;display:none;align-items:center;
-    justify-content:space-between;gap:12px;padding:9px clamp(16px,4vw,28px);background:var(--accent);
-    color:var(--ink);font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;font-weight:500}
-  .admin-banner.show{display:flex}
-  .admin-banner .ab-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ink);
-    margin-right:8px;animation:pulse 1.8s infinite;vertical-align:middle}
-  .admin-banner button{background:var(--ink);color:var(--accent);border:none;border-radius:100px;
-    padding:6px 14px;font-family:var(--font-mono);font-size:11px;cursor:pointer;letter-spacing:.05em}
-  body.admin{padding-top:36px}
-  body.admin .ticker{top:36px}
-  body.admin .studio{top:36px;height:calc(100% - 36px)}
-
-  /* ---------- Ticker ---------- */
-  .ticker{position:sticky;top:0;z-index:40;background:rgba(12,15,26,.72);backdrop-filter:blur(14px);
-    border-bottom:1px solid var(--line);overflow:hidden;white-space:nowrap}
-  .ticker-track{display:inline-block;padding:9px 0;animation:slide 42s linear infinite;
-    font-family:var(--font-mono);font-size:12px;letter-spacing:.02em}
-  .ticker:hover .ticker-track{animation-play-state:paused}
-  .tk{padding:0 22px;color:var(--muted)} .tk b{color:var(--paper);font-weight:500}
-  .up{color:var(--accent-2)} .down{color:var(--rose)}
+  /* ---------------- Live tape ---------------- */
+  .tape{display:none;background:var(--ink);color:var(--paper);overflow:hidden;white-space:nowrap;
+    border-bottom:1px solid var(--ink);position:relative}
+  .tape.on{display:block}
+  .tape-flag{position:absolute;left:0;top:0;bottom:0;z-index:2;display:flex;align-items:center;gap:7px;
+    padding:0 16px;background:var(--accent);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+  .tape-flag i{width:6px;height:6px;border-radius:50%;background:var(--paper);animation:blip 1.9s infinite}
+  @keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+  .tape-track{display:inline-block;padding:9px 0 9px 120px;animation:slide 48s linear infinite;font-size:12px;font-weight:500}
+  .tape:hover .tape-track{animation-play-state:paused}
+  .tk{padding:0 20px;color:rgba(246,242,234,.55);font-variant-numeric:tabular-nums}
+  .tk b{color:var(--paper);font-weight:600}
+  .tk .up{color:#5FCF9A}.tk .down{color:#EE8B8B}
   @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media(max-width:600px){.tape-flag{display:none}.tape-track{padding-left:0}}
 
-  /* ---------- Nav ---------- */
-  nav{display:flex;align-items:center;justify-content:space-between;padding:22px clamp(20px,5vw,64px)}
-  .brand{display:flex;align-items:baseline;gap:12px}
-  .brand .mark{font-family:var(--font-display);font-weight:600;font-size:23px;letter-spacing:.14em}
-  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);align-self:center;box-shadow:0 0 14px var(--accent)}
-  .brand small{font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:.18em;text-transform:uppercase}
-  .nav-links{display:flex;align-items:center;gap:30px}
-  .nav-links a{font-size:14px;color:var(--muted);transition:color .2s}
-  .nav-links a:hover{color:var(--paper)}
-  .btn{font-family:var(--font-body);font-size:13.5px;font-weight:500;padding:10px 20px;border-radius:100px;
-    cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--paper);transition:all .2s}
-  .btn:hover{border-color:var(--accent);color:var(--accent)}
-  .btn-solid{background:var(--accent);color:var(--ink);border-color:var(--accent);font-weight:600}
-  .btn-solid:hover{color:var(--ink);filter:brightness(1.08);transform:translateY(-1px)}
-  @media(max-width:760px){.nav-links a{display:none}}
+  /* ---------------- Masthead ---------------- */
+  .masthead{border-bottom:1px solid var(--ink);background:var(--paper)}
+  .masthead-top{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:13px 0;
+    border-bottom:1px solid var(--rule-soft);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);font-weight:500}
+  .masthead-top .issue{color:var(--accent);font-weight:600}
+  @media(max-width:640px){.masthead-top .dateline{display:none}}
+  .masthead-main{padding:32px 0 24px;text-align:center}
+  .wordmark{font-family:var(--serif);font-size:clamp(2.6rem,9vw,5.6rem);line-height:.95;letter-spacing:-.015em;display:block}
+  .wordmark .tv-dot{color:var(--accent)}
+  .masthead-rule{display:flex;align-items:center;gap:18px;margin-top:16px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-soft)}
+  .masthead-rule::before,.masthead-rule::after{content:"";flex:1;height:1px;background:var(--rule)}
+  nav.sections{border-top:1px solid var(--rule)}
+  nav.sections .wrap{display:flex;align-items:center;justify-content:center;gap:clamp(14px,3.4vw,36px);
+    padding:13px clamp(20px,5vw,56px);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;
+    overflow-x:auto;scrollbar-width:none}
+  nav.sections .wrap::-webkit-scrollbar{display:none}
+  nav.sections a{color:var(--ink-soft);white-space:nowrap;transition:color .18s;padding-bottom:2px;border-bottom:1px solid transparent}
+  nav.sections a:hover{color:var(--ink);border-bottom-color:var(--accent)}
+  nav.sections a.cta{color:var(--accent);font-weight:600}
 
-  /* ---------- Hero ---------- */
-  .hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;
-    padding:40px clamp(20px,5vw,64px) 80px;max-width:1120px}
-  .hero .eyebrow{margin-bottom:26px}
-  .hero h1{font-family:var(--font-display);font-weight:500;font-size:clamp(2.6rem,7vw,5.4rem);
-    line-height:1.02;letter-spacing:-.02em;max-width:16ch;margin-bottom:26px}
-  .hero h1 em{font-style:italic;background:linear-gradient(120deg,var(--accent),var(--rose));
-    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .hero .sub{font-size:clamp(1rem,2vw,1.22rem);color:var(--muted);max-width:52ch;margin-bottom:38px}
+  /* ---------------- Hero ---------------- */
+  .hero{padding:clamp(52px,8vw,92px) 0 clamp(44px,6vw,72px)}
+  .hero-grid{display:grid;grid-template-columns:1.55fr .95fr;gap:clamp(32px,6vw,72px);align-items:start}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:44px}}
+  .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.4rem,5.6vw,4.4rem);line-height:1.04;letter-spacing:-.02em;margin:16px 0 24px;max-width:19ch}
+  .hero h1 em{font-style:italic;color:var(--accent)}
+  .hero .deck{font-size:clamp(1.02rem,1.6vw,1.2rem);color:var(--ink-soft);max-width:50ch;margin-bottom:32px}
   .hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-  .scroll-hint{margin-top:64px;font-family:var(--font-mono);font-size:11px;color:var(--muted);
-    letter-spacing:.2em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
-  .scroll-hint::before{content:"";width:26px;height:1px;background:var(--muted);display:inline-block;animation:grow 2.4s ease-in-out infinite}
-  @keyframes grow{0%,100%{width:12px;opacity:.4}50%{width:30px;opacity:1}}
+  .btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:13px 26px;border:1px solid var(--ink);
+    background:transparent;color:var(--ink);cursor:pointer;transition:all .2s;border-radius:0;display:inline-block;text-align:center}
+  .btn:hover{background:var(--ink);color:var(--paper)}
+  .btn-solid{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+  .btn-solid:hover{background:var(--ink);border-color:var(--ink)}
+  .promise{border-top:2px solid var(--ink);padding-top:4px}
+  .promise-row{display:flex;align-items:baseline;gap:16px;padding:15px 0;border-bottom:1px solid var(--rule-soft)}
+  .promise-row .n{font-family:var(--serif);font-size:2.3rem;line-height:1;min-width:2.4ch;color:var(--accent)}
+  .promise-row .t{font-size:14px;color:var(--ink-soft)}
+  .promise-row .t b{color:var(--ink);font-weight:600;display:block}
 
-  /* ---------- Sections ---------- */
-  .section{padding:100px clamp(20px,5vw,64px);max-width:1200px;margin:0 auto}
-  .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
-    margin-bottom:34px;border-bottom:1px solid var(--line);padding-bottom:22px}
-  .section-head h2{font-family:var(--font-display);font-weight:500;font-size:clamp(1.8rem,4vw,2.9rem);letter-spacing:-.01em}
-  .live-dot{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;
-    letter-spacing:.2em;text-transform:uppercase;color:var(--accent-2)}
-  .live-dot span{width:8px;height:8px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 10px var(--accent-2);animation:pulse 1.8s infinite}
-  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}
+  /* ---------------- Sections ---------------- */
+  section{padding:clamp(52px,7vw,86px) 0;border-top:1px solid var(--rule)}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding-bottom:16px;margin-bottom:34px;border-bottom:2px solid var(--ink)}
+  .sec-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.9rem,4vw,3rem);line-height:1.05;letter-spacing:-.015em}
+  .sec-head .note{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
 
-  /* ---------- Filters ---------- */
-  .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
-  .fchip{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
-    padding:7px 14px;border-radius:100px;border:1px solid var(--line);background:transparent;
-    color:var(--muted);cursor:pointer;transition:all .2s}
-  .fchip:hover{color:var(--paper);border-color:var(--muted)}
-  .fchip.on{background:var(--accent);border-color:var(--accent);color:var(--ink);font-weight:500}
+  /* ---------------- Simulator ---------------- */
+  .sim{background:var(--ink);color:var(--paper);border-top:none}
+  .sim .sec-head{border-bottom-color:rgba(246,242,234,.28)}
+  .sim .sec-head h2{color:var(--paper)}
+  .sim .sec-head .note,.sim .label.quiet{color:rgba(246,242,234,.5)}
+  .sim .label{color:var(--accent-soft)}
+  .sim-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(30px,5vw,60px);align-items:start}
+  @media(max-width:900px){.sim-grid{grid-template-columns:1fr;gap:38px}}
+  .sim-intro{font-family:var(--serif);font-size:clamp(1.4rem,2.8vw,2rem);line-height:1.26;margin-bottom:18px}
+  .sim-intro em{font-style:italic;color:var(--accent-soft)}
+  .sim-copy p{color:rgba(246,242,234,.62);font-size:15.5px;margin-bottom:14px;max-width:46ch}
 
-  /* ---------- Story grid + featured lead ---------- */
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px}
-  .card{background:var(--glass);border:1px solid var(--line);border-radius:16px;padding:26px;
-    transition:transform .3s cubic-bezier(.2,.7,.3,1),border-color .3s,background .3s;
-    backdrop-filter:blur(10px);position:relative;overflow:hidden;display:flex;flex-direction:column}
-  .card::before{content:"";position:absolute;inset:0;opacity:0;transition:opacity .3s;
-    background:radial-gradient(120% 60% at 0% 0%,rgba(232,177,76,.08),transparent 60%)}
-  .card:hover{transform:translateY(-6px);border-color:rgba(232,177,76,.4);background:rgba(236,230,218,.04)}
-  .card:hover::before{opacity:1}
-  .card .tag{align-self:flex-start;font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--accent);border:1px solid rgba(232,177,76,.3);
-    padding:4px 10px;border-radius:100px;margin-bottom:18px}
-  .card h3{font-family:var(--font-display);font-weight:500;font-size:1.32rem;line-height:1.2;margin-bottom:12px;letter-spacing:-.01em}
-  .card p{color:var(--muted);font-size:.94rem;margin-bottom:20px;flex:1}
-  .card .meta{display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);
-    font-size:11px;color:var(--muted);letter-spacing:.03em;padding-top:16px;border-top:1px solid var(--line)}
-  .card .meta a{color:var(--accent-2)}
-  .card.fresh{animation:flash 1.6s ease-out}
-  @keyframes flash{0%{box-shadow:0 0 0 2px var(--accent-2)}100%{box-shadow:0 0 0 0 transparent}}
-  .card.feature{grid-column:1/-1;flex-direction:row;gap:34px;align-items:center;padding:38px;
-    background:linear-gradient(120deg,rgba(232,177,76,.06),var(--glass) 55%)}
-  .card.feature .f-side{flex:1}
-  .card.feature h3{font-size:clamp(1.6rem,3.4vw,2.4rem);max-width:22ch}
-  .card.feature p{font-size:1.02rem;max-width:58ch}
-  @media(max-width:760px){.card.feature{flex-direction:column;align-items:flex-start;padding:28px}}
+  .dial{margin-bottom:26px}
+  .dial-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+  .dial-head .dl{font-size:12.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(246,242,234,.75)}
+  .dial-head .dv{font-family:var(--serif);font-size:1.5rem;color:var(--paper);font-variant-numeric:tabular-nums}
+  .dial-sub{font-size:12.5px;color:rgba(246,242,234,.42);margin-top:7px;line-height:1.5}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:rgba(246,242,234,.25);outline:none;cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:19px;height:19px;border-radius:50%;
+    background:var(--accent-soft);border:2px solid var(--paper);cursor:pointer;transition:transform .15s}
+  input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+  input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;background:var(--accent-soft);border:2px solid var(--paper);cursor:pointer}
 
-  /* ---------- Inside an issue (paper mock) ---------- */
-  .issue-wrap{display:grid;grid-template-columns:0.9fr 1.1fr;gap:56px;align-items:center}
-  @media(max-width:880px){.issue-wrap{grid-template-columns:1fr;gap:36px}}
-  .issue-copy .lede{font-family:var(--font-display);font-weight:400;font-size:clamp(1.4rem,3vw,2rem);line-height:1.35;letter-spacing:-.01em}
-  .issue-copy p{color:var(--muted);margin-top:18px;max-width:44ch}
-  .issue-card{background:var(--paper);color:#171B26;border-radius:18px;padding:34px 34px 28px;
-    box-shadow:0 40px 90px rgba(0,0,0,.45),0 4px 14px rgba(0,0,0,.3);position:relative;transform:rotate(.6deg);transition:transform .4s}
-  .issue-card:hover{transform:rotate(0) translateY(-4px)}
-  .issue-card .stamp{position:absolute;top:18px;right:18px;font-family:var(--font-mono);font-size:10px;
-    letter-spacing:.2em;color:#8A5A16;border:1px solid #C89A4E;border-radius:100px;padding:4px 10px;transform:rotate(4deg)}
-  .issue-card .masthead{font-family:var(--font-display);font-weight:600;letter-spacing:.14em;font-size:19px}
-  .issue-card .isodate{font-family:var(--font-mono);font-size:10.5px;color:#6B6455;letter-spacing:.12em;
-    text-transform:uppercase;margin:4px 0 16px;padding-bottom:14px;border-bottom:2px solid #171B26}
-  .issue-card h4{font-family:var(--font-display);font-weight:500;font-size:1.45rem;line-height:1.15;letter-spacing:-.01em;margin-bottom:14px}
-  .issue-card .sec{margin:14px 0}
-  .issue-card .sec .k{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;color:#8A5A16;text-transform:uppercase}
-  .issue-card .sec p{font-size:.9rem;color:#3A3F4D;line-height:1.55;margin-top:4px}
-  .issue-card .foot{margin-top:18px;padding-top:14px;border-top:1px solid #C9C2B2;
-    font-family:var(--font-mono);font-size:10.5px;color:#6B6455;display:flex;justify-content:space-between}
+  .readout{border:1px solid rgba(246,242,234,.22);padding:clamp(22px,3.4vw,32px);background:rgba(246,242,234,.03)}
+  .readout-top{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:14px;margin-bottom:20px;border-bottom:1px solid rgba(246,242,234,.18)}
+  .readout-top .rl{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(246,242,234,.5)}
+  .verdict{font-family:var(--serif);font-size:clamp(3.2rem,9vw,5rem);line-height:.95;font-variant-numeric:tabular-nums;margin-bottom:6px}
+  .verdict.pos{color:#5FCF9A}.verdict.neg{color:#EE8B8B}
+  .verdict-cap{font-size:13.5px;color:rgba(246,242,234,.55);margin-bottom:24px}
+  .bars{display:flex;flex-direction:column;gap:11px;margin-bottom:22px}
+  .bar-row{display:grid;grid-template-columns:112px 1fr 62px;align-items:center;gap:12px;font-size:12px}
+  .bar-row .bl{color:rgba(246,242,234,.6);letter-spacing:.04em}
+  .bar-track{height:9px;background:rgba(246,242,234,.1);position:relative;overflow:hidden}
+  .bar-fill{position:absolute;top:0;bottom:0;left:50%;transition:width .35s cubic-bezier(.3,.8,.3,1),left .35s cubic-bezier(.3,.8,.3,1)}
+  .bar-fill.pos{background:#5FCF9A}.bar-fill.neg{background:#EE8B8B}
+  .bar-row .bv{text-align:right;font-variant-numeric:tabular-nums;color:var(--paper);font-weight:600}
+  .takeaway{border-left:2px solid var(--accent-soft);padding:14px 0 14px 18px;font-size:14.5px;color:rgba(246,242,234,.8);line-height:1.6}
+  .sim-disclaimer{font-size:12px;color:rgba(246,242,234,.38);margin-top:22px;line-height:1.6;max-width:62ch}
+  .sim-reset{background:none;border:none;color:var(--accent-soft);font-family:var(--sans);font-size:12.5px;
+    font-weight:600;letter-spacing:.06em;cursor:pointer;padding:0;margin-top:16px;text-transform:uppercase}
+  .sim-reset:hover{color:var(--paper)}
 
-  /* ---------- Decoder ---------- */
-  .decoder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-  .d-card{text-align:left;background:var(--glass);border:1px solid var(--line);border-radius:14px;
-    padding:20px 22px;cursor:pointer;color:var(--paper);font-family:var(--font-body);transition:border-color .25s,background .25s}
-  .d-card:hover{border-color:rgba(232,177,76,.45);background:rgba(236,230,218,.04)}
-  .d-card .d-term{display:flex;justify-content:space-between;align-items:center;
-    font-family:var(--font-display);font-weight:500;font-size:1.15rem;letter-spacing:-.01em}
-  .d-card .d-term span:last-child{font-family:var(--font-mono);font-size:16px;color:var(--accent);transition:transform .3s}
-  .d-card.open .d-term span:last-child{transform:rotate(45deg)}
-  .d-card .d-def{max-height:0;overflow:hidden;transition:max-height .4s ease,margin .4s;color:var(--muted);font-size:.92rem;line-height:1.55}
-  .d-card.open .d-def{max-height:200px;margin-top:12px}
+  /* ---------------- Story grid ---------------- */
+  .stories{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  @media(max-width:860px){.stories{grid-template-columns:1fr}}
+  .story{padding:0 28px;border-left:1px solid var(--rule);display:flex;flex-direction:column}
+  .story:first-child{border-left:none;padding-left:0}
+  @media(max-width:860px){.story{border-left:none;padding:26px 0;border-top:1px solid var(--rule)}.story:first-child{border-top:none;padding-top:0}}
+  .story .kicker{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .story h3{font-family:var(--serif);font-weight:400;font-size:1.55rem;line-height:1.14;margin-bottom:12px}
+  .story h3 a:hover{color:var(--accent)}
+  .story p{color:var(--ink-soft);font-size:15px;margin-bottom:18px;flex:1}
+  .story .meta{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);padding-top:14px;border-top:1px solid var(--rule-soft);display:flex;justify-content:space-between;gap:12px}
+  .story .meta a{color:var(--accent);font-weight:600}
+  .awaiting{border:1px solid var(--rule);padding:clamp(30px,5vw,56px);text-align:center;background:var(--paper-2)}
+  .awaiting h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,3.4vw,2.4rem);line-height:1.1;margin:14px 0}
+  .awaiting p{color:var(--ink-soft);max-width:52ch;margin:0 auto 24px}
 
-  /* ---------- Mission ---------- */
-  .mission{display:grid;grid-template-columns:1.3fr 1fr;gap:64px;align-items:center}
-  @media(max-width:820px){.mission{grid-template-columns:1fr;gap:40px}}
-  .mission .lede{font-family:var(--font-display);font-weight:400;font-size:clamp(1.4rem,3vw,2rem);line-height:1.35;letter-spacing:-.01em}
-  .mission .lede b{color:var(--accent);font-weight:500}
-  .mission p{color:var(--muted);margin-top:22px;max-width:46ch}
-  .stats{display:flex;flex-direction:column;gap:2px;border-left:1px solid var(--line);padding-left:32px}
-  .stat{padding:18px 0;border-bottom:1px solid var(--line)}
-  .stat .n{font-family:var(--font-display);font-size:2.4rem;line-height:1}
-  .stat .l{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-top:8px}
+  /* ---------------- Inline subscribe strip ---------------- */
+  .strip{background:var(--paper-3);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:clamp(28px,4vw,40px) 0}
+  .strip-in{display:flex;align-items:center;justify-content:space-between;gap:26px;flex-wrap:wrap}
+  .strip-in .st{font-family:var(--serif);font-size:clamp(1.3rem,2.6vw,1.85rem);line-height:1.2;max-width:32ch}
+  .strip-in .st em{font-style:italic;color:var(--accent)}
 
-  /* ---------- Subscribe ---------- */
-  .subscribe{text-align:center}
-  .subscribe h2{font-family:var(--font-display);font-weight:500;font-size:clamp(2rem,5vw,3.4rem);
-    letter-spacing:-.02em;margin-bottom:16px;max-width:18ch;margin-inline:auto}
-  .subscribe h2 em{font-style:italic;color:var(--accent)}
-  .subscribe p{color:var(--muted);margin-bottom:34px}
-  .form{display:flex;gap:10px;max-width:460px;margin:0 auto}
-  .form input{flex:1;background:var(--ink-2);border:1px solid var(--line);border-radius:100px;
-    padding:15px 22px;color:var(--paper);font-size:15px;font-family:var(--font-body)}
-  .form input::placeholder{color:var(--muted)}
-  .form-note{margin-top:16px;font-family:var(--font-mono);font-size:11px;color:var(--muted)}
-  @media(max-width:520px){.form{flex-direction:column}}
+  /* ---------------- Inside an issue ---------------- */
+  .issue-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(32px,6vw,68px);align-items:center}
+  @media(max-width:900px){.issue-grid{grid-template-columns:1fr;gap:40px}}
+  .issue-copy .lede{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2.15rem);line-height:1.24;margin-bottom:20px}
+  .issue-copy p{color:var(--ink-soft);max-width:46ch;margin-bottom:16px}
+  .anatomy{list-style:none;margin-top:24px;border-top:1px solid var(--rule)}
+  .anatomy li{display:flex;gap:18px;padding:14px 0;border-bottom:1px solid var(--rule-soft);align-items:baseline}
+  .anatomy .k{font-family:var(--serif);font-size:1.2rem;color:var(--accent);min-width:2.2ch}
+  .anatomy .v{font-size:14.5px;color:var(--ink-soft)}
+  .anatomy .v b{color:var(--ink);font-weight:600}
+  .specimen{background:#fff;border:1px solid var(--rule);padding:clamp(26px,4vw,40px);box-shadow:0 24px 60px rgba(20,17,14,.09),0 2px 6px rgba(20,17,14,.05)}
+  .specimen .sp-top{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:12px;border-bottom:2px solid var(--ink);margin-bottom:20px}
+  .specimen .sp-name{font-family:var(--serif);font-size:1.35rem}
+  .specimen .sp-no{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+  .specimen h4{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3vw,2rem);line-height:1.1;margin-bottom:18px}
+  .specimen .sp-sec{margin-bottom:18px}
+  .specimen .sp-k{font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .specimen .sp-sec p{font-size:15px;color:var(--ink-soft);line-height:1.6}
+  .specimen .sp-foot{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);padding-top:16px;border-top:1px solid var(--rule)}
 
-  /* ---------- Footer ---------- */
-  footer{border-top:1px solid var(--line);padding:56px clamp(20px,5vw,64px) 30px;position:relative;z-index:5}
-  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;max-width:1200px;margin:0 auto 40px}
-  @media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:28px}}
-  .foot-grid h5{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
-  .foot-grid .fb{font-family:var(--font-display);font-weight:600;font-size:19px;letter-spacing:.12em;margin-bottom:10px}
-  .foot-grid p{color:var(--muted);font-size:.88rem;max-width:34ch}
-  .foot-grid a{display:block;color:var(--muted);font-size:.9rem;padding:5px 0;transition:color .2s}
+  /* ---------------- About ---------------- */
+  .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(32px,6vw,72px);align-items:start}
+  @media(max-width:900px){.about-grid{grid-template-columns:1fr;gap:40px}}
+  .about-grid .lede{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2.15rem);line-height:1.26;margin-bottom:22px}
+  .about-grid .lede b{color:var(--accent);font-weight:400;font-style:italic}
+  .about-grid p{color:var(--ink-soft);margin-bottom:18px;max-width:52ch}
+  .colophon{border-top:2px solid var(--ink);padding-top:20px}
+  .colophon dt{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-top:18px}
+  .colophon dt:first-child{margin-top:0}
+  .colophon dd{font-size:14.5px;color:var(--ink-soft);margin-top:5px}
+
+  /* ---------------- Subscribe ---------------- */
+  .subscribe{text-align:center;background:var(--ink);color:var(--paper);border-top:none}
+  .subscribe .label{color:var(--accent-soft)}
+  .subscribe h2{font-family:var(--serif);font-weight:400;font-size:clamp(2.1rem,5.2vw,3.6rem);line-height:1.06;letter-spacing:-.02em;margin:16px auto 18px;max-width:17ch}
+  .subscribe h2 em{font-style:italic;color:var(--accent-soft)}
+  .subscribe .deck{color:rgba(246,242,234,.62);max-width:46ch;margin:0 auto 32px}
+  .embed-slot{max-width:480px;margin:0 auto;min-height:60px}
+  .embed-slot iframe{width:100%;border:1px solid rgba(246,242,234,.2);background:transparent}
+  .fallback-form{display:flex;max-width:460px;margin:0 auto;border:1px solid rgba(246,242,234,.3)}
+  .fallback-form input{flex:1;background:transparent;border:none;padding:15px 20px;color:var(--paper);font-size:15px;font-family:var(--sans)}
+  .fallback-form input::placeholder{color:rgba(246,242,234,.4)}
+  .fallback-form button{background:var(--paper);color:var(--ink);border:none;padding:15px 26px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer}
+  .fallback-form button:hover{background:var(--accent-soft);color:var(--paper)}
+  .sub-note{font-size:12.5px;color:rgba(246,242,234,.5);margin-top:18px}
+  @media(max-width:520px){.fallback-form{flex-direction:column}}
+
+  /* ---------------- Footer ---------------- */
+  footer{background:var(--ink);color:rgba(246,242,234,.6);padding:0 0 34px}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px;padding:50px 0 34px;border-top:1px solid rgba(246,242,234,.14)}
+  @media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:30px}}
+  .foot-brand{font-family:var(--serif);font-size:1.8rem;color:var(--paper);margin-bottom:10px}
+  .foot-grid p{font-size:14px;max-width:36ch}
+  .foot-grid h5{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-soft);margin-bottom:14px}
+  .foot-grid a{display:block;font-size:14px;padding:5px 0;transition:color .18s}
   .foot-grid a:hover{color:var(--paper)}
-  .foot-base{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;
-    flex-wrap:wrap;gap:14px;padding-top:24px;border-top:1px solid var(--line);
-    font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:.03em}
-  .studio-link{opacity:.5;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;
-    background:none;border:none;color:var(--muted);cursor:pointer;transition:opacity .2s,color .2s}
-  .studio-link:hover{opacity:1;color:var(--accent)}
+  .foot-base{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding-top:22px;border-top:1px solid rgba(246,242,234,.14);font-size:12px;letter-spacing:.06em}
 
-  /* ---------- Admin gate ---------- */
-  .admin-gate{position:fixed;inset:0;z-index:210;display:none;align-items:center;justify-content:center;
-    background:rgba(8,10,17,.7);backdrop-filter:blur(10px);padding:20px}
-  .admin-gate.show{display:flex}
-  .gate-card{width:min(400px,100%);background:var(--ink-2);border:1px solid var(--line);border-radius:20px;
-    padding:38px 34px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5)}
-  .gate-card h3{font-family:var(--font-display);font-weight:500;font-size:1.7rem;margin-bottom:10px}
-  .gate-card p{color:var(--muted);font-size:.9rem;margin-bottom:24px}
-  .gate-card input{width:100%;background:var(--ink);border:1px solid var(--line);border-radius:100px;
-    padding:14px 20px;color:var(--paper);font-size:15px;font-family:var(--font-body);text-align:center;margin-bottom:12px}
-  .gate-enter{width:100%;background:var(--accent);color:var(--ink);border:none;border-radius:100px;
-    padding:14px;font-weight:600;font-size:15px;cursor:pointer;font-family:var(--font-body)}
-  .gate-enter:hover{filter:brightness(1.08)}
-  .gate-note{min-height:18px;font-family:var(--font-mono);font-size:11px;color:var(--rose);margin-top:12px}
-  .gate-cancel{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;margin-top:16px}
-  .gate-cancel:hover{color:var(--paper)}
-  .gate-card.shake{animation:shake .4s}
-  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-
-  /* ---------- Admin Studio panel ---------- */
-  .studio{position:fixed;top:0;right:0;height:100%;width:min(440px,100vw);z-index:70;
-    background:rgba(14,18,28,.9);backdrop-filter:blur(24px);border-left:1px solid var(--line);
-    transform:translateX(100%);transition:transform .4s cubic-bezier(.3,.8,.3,1);display:flex;flex-direction:column}
-  .studio.open{transform:translateX(0);box-shadow:-30px 0 80px rgba(0,0,0,.5)}
-  .studio-top{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .studio-top .t{font-family:var(--font-display);font-size:19px;font-weight:600}
-  .studio-top .t span{color:var(--muted);font-family:var(--font-mono);font-size:10px;display:block;letter-spacing:.18em;text-transform:uppercase;margin-top:2px}
-  .status-pill{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;padding:5px 11px;border-radius:100px;
-    border:1px solid var(--line);color:var(--muted);white-space:nowrap}
-  .status-pill.live{color:var(--accent-2);border-color:rgba(86,211,163,.4)}
-  .status-pill.local{color:var(--accent);border-color:rgba(232,177,76,.4)}
-  .studio-close{background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1}
-  .studio-close:hover{color:var(--paper)}
-  .studio-log{flex:1;overflow-y:auto;padding:22px;display:flex;flex-direction:column;gap:14px}
-  .msg{max-width:90%;padding:13px 16px;border-radius:14px;font-size:14px;line-height:1.55;white-space:pre-wrap}
-  .msg.you{align-self:flex-end;background:var(--accent);color:var(--ink);border-bottom-right-radius:4px}
-  .msg.ai{align-self:flex-start;background:var(--glass);border:1px solid var(--line);border-bottom-left-radius:4px}
-  .receipt{align-self:flex-start;font-family:var(--font-mono);font-size:11px;color:var(--accent-2);padding:0 4px}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 22px 14px}
-  .chip{font-size:12px;padding:7px 13px;border-radius:100px;border:1px solid var(--line);
-    background:var(--glass);color:var(--paper);cursor:pointer;transition:all .2s}
-  .chip:hover{border-color:var(--accent);color:var(--accent)}
-  .studio-input{display:flex;gap:8px;padding:16px 20px;border-top:1px solid var(--line)}
-  .studio-input input{flex:1;background:var(--ink-2);border:1px solid var(--line);border-radius:100px;
-    padding:12px 18px;color:var(--paper);font-size:14px;font-family:var(--font-body)}
-  .studio-input button{background:var(--accent);color:var(--ink);border:none;border-radius:100px;width:44px;font-size:18px;cursor:pointer;font-weight:700}
-  .typing{align-self:flex-start;display:flex;gap:5px;padding:14px 16px}
-  .typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:blink 1.4s infinite}
-  .typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
-  @keyframes blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
-
-  .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.3,1)}
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
   .reveal.in{opacity:1;transform:none}
-
   @media(prefers-reduced-motion:reduce){
-    .ticker-track,.live-dot span,.admin-banner .ab-dot,.scroll-hint::before{animation:none!important}
     .reveal{transition:none;opacity:1;transform:none}
+    .tape-track{animation:none}
     html{scroll-behavior:auto}
-    .issue-card{transform:none}
   }
 </style>
 </head>
 <body>
 
-<div class="admin-banner" id="adminBanner">
-  <span><span class="ab-dot"></span> ADMIN MODE — edits save in this browser</span>
-  <button onclick="lockStudio()">Lock studio</button>
+<!-- ================= LIVE TAPE (hides itself if real data can't be fetched) ================= -->
+<div class="tape" id="tape" aria-label="Live market rates">
+  <span class="tape-flag"><i></i> Live</span>
+  <div class="tape-track" id="tapeTrack"></div>
 </div>
-
-<canvas id="bg"></canvas>
-<div class="vignette"></div>
-<div class="grain"></div>
-<div id="cursor"></div>
-
-<div class="ticker"><div class="ticker-track" id="ticker"></div></div>
 
 <div class="layer">
 
-  <nav>
-    <div class="brand">
-      <span class="dot"></span>
-      <span class="mark" id="brandName">FATHOM</span>
-      <small id="brandTag">Finance, made legible</small>
+  <!-- ================= MASTHEAD ================= -->
+  <header class="masthead" id="top">
+    <div class="wrap">
+      <div class="masthead-top">
+        <span class="dateline" id="dateline">—</span>
+        <span class="issue">Independent · Weekly</span>
+        <span class="dateline">Est. 2026</span>
+      </div>
+      <div class="masthead-main">
+        <a href="#top" class="wordmark" id="wordmark">Terminal Value<span class="tv-dot">.</span></a>
+        <div class="masthead-rule"><span id="taglineEl">What it's worth when the noise stops</span></div>
+      </div>
     </div>
-    <div class="nav-links">
-      <a href="#latest">Latest</a>
-      <a href="#issue">Inside an issue</a>
-      <a href="#decoder">Decoder</a>
-      <a href="#mission">Mission</a>
-      <button class="btn btn-solid" onclick="document.getElementById('join').scrollIntoView()">Subscribe</button>
-    </div>
-  </nav>
-
-  <header class="hero">
-    <div class="eyebrow" id="heroEyebrow">Independent finance journalism · Est. 2026</div>
-    <h1 id="heroHeadline">Understand the money story <em>before</em> it moves the world.</h1>
-    <p class="sub" id="heroSub">Plain-English newsletters and insight on markets, macro, and your own wallet — written for the people who were never handed the glossary.</p>
-    <div class="hero-cta">
-      <button class="btn btn-solid" onclick="document.getElementById('join').scrollIntoView()">Read the newsletter</button>
-      <button class="btn" onclick="document.getElementById('latest').scrollIntoView()">This week's stories</button>
-    </div>
-    <div class="scroll-hint">Scroll — this week's stories</div>
+    <nav class="sections" aria-label="Sections">
+      <div class="wrap">
+        <a href="#latest">The Column</a>
+        <a href="#simulator">The Simulator</a>
+        <a href="#issue">Inside an Issue</a>
+        <a href="#about">About</a>
+        <a href="#subscribe" class="cta">Subscribe</a>
+      </div>
+    </nav>
   </header>
 
-  <!-- LATEST -->
-  <section class="section reveal" id="latest">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow" style="margin-bottom:12px;">This week</div>
-        <h2>The Latest</h2>
+  <!-- ================= HERO ================= -->
+  <div class="wrap">
+    <section class="hero" style="border-top:none">
+      <div class="hero-grid">
+        <div>
+          <span class="label">The weekly column</span>
+          <h1>You don't need more finance news. You need someone to say which parts <em>mattered</em>.</h1>
+          <p class="deck">Five hundred words, once a week, on markets, money, and the companies quietly running your life. Written for people who can already read a balance sheet and still can't work out why the market cared.</p>
+          <div class="hero-cta">
+            <a class="btn btn-solid" href="#subscribe">Get it weekly</a>
+            <a class="btn" href="#simulator">Try the simulator</a>
+          </div>
+        </div>
+        <aside class="promise" aria-label="What you get">
+          <div class="promise-row"><span class="n">500</span><span class="t"><b>words</b>Long enough to say something. Short enough to finish.</span></div>
+          <div class="promise-row"><span class="n">1</span><span class="t"><b>issue a week</b>Same day, every week. That's the whole deal.</span></div>
+          <div class="promise-row"><span class="n">0</span><span class="t"><b>hot takes</b>No predictions dressed up as analysis.</span></div>
+        </aside>
       </div>
-      <div class="live-dot"><span></span> Live feed</div>
+    </section>
+  </div>
+
+  <!-- ================= THE SIMULATOR ================= -->
+  <section class="sim" id="simulator">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="label">Play with it</span>
+          <h2>The Simulator</h2>
+        </div>
+        <span class="note">Drag the dials</span>
+      </div>
+
+      <div class="sim-grid">
+        <div class="sim-copy">
+          <p class="sim-intro">A company beats on revenue and the stock falls nine percent. <em>Everyone finds this insane.</em> It isn't.</p>
+          <p>Markets don't pay for the quarter that happened. They pay for the quarter everyone now expects to happen next. So a small cut to forward guidance can bury a genuinely good three months — and usually does.</p>
+          <p>Move the dials and watch which one actually swings the number. It's not the one on the front page of the earnings release.</p>
+
+          <div class="dial">
+            <div class="dial-head"><span class="dl">Revenue surprise</span><span class="dv num" id="revOut">+3.0%</span></div>
+            <input type="range" id="rev" min="-10" max="10" step="0.5" value="3" aria-label="Revenue surprise versus expectations" />
+            <div class="dial-sub">How much this quarter's sales beat or missed what analysts expected.</div>
+          </div>
+
+          <div class="dial">
+            <div class="dial-head"><span class="dl">Guidance revision</span><span class="dv num" id="guideOut">−2.0%</span></div>
+            <input type="range" id="guide" min="-8" max="8" step="0.5" value="-2" aria-label="Forward guidance revision" />
+            <div class="dial-sub">What the company now says about <em>next</em> quarter, against what the market had penciled in.</div>
+          </div>
+
+          <div class="dial">
+            <div class="dial-head"><span class="dl">Multiple re-rating</span><span class="dv num" id="multOut">0.0%</span></div>
+            <input type="range" id="mult" min="-15" max="15" step="0.5" value="0" aria-label="Change in valuation multiple" />
+            <div class="dial-sub">Whether investors are willing to pay more or less for each dollar of profit — the mood, essentially.</div>
+          </div>
+
+          <button class="sim-reset" onclick="resetSim()">↺ Reset to the classic case</button>
+        </div>
+
+        <div class="readout" aria-live="polite">
+          <div class="readout-top">
+            <span class="rl">Share price reaction</span>
+            <span class="rl" id="dayTag">Day one</span>
+          </div>
+          <div class="verdict num neg" id="verdict">−8.6%</div>
+          <div class="verdict-cap" id="verdictCap">A solid beat, erased by a two percent trim to the outlook.</div>
+
+          <div class="bars">
+            <div class="bar-row">
+              <span class="bl">Revenue beat</span>
+              <span class="bar-track"><span class="bar-fill pos" id="barRev"></span></span>
+              <span class="bv num" id="valRev">+2.4</span>
+            </div>
+            <div class="bar-row">
+              <span class="bl">Guidance</span>
+              <span class="bar-track"><span class="bar-fill neg" id="barGuide"></span></span>
+              <span class="bv num" id="valGuide">−11.0</span>
+            </div>
+            <div class="bar-row">
+              <span class="bl">Re-rating</span>
+              <span class="bar-track"><span class="bar-fill pos" id="barMult"></span></span>
+              <span class="bv num" id="valMult">0.0</span>
+            </div>
+          </div>
+
+          <div class="takeaway" id="takeaway">Guidance is weighted far more heavily than the quarter itself. That's the entire trick — and it's why "beat and fell" headlines aren't a contradiction.</div>
+
+          <p class="sim-disclaimer">This is a teaching model, not a forecast. Real reactions depend on positioning, sector, rates and what management said on the call. The weightings here are illustrative and deliberately simple — the point is the relative size of the levers, not a number to trade on.</p>
+        </div>
+      </div>
     </div>
-    <div class="filters" id="filters"></div>
-    <div class="grid" id="storyGrid"></div>
   </section>
 
-  <!-- INSIDE AN ISSUE -->
-  <section class="section reveal" id="issue">
-    <div class="issue-wrap">
-      <div class="issue-copy">
-        <div class="eyebrow" style="margin-bottom:22px;">Inside an issue</div>
-        <p class="lede">Every issue answers one question in plain English — in about the time it takes to make coffee.</p>
-        <p>Same shape every time, so it's easy to read fast: one big story, three numbers that matter, one idea to keep. That's the whole formula.</p>
-        <p style="margin-top:26px;"><button class="btn btn-solid" onclick="document.getElementById('join').scrollIntoView()">Get issues like this</button></p>
+  <!-- ================= INLINE SUBSCRIBE STRIP ================= -->
+  <div class="strip">
+    <div class="wrap strip-in">
+      <p class="st">Every issue takes one of these and does it properly. <em>Once a week.</em></p>
+      <a class="btn btn-solid" href="#subscribe">Subscribe free</a>
+    </div>
+  </div>
+
+  <!-- ================= LATEST ================= -->
+  <div class="wrap">
+    <section id="latest" class="reveal" style="border-top:none">
+      <div class="sec-head">
+        <div>
+          <span class="label quiet">Most recent</span>
+          <h2>The Column</h2>
+        </div>
+        <span class="note" id="feedNote">Updated weekly</span>
       </div>
-      <div class="issue-card" aria-label="Example newsletter issue">
-        <div class="stamp">Preview</div>
-        <div class="masthead" id="issueMasthead">FATHOM DISPATCH</div>
-        <div class="isodate">Issue № 042 · Tuesday morning</div>
-        <h4>Why your grocery bill ignores the inflation report</h4>
-        <div class="sec"><div class="k">The big one</div><p>The headline number says prices cooled. Your receipt says otherwise. Here's the gap between the basket they measure and the basket you actually buy.</p></div>
-        <div class="sec"><div class="k">Three numbers</div><p>3.1% — official CPI. 8.4% — eggs, year on year. $0 — how much of that is your fault.</p></div>
-        <div class="sec"><div class="k">One idea to keep</div><p>"Inflation" is an average. Averages hide the stuff you buy weekly and flatter the stuff you buy never.</p></div>
-        <div class="foot"><span>6 min read</span><span>fathom.money</span></div>
+      <div id="storyArea"></div>
+    </section>
+  </div>
+
+  <!-- ================= INSIDE AN ISSUE ================= -->
+  <div class="wrap">
+    <section id="issue" class="reveal">
+      <div class="sec-head">
+        <div>
+          <span class="label quiet">The format</span>
+          <h2>Inside an issue</h2>
+        </div>
+        <span class="note">Five minutes, give or take</span>
       </div>
+      <div class="issue-grid">
+        <div class="issue-copy">
+          <p class="lede">Every issue is the same shape, so you learn to read it fast.</p>
+          <p>One thing happened this week that actually mattered. Not the loudest thing — the one that changes a number somewhere. We find it, work out why it moved, and hand it to you in the time it takes your coffee to go cold.</p>
+          <ul class="anatomy">
+            <li><span class="k">1</span><span class="v"><b>The move.</b> What happened, in one paragraph, without the drama.</span></li>
+            <li><span class="k">2</span><span class="v"><b>The number.</b> The one figure that explains it — and where it came from.</span></li>
+            <li><span class="k">3</span><span class="v"><b>The read.</b> What it means, what it doesn't mean, and who's pretending otherwise.</span></li>
+            <li><span class="k">4</span><span class="v"><b>Worth keeping.</b> One idea you can use again next month.</span></li>
+          </ul>
+        </div>
+        <div class="specimen" aria-label="Sample issue layout">
+          <div class="sp-top">
+            <span class="sp-name" id="spName">Terminal Value</span>
+            <span class="sp-no">Issue № 001</span>
+          </div>
+          <h4>The quarter was fine. The guidance was the story.</h4>
+          <div class="sp-sec"><div class="sp-k">The move</div><p>Revenue beat. The stock fell nine percent anyway. That gap between "good quarter" and "bad day" is where most of the actual information lives.</p></div>
+          <div class="sp-sec"><div class="sp-k">The number</div><p>Next quarter's guide came in two percent under consensus. Two percent. That was the entire nine.</p></div>
+          <div class="sp-sec"><div class="sp-k">Worth keeping</div><p>Markets don't price what happened. They price the revision to what they expected to happen.</p></div>
+          <div class="sp-foot"><span>5 min read</span><span id="spDomain">terminalvalue.com</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= ABOUT ================= -->
+  <div class="wrap">
+    <section id="about" class="reveal">
+      <div class="sec-head">
+        <div>
+          <span class="label quiet">Why this exists</span>
+          <h2>About</h2>
+        </div>
+      </div>
+      <div class="about-grid">
+        <div>
+          <p class="lede">Terminal value is what a business is worth after the forecast runs out — <b>the part that's left when the noise stops.</b></p>
+          <p>That's the job here. Markets generate an enormous amount of noise every single day, almost none of which survives contact with the following Tuesday. This column ignores nearly all of it and writes about the small number of things that will still matter in a year.</p>
+          <p>No predictions. No tickers to buy. No breathless thread about a company we'd never heard of last week. Just one thing that moved, explained properly, by someone doing the reading so you don't have to.</p>
+          <p>It's written for the person who already knows what a bond is, follows the market on and off, and is quietly tired of choosing between coverage that assumes you know nothing and coverage that assumes you do this for a living.</p>
+        </div>
+        <dl class="colophon">
+          <dt>Published</dt><dd>Weekly, by email and here.</dd>
+          <dt>Length</dt><dd>About 500 words. Roughly five minutes.</dd>
+          <dt>Coverage</dt><dd>Global markets, macro, large-cap technology, and the occasional filing nobody else read.</dd>
+          <dt>Byline</dt><dd>Written anonymously, for now. The work should be worth reading before the name is.</dd>
+          <dt>Corrections</dt><dd>Issued in the following week's edition, in full, at the top.</dd>
+          <dt>Contact</dt><dd><a href="#" id="aboutMail" style="color:var(--accent);font-weight:500">—</a></dd>
+        </dl>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= SUBSCRIBE ================= -->
+  <section id="subscribe" class="subscribe">
+    <div class="wrap">
+      <span class="label">The list</span>
+      <h2>One issue a week. <em>That's it.</em></h2>
+      <p class="deck">Free. No welcome sequence, no "quick favour," no seven-part onboarding course. One email, one week, one idea worth keeping.</p>
+      <div class="embed-slot" id="embedSlot"></div>
+      <p class="sub-note" id="subNote">Unsubscribe any time — the link's at the bottom of every issue.</p>
     </div>
   </section>
 
-  <!-- DECODER -->
-  <section class="section reveal" id="decoder">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow" style="margin-bottom:12px;">Jargon, translated</div>
-        <h2>The Decoder</h2>
-      </div>
-    </div>
-    <div class="decoder-grid" id="decoderGrid"></div>
-  </section>
-
-  <!-- MISSION -->
-  <section class="section reveal" id="mission">
-    <div class="mission">
-      <div>
-        <div class="eyebrow" style="margin-bottom:22px;">Why we exist</div>
-        <p class="lede">Finance runs the world, yet it's written in a language <b>almost no one is taught.</b> We translate it — clearly, honestly, without the jargon tax.</p>
-        <p id="aboutText">Every week we take one thing that actually moved the economy — a rate decision, an earnings miss, a number in your grocery bill — and explain what it means for a real person. No hot takes. No hype. Just the throughline, in words you can use.</p>
-      </div>
-      <div class="stats">
-        <div class="stat"><div class="n num">2×</div><div class="l">Newsletters / week</div></div>
-        <div class="stat"><div class="n num">6&nbsp;min</div><div class="l">Average read</div></div>
-        <div class="stat"><div class="n num">0</div><div class="l">Jargon, unexplained</div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SUBSCRIBE -->
-  <section class="section subscribe reveal" id="join">
-    <div class="eyebrow" style="margin-bottom:20px;">Join the readers</div>
-    <h2>Get the <em>plain-English</em> finance brief.</h2>
-    <p>Twice a week. Free. Unsubscribe anytime.</p>
-    <div class="form">
-      <input id="email" type="email" placeholder="you@email.com" aria-label="Your email address" />
-      <button class="btn btn-solid" onclick="subscribe()">Subscribe</button>
-    </div>
-    <div class="form-note" id="formNote">Delivered to your inbox — no spam, ever.</div>
-  </section>
-
+  <!-- ================= FOOTER ================= -->
   <footer>
-    <div class="foot-grid">
-      <div>
-        <div class="fb" id="footBrandName">FATHOM</div>
-        <p id="footBlurb">Finance, made legible. Independent journalism for people who were never handed the glossary.</p>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div>
+          <div class="foot-brand" id="footBrand">Terminal Value</div>
+          <p id="footBlurb">Independent financial journalism. What it's worth when the noise stops.</p>
+        </div>
+        <div>
+          <h5>Read</h5>
+          <a href="#latest">The Column</a>
+          <a href="#simulator">The Simulator</a>
+          <a href="#issue">Inside an Issue</a>
+          <a href="#about">About</a>
+        </div>
+        <div>
+          <h5>Elsewhere</h5>
+          <a href="#subscribe">Subscribe</a>
+          <a href="#" id="footMail">Contact</a>
+          <a href="#" id="footArchive">Archive</a>
+        </div>
       </div>
-      <div>
-        <h5>Explore</h5>
-        <a href="#latest">The Latest</a>
-        <a href="#issue">Inside an issue</a>
-        <a href="#decoder">The Decoder</a>
-        <a href="#mission">Mission</a>
+      <div class="foot-base">
+        <span id="footCopy">© 2026 Terminal Value</span>
+        <span>Written and edited independently.</span>
       </div>
-      <div>
-        <h5>Connect</h5>
-        <a href="#join">Subscribe</a>
-        <a href="mailto:hello@example.com" id="footMail">hello@example.com</a>
-        <a href="#" onclick="return false;">Twitter / X</a>
-        <a href="#" onclick="return false;">LinkedIn</a>
-      </div>
-    </div>
-    <div class="foot-base">
-      <div id="footBrand">© 2026 FATHOM — Finance, made legible.</div>
-      <button class="studio-link" onclick="openGate()">✦ Studio</button>
     </div>
   </footer>
 </div>
 
-<!-- ================= ADMIN-ONLY, BELOW THIS LINE ================= -->
-
-<div class="admin-gate" id="adminGate">
-  <div class="gate-card">
-    <div class="eyebrow" style="color:var(--accent-2);margin-bottom:14px;">✦ Private access</div>
-    <h3>Studio sign-in</h3>
-    <p>The control room for <b id="gateBrand">FATHOM</b>. Public visitors never see this.</p>
-    <input id="adminPassInput" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')tryLogin()" autocomplete="current-password" />
-    <button class="gate-enter" onclick="tryLogin()">Enter Studio</button>
-    <div class="gate-note" id="gateNote"></div>
-    <button class="gate-cancel" onclick="closeGate()">← Back to site</button>
-  </div>
-</div>
-
-<div class="studio" id="studioPanel">
-  <div class="studio-top">
-    <div class="t">Studio <span>Admin · AI assistant</span></div>
-    <span class="status-pill" id="aiStatus">…</span>
-    <button class="studio-close" onclick="lockStudio()" aria-label="Lock and exit">×</button>
-  </div>
-  <div class="studio-log" id="studioLog"></div>
-  <div class="chips" id="studioChips"></div>
-  <div class="studio-input">
-    <input id="studioText" placeholder="Edit the site, ask anything…" onkeydown="if(event.key==='Enter')sendStudio()" />
-    <button onclick="sendStudio()" aria-label="Send">↑</button>
-  </div>
-</div>
-
 <script>
 /* ============================================================================
-   ===== 1) CONFIG — the only block you need to edit ==========================
+   ==================  EDIT ME — the only block you need  =====================
    ============================================================================ */
 const CONFIG = {
-  brand:    "FATHOM",
-  tagline:  "Finance, made legible",
-  eyebrow:  "Independent finance journalism · Est. 2026",
-  headline: "Understand the money story <em>before</em> it moves the world.",
-  sub:      "Plain-English newsletters and insight on markets, macro, and your own wallet — written for the people who were never handed the glossary.",
-  about:    "Every week we take one thing that actually moved the economy — a rate decision, an earnings miss, a number in your grocery bill — and explain what it means for a real person. No hot takes. No hype. Just the throughline, in words you can use.",
-  accent:   "#E8B14C",
-  accent2:  "#56D3A3",
-  contact:  "hello@example.com",   // shown in the footer
+  brand:    "Terminal Value",
+  tagline:  "What it's worth when the noise stops",
+  domain:   "terminalvalue.com",
+  contact:  "hello@terminalvalue.com",     // ← your real new email
 
-  /* ---- ADMIN LOGIN ----
-     The password itself is NOT here. This is its SHA-256 fingerprint (a
-     one-way scramble). When someone types a password, the page scrambles what
-     they typed and compares scrambles — so reading this file never reveals
-     the password. To set a NEW password: log in, ask the chatbot
-     "make a hash for MyNewPassword" and paste the result here.             */
-  adminPassHash: "dbc5d9d1b00afac1389ed99d434faac26c8375e21fc58021a401aaaf5eff867e",
+  /* Your Substack. Leave "" until it exists.
+     Example: "https://terminalvalue.substack.com"
+     Filling this in turns on BOTH the live post feed and the real subscribe box. */
+  substack: "",
 
-  /* ---- REAL AI CONNECTION (optional, for the deployed site) ----
-     Paste your Cloudflare Worker URL here after you set up
-     claude-proxy-worker.js (free, ~10 min). Until then, the chatbot uses its
-     built-in Local Brain everywhere outside Claude.ai.                     */
-  AI_PROXY_URL: ""     // e.g. "https://fathom-ai.yourname.workers.dev"
+  /* Live tape at the very top. Real data only — if the fetch fails the tape
+     hides itself rather than showing invented numbers. Set to false to remove. */
+  showTape: true
 };
+/* ========================================================================== */
 
-/* ---- 2) LIVE NEWSLETTER FEEDS — paste RSS links, one per line ---- */
-const RSS_FEEDS = [
-  // "https://yourname.substack.com/feed",
-];
 
-/* ---- 3) BACKUP STORIES (shown until a live feed is set) ---- */
-const SAMPLE_STORIES = [
-  { tag:"Explainer", title:"The Fed Held Rates. Here's What That Actually Means for Your Rent.", summary:"Everyone says “the Fed paused.” We skip the drama and show the two ways it lands in your actual monthly budget — and the one way it doesn't.", time:"2h ago", read:"6 min" },
-  { tag:"Markets",   title:"ETFs, Explained Without the Jargon", summary:"It's a basket. That's basically it. But the details are where beginners lose money — so here's the plain version.", time:"1d ago", read:"5 min" },
-  { tag:"Macro",     title:"Why Everyone's Suddenly Talking About the Yield Curve", summary:"A line on a chart that has predicted almost every recession. What it is, and why it's making headlines again.", time:"2d ago", read:"7 min" },
-  { tag:"Your Money",title:"Compound Interest: The Closest Thing to Free Money", summary:"The single idea that separates people who build wealth from people who don't — with a calculator you'll actually use.", time:"3d ago", read:"4 min" },
-  { tag:"Explainer", title:"How to Read an Earnings Report in Five Minutes", summary:"Three numbers matter. The rest is noise. A field guide to skimming any company's results like a pro.", time:"4d ago", read:"6 min" },
-  { tag:"Macro",     title:"Inflation vs. Your Grocery Bill: A Field Guide", summary:"Why the official number never matches your receipt — and how to read what's really happening to prices.", time:"5d ago", read:"5 min" }
-];
+/* ---------- masthead ---------- */
+document.getElementById('dateline').textContent =
+  new Date().toLocaleDateString('en-US',{weekday:'long', month:'long', day:'numeric', year:'numeric'});
 
-/* ---- 4) TICKER (illustrative numbers — edit freely) ---- */
-const TICKER = [
-  ["S&P 500","5,431","+0.42%",1],["NASDAQ","17,689","+0.68%",1],["DOW","39,308","+0.19%",1],
-  ["10Y YIELD","4.19%","-0.03",0],["BTC","63,204","-1.10%",0],["GOLD","2,338","+0.30%",1],
-  ["EUR/USD","1.0841","+0.12%",1],["OIL WTI","78.90","+0.90%",1],["FTSE 100","8,241","+0.24%",1]
-];
+(function applyConfig(){
+  document.getElementById('wordmark').innerHTML = CONFIG.brand + '<span class="tv-dot">.</span>';
+  document.getElementById('taglineEl').textContent = CONFIG.tagline;
+  document.getElementById('spName').textContent = CONFIG.brand;
+  document.getElementById('spDomain').textContent = CONFIG.domain;
+  document.getElementById('footBrand').textContent = CONFIG.brand;
+  document.getElementById('footBlurb').textContent = 'Independent financial journalism. ' + CONFIG.tagline + '.';
+  document.getElementById('footCopy').textContent = '© ' + new Date().getFullYear() + ' ' + CONFIG.brand;
+  document.title = CONFIG.brand + ' — weekly financial journalism, 500 words';
 
-/* ---- 5) GLOSSARY — powers BOTH the public Decoder cards AND the chatbot ---- */
-const GLOSSARY = {
-  "etf":            {term:"ETF", def:"A basket of many investments (stocks, bonds) you buy in one go, and it trades like a single stock. Instant diversification without picking winners yourself."},
-  "bond":           {term:"Bond", def:"A loan you give to a government or company. They pay you steady interest, then return your money on an agreed date. Usually lower risk — and lower reward — than stocks."},
-  "yield curve":    {term:"Yield curve", def:"A chart of what lenders charge governments for short vs. long loans. When short-term costs more than long-term (an 'inversion'), markets read it as a recession warning."},
-  "compound interest":{term:"Compound interest", def:"Interest that earns interest. Money grows slowly at first, then snowballs — which is why starting early beats starting big."},
-  "index fund":     {term:"Index fund", def:"A fund that just copies a whole market list (like the S&P 500) instead of trying to beat it. Boring on purpose — and it outperforms most professionals over time."},
-  "inflation":      {term:"Inflation", def:"Prices rising over time, which quietly shrinks what your money buys. Measured by tracking a fixed 'basket' of goods — which may not match YOUR basket."},
-  "cpi":            {term:"CPI", def:"The Consumer Price Index — the official basket of goods used to measure inflation. When the news says 'inflation was 3.1%', they mean CPI."},
-  "diversification":{term:"Diversification", def:"Not putting all your eggs in one basket. Spreading money across many investments so one disaster can't sink you."},
-  "bull market":    {term:"Bull vs. bear", def:"Bull market = prices rising and optimism (a bull attacks upward). Bear market = prices down 20%+ and pessimism (a bear swipes down)."},
-  "bear market":    {term:"Bull vs. bear", def:"Bear market = prices down 20%+ from a peak, with pessimism. Bull market = the opposite: rising prices, rising confidence."},
-  "p/e ratio":      {term:"P/E ratio", def:"Price ÷ earnings: how many dollars you pay for $1 of a company's annual profit. High P/E = expensive hopes; low P/E = cheap, or cheap for a reason."},
-  "dollar-cost averaging":{term:"Dollar-cost averaging", def:"Investing a fixed amount on a schedule (say, monthly) no matter what the market does. You automatically buy more when it's cheap, less when it's pricey — and skip the panic."},
-  "dividend":       {term:"Dividend", def:"A slice of profit some companies pay shareholders in cash, usually quarterly. Income for owning, not selling."},
-  "market cap":     {term:"Market cap", def:"A company's sticker price: share price × number of shares. It's how we say Apple is 'worth' $3 trillion."},
-  "recession":      {term:"Recession", def:"When the whole economy shrinks for months — less buying, less hiring. Officially declared after the fact, which is why everyone argues about it in real time."},
-  "gdp":            {term:"GDP", def:"Gross Domestic Product — the total value of everything a country makes and does in a year. The economy's scoreboard."},
-  "liquidity":      {term:"Liquidity", def:"How fast something turns into cash without losing value. A savings account is liquid; a house is not."},
-  "volatility":     {term:"Volatility", def:"How wildly a price swings. High volatility = big ups AND downs. It's the fee you pay, in stress, for higher potential returns."},
-  "apr":            {term:"APR vs. APY", def:"APR is the yearly interest rate before compounding (what loans quote). APY includes compounding (what savings quote). APY is the honest number."},
-  "apy":            {term:"APR vs. APY", def:"APY is the yearly return including compounding — the honest number for savings. APR ignores compounding and is how loans are usually quoted."},
-  "emergency fund": {term:"Emergency fund", def:"3–6 months of living costs in boring, instant-access savings. It's the moat that keeps one bad month from becoming debt."},
-  "emergency":      {term:"Emergency fund", def:"3–6 months of living costs in boring, instant-access savings. It's the moat that keeps one bad month from becoming debt."},
-  "credit score":   {term:"Credit score", def:"A number (roughly 300–850) summarizing how reliably you repay. Pay on time and use little of your limit — that's ~65% of the whole game."},
-  "short selling":  {term:"Short selling", def:"Betting a price will FALL: borrow shares, sell them, buy back cheaper later, keep the difference. Profitable when right; theoretically unlimited losses when wrong."},
-  "ipo":            {term:"IPO", def:"Initial Public Offering — a private company selling shares to the public for the first time. Day one is famous for hype; year one for reality."},
-  "hedge":          {term:"Hedge", def:"An investment made to offset losses in another — insurance, basically. You give up some upside to cap the downside."},
-  "stock":          {term:"Stock", def:"A tiny slice of ownership in a company. If the company grows, your slice is worth more; some also pay you dividends along the way."},
-  "treasury":       {term:"Treasuries", def:"Loans to the U.S. government — T-bills (short), notes (medium), bonds (long). The world treats them as the safest IOU on Earth, so their rates anchor everything else."}
-};
-/* the 9 shown on the public Decoder section: */
-const DECODER_PICKS = ["etf","bond","yield curve","compound interest","index fund","inflation","diversification","p/e ratio","dollar-cost averaging"];
+  const mail = 'mailto:' + CONFIG.contact;
+  const am = document.getElementById('aboutMail'); am.textContent = CONFIG.contact; am.href = mail;
+  const fm = document.getElementById('footMail');  fm.textContent = 'Email'; fm.href = mail;
+
+  const arch = document.getElementById('footArchive');
+  if(CONFIG.substack){ arch.href = CONFIG.substack.replace(/\/$/,'') + '/archive'; arch.target='_blank'; arch.rel='noopener'; }
+  else { arch.style.display = 'none'; }
+})();
+
 
 /* ============================================================================
-   ===== 2) ENGINE — readable, but you never NEED to touch it =================
+   THE SIMULATOR
+   A deliberately simple teaching model. Weights are illustrative and chosen to
+   show the RELATIVE size of each lever — guidance dominates. Not a forecast.
    ============================================================================ */
+const W = { rev: 0.8, guide: 5.5, mult: 1.0 };   // sensitivity weights
 
-/* ---- safe storage: works when deployed; silently skips if the browser blocks it ---- */
-const store = {
-  get(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } },
-  set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
-  del(k){ try{ localStorage.removeItem(k); }catch(e){} },
-  sGet(k){ try{ return sessionStorage.getItem(k); }catch(e){ return null; } },
-  sSet(k,v){ try{ sessionStorage.setItem(k,v); }catch(e){} },
-  sDel(k){ try{ sessionStorage.removeItem(k); }catch(e){} }
-};
+const el = id => document.getElementById(id);
+const fmt = n => (n > 0 ? '+' : n < 0 ? '−' : '') + Math.abs(n).toFixed(1);
 
-/* ---- site state: CONFIG defaults + any saved admin edits ---- */
-let SITE = Object.assign({
-  brand:CONFIG.brand, tagline:CONFIG.tagline, headline:CONFIG.headline, sub:CONFIG.sub,
-  about:CONFIG.about, accent:CONFIG.accent, accent2:CONFIG.accent2, customStories:[]
-}, store.get('fathom_site') || {});
-function saveSite(){ store.set('fathom_site', SITE); }
+function runSim(){
+  const rev   = parseFloat(el('rev').value);
+  const guide = parseFloat(el('guide').value);
+  const mult  = parseFloat(el('mult').value);
 
-function boot(){
-  document.documentElement.style.setProperty('--accent', SITE.accent);
-  document.documentElement.style.setProperty('--accent-2', SITE.accent2);
-  brandName.textContent = SITE.brand;  brandTag.textContent = SITE.tagline;
-  heroEyebrow.textContent = CONFIG.eyebrow;
-  heroHeadline.innerHTML = SITE.headline;  heroSub.textContent = SITE.sub;
-  aboutText.textContent = SITE.about;
-  gateBrand.textContent = SITE.brand;
-  footBrandName.textContent = SITE.brand;
-  footBlurb.textContent = SITE.tagline + ". Independent journalism for people who were never handed the glossary.";
-  footMail.textContent = CONFIG.contact; footMail.href = "mailto:"+CONFIG.contact;
-  footBrand.textContent = `© 2026 ${SITE.brand} — ${SITE.tagline}.`;
-  issueMasthead.textContent = SITE.brand + " DISPATCH";
-  document.title = `${SITE.brand} — ${SITE.tagline}`;
-}
+  el('revOut').textContent   = fmt(rev)   + '%';
+  el('guideOut').textContent = fmt(guide) + '%';
+  el('multOut').textContent  = fmt(mult)  + '%';
 
-/* ---- ticker ---- */
-function renderTicker(){
-  const one = TICKER.map(([n,v,c,up])=>`<span class="tk">${n} <b class="num">${v}</b> <em class="${up==1?'up':'down'}">${c}</em></span>`).join('');
-  ticker.innerHTML = one + one;
-}
+  const cRev = rev * W.rev, cGuide = guide * W.guide, cMult = mult * W.mult;
+  const total = cRev + cGuide + cMult;
 
-/* ---- stories: featured lead + filterable grid ---- */
-let STORIES = [];            // current full list (custom + feed/sample)
-let activeTag = 'All';
+  const v = el('verdict');
+  v.textContent = fmt(total) + '%';
+  v.className = 'verdict num ' + (total >= 0 ? 'pos' : 'neg');
 
-function storyCard(s, featured){
-  const link = s.link ? `<a href="${s.link}" target="_blank" rel="noopener">Read →</a>` : `<span>Read →</span>`;
-  if(featured){
-    return `<article class="card feature" data-tag="${escapeHtml(s.tag||'Story')}">
-      <div class="f-side"><span class="tag">Featured · ${escapeHtml(s.tag||'Story')}</span>
-      <h3>${escapeHtml(s.title)}</h3><p>${escapeHtml(s.summary||'')}</p>
-      <div class="meta"><span>${s.time||''} · ${s.read||'5 min'}</span>${link}</div></div>
-    </article>`;
+  const MAX = 44;   // scale for the bars
+  [['barRev','valRev',cRev],['barGuide','valGuide',cGuide],['barMult','valMult',cMult]].forEach(([bar,val,c])=>{
+    const w = Math.min(Math.abs(c) / MAX * 50, 50);
+    const b = el(bar);
+    b.className = 'bar-fill ' + (c >= 0 ? 'pos' : 'neg');
+    b.style.width = w + '%';
+    b.style.left  = (c >= 0 ? 50 : 50 - w) + '%';
+    el(val).textContent = fmt(c);
+  });
+
+  /* plain-English read of what the dials are saying */
+  const cap = el('verdictCap'), take = el('takeaway');
+  const beat = rev > 0.4, miss = rev < -0.4, cut = guide < -0.4, raise = guide > 0.4;
+
+  if(beat && cut){
+    cap.textContent = 'A solid beat, erased by a ' + Math.abs(guide).toFixed(1) + ' percent trim to the outlook.';
+    take.textContent = 'This is the case that confuses everyone. The quarter was good; the forecast got worse. Markets pay for the second one.';
+  } else if(miss && raise){
+    cap.textContent = 'A weak quarter, forgiven because the outlook went up.';
+    take.textContent = 'The mirror image, and just as common. A bad three months matters far less than a better-looking next twelve.';
+  } else if(beat && raise){
+    cap.textContent = 'Beat and raised. The rare clean one.';
+    take.textContent = 'When both dials point the same way there is nothing to explain — which is exactly why these quarters make dull reading.';
+  } else if(miss && cut){
+    cap.textContent = 'Missed, then guided lower. No ambiguity here.';
+    take.textContent = 'Both levers pulling down. The only question left is whether the multiple falls too — and it usually does.';
+  } else if(Math.abs(mult) > 5){
+    cap.textContent = 'The results barely moved. The mood did.';
+    take.textContent = 'Sometimes nothing about the business changed at all and the price still moved — that is the multiple, which is really just sentiment with a number attached.';
+  } else {
+    cap.textContent = 'Roughly in line. The market shrugs.';
+    take.textContent = 'In-line quarters are the majority and they rarely make headlines, which tells you something about what headlines select for.';
   }
-  return `<article class="card" data-tag="${escapeHtml(s.tag||'Story')}">
-    <span class="tag">${escapeHtml(s.tag||'Story')}</span>
-    <h3>${escapeHtml(s.title)}</h3><p>${escapeHtml(s.summary||'')}</p>
-    <div class="meta"><span>${s.time||''} · ${s.read||'5 min'}</span>${link}</div>
-  </article>`;
 }
-function renderStories(){
-  const list = STORIES.filter(s=>activeTag==='All' || (s.tag||'Story')===activeTag);
-  storyGrid.innerHTML = list.map((s,i)=>storyCard(s, i===0 && activeTag==='All')).join('');
-  renderFilters();
-}
-function renderFilters(){
-  const tags = ['All', ...new Set(STORIES.map(s=>s.tag||'Story'))];
-  filters.innerHTML = tags.map(t=>`<button class="fchip ${t===activeTag?'on':''}" onclick="setFilter('${t.replace(/'/g,"\\'")}')">${t}</button>`).join('');
-}
-function setFilter(t){ activeTag=t; renderStories(); }
 
-function setStories(list){ STORIES = [...SITE.customStories, ...list]; renderStories(); }
+function resetSim(){
+  el('rev').value = 3; el('guide').value = -2; el('mult').value = 0;
+  runSim();
+}
+['rev','guide','mult'].forEach(id => el(id).addEventListener('input', runSim));
+runSim();
 
-/* ---- live RSS (with graceful fallback to samples) ---- */
-async function loadFeeds(){
-  if(!RSS_FEEDS.length) return;
+
+/* ============================================================================
+   LIVE TAPE — real rates only, no invented numbers.
+   Sources: exchangerate.host (FX) and CoinGecko (crypto). Both free, no key.
+   If either fails, that group is skipped. If everything fails, the tape hides.
+   ============================================================================ */
+async function loadTape(){
+  if(!CONFIG.showTape) return;
+  const items = [];
+
+  /* crypto, with real 24h change */
   try{
-    const all = [];
-    for(const url of RSS_FEEDS){
-      const api = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(url);
-      const r = await fetch(api); const d = await r.json();
-      if(d.status==='ok' && d.items){
-        d.items.forEach(it=>all.push({
-          tag:(it.categories&&it.categories[0])||d.feed.title||'Latest',
-          title:it.title,
-          summary:stripHtml(it.description||it.content||'').slice(0,150)+'…',
-          time:timeAgo(new Date(it.pubDate)), read:estRead(it.content||it.description||''),
-          link:it.link, _date:new Date(it.pubDate)
-        }));
-      }
-    }
-    if(all.length){ all.sort((a,b)=>b._date-a._date); setStories(all.slice(0,9)); }
-  }catch(e){ console.log('Feed fallback:', e); }
-}
-
-/* ---- decoder (public glossary cards) ---- */
-function renderDecoder(){
-  decoderGrid.innerHTML = DECODER_PICKS.map(k=>{
-    const g = GLOSSARY[k];
-    return `<button class="d-card" onclick="this.classList.toggle('open')" aria-expanded="false">
-      <span class="d-term"><span>${g.term}</span><span>+</span></span>
-      <span class="d-def">${g.def}</span></button>`;
-  }).join('');
-}
-
-/* ---- helpers ---- */
-function stripHtml(h){ const d=document.createElement('div'); d.innerHTML=h; return (d.textContent||'').trim(); }
-function escapeHtml(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-function estRead(t){ const w=stripHtml(t).split(/\s+/).length; return Math.max(2,Math.round(w/200))+' min'; }
-function timeAgo(d){ const s=(Date.now()-d)/1000; if(s<3600)return Math.round(s/60)+'m ago';
-  if(s<86400)return Math.round(s/3600)+'h ago'; return Math.round(s/86400)+'d ago'; }
-function subscribe(){
-  const v=email.value.trim();
-  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ formNote.textContent="Please enter a valid email address."; formNote.style.color="var(--rose)"; return; }
-  email.value=''; formNote.style.color="var(--accent-2)";
-  formNote.textContent="You're on the list ✓  (Demo — connect an email service to go live.)";
-}
-
-/* ============================================================
-   PASSWORD HASHING — SHA-256, two ways:
-   1) crypto.subtle (built into modern browsers on https)
-   2) a tiny pure-JS fallback (constants generated from prime
-      numbers, the official SHA-256 method) for odd contexts
-   ============================================================ */
-async function hashText(str){
-  try{
-    if(crypto && crypto.subtle){
-      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-      return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
-    }
-  }catch(e){}
-  return sha256sync(str);
-}
-function sha256sync(ascii){
-  const rr=(v,a)=>(v>>>a)|(v<<(32-a));
-  const mathPow=Math.pow, maxWord=mathPow(2,32);
-  let result='', words=[], asciiBitLength=ascii.length*8;
-  let hash=sha256sync.h=sha256sync.h||[], k=sha256sync.k=sha256sync.k||[];
-  let primeCounter=k.length;
-  const isComposite={};
-  for(let candidate=2; primeCounter<64; candidate++){
-    if(!isComposite[candidate]){
-      for(let i=0;i<313;i+=candidate) isComposite[i]=candidate;
-      hash[primeCounter]=(mathPow(candidate,.5)*maxWord)|0;
-      k[primeCounter++]=(mathPow(candidate,1/3)*maxWord)|0;
-    }
-  }
-  ascii+='\x80';
-  while(ascii.length%64-56) ascii+='\x00';
-  for(let i=0;i<ascii.length;i++){
-    const j=ascii.charCodeAt(i);
-    if(j>>8) return '';                      // non-ASCII → let crypto.subtle handle it
-    words[i>>2]|=j<<((3-i)%4)*8;
-  }
-  words[words.length]=(asciiBitLength/maxWord)|0;
-  words[words.length]=asciiBitLength;
-  for(let j=0;j<words.length;){
-    const w=words.slice(j,j+=16), oldHash=hash.slice(0,8);
-    hash=hash.slice(0,8);
-    for(let i=0;i<64;i++){
-      const w15=w[i-15],w2=w[i-2];
-      const a=hash[0],e=hash[4];
-      const temp1=hash[7]
-        +(rr(e,6)^rr(e,11)^rr(e,25))
-        +((e&hash[5])^((~e)&hash[6]))
-        +k[i]
-        +(w[i]=(i<16)?w[i]:(w[i-16]+(rr(w15,7)^rr(w15,18)^(w15>>>3))+w[i-7]+(rr(w2,17)^rr(w2,19)^(w2>>>10)))|0);
-      const temp2=(rr(a,2)^rr(a,13)^rr(a,22))+((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
-      hash=[(temp1+temp2)|0].concat(hash);
-      hash[4]=(hash[4]+temp1)|0;
-    }
-    for(let i=0;i<8;i++) hash[i]=(hash[i]+oldHash[i])|0;
-  }
-  for(let i=0;i<8;i++)
-    for(let j=3;j+1;j--){
-      const b=(hash[i]>>(j*8))&255;
-      result+=((b<16)?0:'')+b.toString(16);
-    }
-  return result;
-}
-
-/* ============================================================
-   ADMIN GATE — three ways in:
-   footer "✦ Studio" link · yoursite.com/#admin · Ctrl/Cmd+Shift+A
-   ============================================================ */
-let unlocked = false;
-let sessionToken = null;   // the typed password, kept only in memory + this tab's session
-function openGate(){ if(unlocked){ enterAdmin(); return; } adminGate.classList.add('show'); setTimeout(()=>adminPassInput.focus(),300); }
-function closeGate(){
-  adminGate.classList.remove('show'); adminPassInput.value=''; gateNote.textContent='';
-  if(location.hash==='#admin') history.replaceState(null,'',location.pathname+location.search);
-}
-async function tryLogin(){
-  const typed = adminPassInput.value;
-  const h = await hashText(typed);
-  if(h === CONFIG.adminPassHash){
-    sessionToken = typed; store.sSet('fathom_tok', typed);
-    adminGate.classList.remove('show'); adminPassInput.value=''; gateNote.textContent='';
-    enterAdmin();
-  }else{
-    gateNote.textContent='Incorrect password.';
-    const c=document.querySelector('.gate-card'); c.classList.add('shake'); setTimeout(()=>c.classList.remove('shake'),400);
-  }
-}
-function enterAdmin(){
-  unlocked = true;
-  document.body.classList.add('admin'); adminBanner.classList.add('show');
-  openStudio();
-}
-function lockStudio(){
-  closeStudio(); unlocked=false; sessionToken=null; store.sDel('fathom_tok');
-  document.body.classList.remove('admin'); adminBanner.classList.remove('show');
-  if(location.hash==='#admin') history.replaceState(null,'',location.pathname+location.search);
-}
-/* restore session on refresh (this tab only) */
-(async ()=>{
-  const t = store.sGet('fathom_tok');
-  if(t && await hashText(t)===CONFIG.adminPassHash){ sessionToken=t; enterAdmin(); }
-})();
-if(location.hash==='#admin') setTimeout(openGate, 300);
-window.addEventListener('hashchange', ()=>{ if(location.hash==='#admin' && !unlocked) openGate(); });
-window.addEventListener('keydown', e=>{
-  if((e.ctrlKey||e.metaKey)&&e.shiftKey&&(e.key==='a'||e.key==='A')){ e.preventDefault(); openGate(); }
-});
-
-/* ============================================================
-   THE AI — three tiers, auto-detected:
-   Tier 1: your proxy (CONFIG.AI_PROXY_URL) → real Claude, deployed
-   Tier 2: inside Claude.ai preview        → real Claude, no setup
-   Tier 3: Local Brain                     → built-in, works anywhere
-   ============================================================ */
-let aiMode = 'probing';    // 'proxy' | 'direct' | 'local'
-let convo = [];
-
-const SITE_HELP = `SITE FACTS (for answering the owner's questions):
-- Log in to Studio: footer "✦ Studio" link, OR add #admin to the URL, OR Ctrl/Cmd+Shift+A. Then the password.
-- Change password: ask the Studio "make a hash for NEWPASSWORD", then paste the printed hash into CONFIG.adminPassHash in the site file, replacing the old one. The password itself is never stored in the file.
-- Add/replace newsletter feeds: open the site file, find RSS_FEEDS near the top of the <script>, paste feed URLs like "https://name.substack.com/feed" inside the brackets, separated by commas.
-- Change brand/headline/colours permanently for ALL visitors: edit CONFIG at the top of the <script>. Changes made via this chat save only in THIS browser (localStorage) — visitors see CONFIG values until a backend/CMS exists.
-- Say "reset the site" in chat to clear saved local edits.
-- Ticker numbers are illustrative placeholders, not live market data (live data needs a market-data API).
-- The Subscribe form is a demo; to collect real emails, embed a Substack/Buttondown/ConvertKit form.
-- Deploy: host the HTML free on Netlify Drop or Cloudflare Pages, then point the GoDaddy domain's DNS at it.
-- Real AI on the deployed site: deploy claude-proxy-worker.js to Cloudflare Workers (free), set ANTHROPIC_API_KEY and STUDIO_SECRET (=the admin password) as its secrets, paste the worker URL into CONFIG.AI_PROXY_URL.`;
-
-const SYSTEM_PROMPT = `You are "Studio", the private admin assistant built into "${CONFIG.brand}" (${CONFIG.tagline}), a plain-English finance journalism site. You talk to the site's owner/editor. Voice: warm, clear, jargon-free, concise.
-
-You can EDIT THE LIVE SITE. When asked for a change, reply ONLY with JSON (no markdown fences, no text outside it):
-{"reply":"<one short sentence>","actions":[...]}
-
-Allowed actions:
-{"type":"setHeadline","value":"<html; wrap ONE key word in <em></em>>"}
-{"type":"setSub","value":"<sentence>"}
-{"type":"setBrand","value":"<name>"}
-{"type":"setTagline","value":"<short tagline>"}
-{"type":"setAbout","value":"<paragraph>"}
-{"type":"setAccent","value":"<#hex>"}
-{"type":"setAccent2","value":"<#hex>"}
-{"type":"addStory","tag":"<category>","title":"<headline>","summary":"<1-2 sentences>","read":"<e.g. 5 min>"}
-{"type":"resetSite"}
-
-For anything that is NOT a site edit — finance questions, newsletter drafting, brainstorming, help using this site — return {"reply":"<your answer>","actions":[]}. Keep chat answers under ~150 words unless drafting content. When drafting a newsletter, give: 2 subject-line options, a hook, three short sections, one takeaway.
-
-${SITE_HELP}`;
-
-function setStatus(mode){
-  aiMode = mode;
-  const el = document.getElementById('aiStatus');
-  if(mode==='proxy' || mode==='direct'){ el.textContent='Claude · live'; el.className='status-pill live'; }
-  else { el.textContent='Local brain'; el.className='status-pill local'; }
-}
-
-function openStudio(){
-  studioPanel.classList.add('open');
-  if(convo.length===0){
-    addMsg('ai', `Hey! I'm Studio — your private assistant for ${SITE.brand}. I can:\n• edit the site ("make the accent emerald", "add a story about the Fed")\n• explain any finance term in plain English\n• draft newsletters and headlines\n• answer questions about how this site itself works\n\nWhat shall we do?`);
-    refreshChips();
-    probeAI();
-  }
-  setTimeout(()=>studioText.focus(),400);
-}
-function closeStudio(){ studioPanel.classList.remove('open'); }
-function refreshChips(){
-  renderChips(["Add a story about the Fed","Make the accent emerald","What's an ETF?","Draft a newsletter on inflation","How do I change my password?","Help"]);
-}
-function renderChips(list){ studioChips.innerHTML=list.map(c=>`<button class="chip" onclick="chip(this)">${c}</button>`).join(''); }
-function chip(el){ studioText.value=el.textContent; sendStudio(); }
-function addMsg(who,text){ const d=document.createElement('div'); d.className='msg '+who; d.textContent=text;
-  studioLog.appendChild(d); studioLog.scrollTop=studioLog.scrollHeight; return d; }
-function addReceipt(text){ const d=document.createElement('div'); d.className='receipt'; d.textContent='→ '+text;
-  studioLog.appendChild(d); studioLog.scrollTop=studioLog.scrollHeight; }
-function showTyping(){ const d=document.createElement('div'); d.className='typing'; d.id='typing';
-  d.innerHTML='<i></i><i></i><i></i>'; studioLog.appendChild(d); studioLog.scrollTop=studioLog.scrollHeight; }
-function hideTyping(){ const t=document.getElementById('typing'); if(t)t.remove(); }
-
-/* quick connectivity probe so the status pill is honest */
-async function probeAI(){
-  if(CONFIG.AI_PROXY_URL){ setStatus('proxy'); return; }   // trust it; falls back on first failure
-  try{
-    const r = await fetch("https://api.anthropic.com/v1/messages", {
-      method:"POST", headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1,messages:[{role:"user",content:"hi"}]})
-    });
+    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
     const d = await r.json();
-    if(d && d.content){ setStatus('direct'); return; }
-    throw 0;
-  }catch(e){ setStatus('local'); }
+    const add = (label, o) => {
+      if(!o || o.usd == null) return;
+      const ch = o.usd_24h_change;
+      const cls = ch >= 0 ? 'up' : 'down';
+      const sign = ch >= 0 ? '+' : '−';
+      items.push('<span class="tk">' + label + ' <b>$' +
+        Math.round(o.usd).toLocaleString('en-US') + '</b> <em class="' + cls + '">' +
+        sign + Math.abs(ch).toFixed(2) + '%</em></span>');
+    };
+    add('BTC', d.bitcoin); add('ETH', d.ethereum);
+  }catch(e){ /* skip crypto */ }
+
+  /* FX levels */
+  try{
+    const r = await fetch('https://api.exchangerate.host/latest?base=USD&symbols=EUR,GBP,JPY,INR');
+    const d = await r.json();
+    if(d && d.rates){
+      const pairs = [['EUR/USD', d.rates.EUR ? (1/d.rates.EUR).toFixed(4) : null],
+                     ['GBP/USD', d.rates.GBP ? (1/d.rates.GBP).toFixed(4) : null],
+                     ['USD/JPY', d.rates.JPY ? d.rates.JPY.toFixed(2) : null],
+                     ['USD/INR', d.rates.INR ? d.rates.INR.toFixed(2) : null]];
+      pairs.forEach(([k,v]) => { if(v) items.push('<span class="tk">' + k + ' <b>' + v + '</b></span>'); });
+    }
+  }catch(e){ /* skip fx */ }
+
+  if(!items.length) return;             // nothing real to show → tape stays hidden
+  const row = items.join('');
+  document.getElementById('tapeTrack').innerHTML = row + row;
+  document.getElementById('tape').classList.add('on');
+}
+loadTape();
+
+
+/* ============================================================================
+   THE COLUMN — pulls your latest posts from Substack via RSS
+   ============================================================================ */
+const storyArea = el('storyArea'), feedNote = el('feedNote');
+const esc = s => String(s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const stripHtml = h => { const d=document.createElement('div'); d.innerHTML=h||''; return (d.textContent||'').trim(); };
+function timeAgo(d){
+  const s=(Date.now()-d)/1000;
+  if(s<86400) return 'Today';
+  const days=Math.round(s/86400);
+  if(days<7) return days+' day'+(days>1?'s':'')+' ago';
+  const wk=Math.round(days/7);
+  if(wk<5) return wk+' week'+(wk>1?'s':'')+' ago';
+  return d.toLocaleDateString('en-US',{month:'short', day:'numeric'});
 }
 
-async function sendStudio(){
-  const text = studioText.value.trim(); if(!text) return;
-  studioText.value=''; studioChips.innerHTML='';
-  addMsg('you', text); showTyping();
-
-  /* "make a hash for X" is always handled locally & instantly (it's a site tool) */
-  const hm = text.match(/(?:make|generate|create).*hash (?:for|of)\s+(.+)/i);
-  if(hm){
-    const h = await hashText(hm[1].trim());
-    hideTyping();
-    addMsg('ai', `Fingerprint for that password:\n\n${h}\n\nOpen the site file, find CONFIG.adminPassHash, and replace the old value with this. If you use the AI proxy, also update its STUDIO_SECRET to the new password. Keep the password itself somewhere safe — it isn't stored anywhere in the site.`);
-    refreshChips(); return;
-  }
-
-  if(aiMode==='proxy' || aiMode==='direct' || aiMode==='probing'){
-    try{
-      convo.push({role:'user',content:text});
-      const trimmed = convo.slice(-12);
-      const payload = {model:"claude-sonnet-4-6",max_tokens:1200,system:SYSTEM_PROMPT,messages:trimmed};
-      let res;
-      if(CONFIG.AI_PROXY_URL){
-        res = await fetch(CONFIG.AI_PROXY_URL, {method:"POST",
-          headers:{"Content-Type":"application/json","Authorization":"Bearer "+(sessionToken||'')},
-          body:JSON.stringify(payload)});
-      }else{
-        res = await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
-          headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)});
-      }
-      const data = await res.json();
-      if(!data || !data.content) throw new Error('no content');
-      const raw = data.content.filter(b=>b.type==='text').map(b=>b.text).join('\n');
-      convo.push({role:'assistant',content:raw});
-      hideTyping(); handleAI(raw); refreshChips(); 
-      if(aiMode==='probing') setStatus(CONFIG.AI_PROXY_URL?'proxy':'direct');
-      return;
-    }catch(err){ setStatus('local'); console.log('AI → local brain:', err); }
-  }
-
-  hideTyping();
-  localBrain(text);
-  refreshChips();
+function renderAwaiting(){
+  feedNote.textContent = 'Issue № 001 in production';
+  storyArea.innerHTML =
+    '<div class="awaiting">' +
+      '<span class="label">Not yet published</span>' +
+      '<h3>The first issue is being written.</h3>' +
+      '<p>Rather than fill this page with placeholder headlines, it\'s staying empty until there\'s something real on it. ' +
+      'The first edition ships shortly — put your email below and it lands in your inbox that morning.</p>' +
+      '<a class="btn btn-solid" href="#subscribe">Get issue № 001</a>' +
+    '</div>';
 }
 
-function handleAI(raw){
-  let obj=null;
-  try{ obj=JSON.parse(raw.replace(/```json|```/g,'').trim()); }catch(e){}
-  if(obj && typeof obj==='object' && ('reply' in obj)){
-    addMsg('ai', obj.reply||'Done.');
-    if(Array.isArray(obj.actions)) obj.actions.forEach(applyAction);
-  }else{ addMsg('ai', raw||'Done.'); }
+function renderStories(items){
+  feedNote.textContent = 'Updated weekly';
+  storyArea.innerHTML = '<div class="stories">' + items.slice(0,3).map(s =>
+    '<article class="story">' +
+      '<div class="kicker">' + esc(s.kicker) + '</div>' +
+      '<h3><a href="' + esc(s.link) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a></h3>' +
+      '<p>' + esc(s.summary) + '</p>' +
+      '<div class="meta"><span>' + esc(s.time) + ' · ' + esc(s.read) + '</span>' +
+      '<a href="' + esc(s.link) + '" target="_blank" rel="noopener">Read →</a></div>' +
+    '</article>').join('') + '</div>';
 }
 
-/* ---- apply an action to the live page AND save it in this browser ---- */
-function applyAction(a){
-  switch(a.type){
-    case 'setAccent':   if(a.value){ SITE.accent=a.value; document.documentElement.style.setProperty('--accent',a.value);
-                          document.body.animate([{filter:'brightness(1.25)'},{filter:'brightness(1)'}],{duration:500});
-                          addReceipt('accent → '+a.value);} break;
-    case 'setAccent2':  if(a.value){ SITE.accent2=a.value; document.documentElement.style.setProperty('--accent-2',a.value);
-                          addReceipt('secondary → '+a.value);} break;
-    case 'setHeadline': if(a.value){ SITE.headline=a.value; heroHeadline.innerHTML=a.value; flash(heroHeadline); addReceipt('headline updated');} break;
-    case 'setSub':      if(a.value){ SITE.sub=a.value; heroSub.textContent=a.value; flash(heroSub); addReceipt('subheading updated');} break;
-    case 'setBrand':    if(a.value){ SITE.brand=a.value; boot(); flash(brandName); addReceipt('brand → '+a.value);} break;
-    case 'setTagline':  if(a.value){ SITE.tagline=a.value; boot(); flash(brandTag); addReceipt('tagline updated');} break;
-    case 'setAbout':    if(a.value){ SITE.about=a.value; aboutText.textContent=a.value; flash(aboutText); addReceipt('mission updated');} break;
-    case 'addStory':    { const s={tag:a.tag||'New',title:a.title||'Untitled',summary:a.summary||'',time:'just now',read:a.read||'5 min'};
-                          SITE.customStories.unshift(s); setStories(STORIES.filter(x=>!SITE.customStories.includes(x)));
-                          const first=storyGrid.querySelector('.card'); if(first) first.classList.add('fresh');
-                          document.getElementById('latest').scrollIntoView({behavior:'smooth',block:'center'});
-                          addReceipt('story added: '+s.title.slice(0,40)); } break;
-    case 'resetSite':   store.del('fathom_site'); location.reload(); return;
-  }
-  saveSite();
+async function loadColumn(){
+  if(!CONFIG.substack){ renderAwaiting(); return; }
+  try{
+    const feed = CONFIG.substack.replace(/\/$/,'') + '/feed';
+    const res  = await fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(feed));
+    const data = await res.json();
+    if(data.status !== 'ok' || !data.items || !data.items.length) throw new Error('no items');
+    renderStories(data.items.map(it => {
+      const text = stripHtml(it.content || it.description || '');
+      return {
+        kicker: (it.categories && it.categories[0]) || 'The Column',
+        title: it.title,
+        summary: text.slice(0,160).trim() + '…',
+        time: timeAgo(new Date(it.pubDate)),
+        read: Math.max(2, Math.round(text.split(/\s+/).length/200)) + ' min',
+        link: it.link
+      };
+    }));
+  }catch(err){ console.log('Feed unavailable:', err); renderAwaiting(); }
 }
-function flash(el){ el.animate([{opacity:.2,filter:'blur(3px)'},{opacity:1,filter:'blur(0)'}],{duration:450}); }
+loadColumn();
 
-/* ============================================================
-   LOCAL BRAIN — the built-in assistant. No internet, no key.
-   Understands: site edits, colours, stories, glossary Q&A,
-   newsletter drafts, money calculators, site help, reset.
-   ============================================================ */
-const COLORS={gold:'#E8B14C',amber:'#E8B14C',yellow:'#E8C84C',blue:'#4C6FE8',navy:'#3D5BC7',azure:'#4C9BE8',
-  green:'#56D3A3',emerald:'#2FBF8F',mint:'#7EE8C4',red:'#F2708A',crimson:'#E8556E',rose:'#F2B8A2',
-  pink:'#F29CC4',purple:'#9B6FE8',violet:'#8A6FE8',lavender:'#B49CF2',orange:'#F29C5A',coral:'#F2836B',
-  teal:'#4CE8C4',cyan:'#5AD6F2',white:'#ECE6DA',silver:'#C9CDD6'};
 
-function localBrain(text){
-  const t = text.toLowerCase().trim();
-
-  /* — reset — */
-  if(/reset (the )?site/.test(t)){ applyAction({type:'resetSite'}); return; }
-
-  /* — colour changes — */
-  const hex = t.match(/#([0-9a-f]{6}|[0-9a-f]{3})\b/i);
-  const named = Object.keys(COLORS).find(c=>t.includes(c));
-  if((hex||named) && /(accent|colou?r|theme)/.test(t)){
-    const v = hex ? hex[0] : COLORS[named];
-    const which = /second|accent ?2|live dot/.test(t) ? 'setAccent2' : 'setAccent';
-    applyAction({type:which, value:v});
-    addMsg('ai', `Done — ${which==='setAccent2'?'secondary':'accent'} is now ${named||v}. Saved in this browser; to make it permanent for all visitors, put ${v} into CONFIG.${which==='setAccent2'?'accent2':'accent'}.`);
-    return;
+/* ---------- subscribe box ---------- */
+(function renderSubscribe(){
+  const slot = el('embedSlot'), note = el('subNote');
+  if(CONFIG.substack){
+    slot.innerHTML = '<iframe src="' + CONFIG.substack.replace(/\/$/,'') + '/embed" height="150" title="Subscribe" scrolling="no" loading="lazy"></iframe>';
+  } else {
+    slot.innerHTML =
+      '<form class="fallback-form" onsubmit="return holdingSignup(event)">' +
+        '<input type="email" required placeholder="you@email.com" aria-label="Your email address" />' +
+        '<button type="submit">Notify me</button></form>';
+    note.textContent = 'The first issue is being written. Leave your email and you\'ll get it the day it ships.';
   }
-
-  /* — headline / tagline / brand / sub / about — */
-  let m;
-  if(m = text.match(/headline (?:to|:)\s*(.+)/i)){ applyAction({type:'setHeadline',value:escapeHtml(m[1])}); addMsg('ai','Headline updated.'); return; }
-  if(m = text.match(/tagline (?:to|:)\s*(.+)/i)){ applyAction({type:'setTagline',value:m[1]}); addMsg('ai','Tagline updated.'); return; }
-  if(m = text.match(/(?:brand|site name|name) (?:to|:)\s*(.+)/i)){ applyAction({type:'setBrand',value:m[1].trim()}); addMsg('ai','Brand updated everywhere — nav, footer, the works.'); return; }
-  if(m = text.match(/(?:sub(?:heading|title)?|hero text) (?:to|:)\s*(.+)/i)){ applyAction({type:'setSub',value:m[1]}); addMsg('ai','Subheading updated.'); return; }
-  if(m = text.match(/(?:about|mission) (?:paragraph )?(?:to|:)\s*(.+)/i)){ applyAction({type:'setAbout',value:m[1]}); addMsg('ai','Mission paragraph updated.'); return; }
-
-  /* — add a story (topic-aware templates) — */
-  if(/(add|write|create|new).*(story|article|post|piece)/.test(t) || /^story about/.test(t)){
-    const topic = (text.match(/(?:about|on)\s+(.+)/i)||[])[1] || 'the week in money';
-    const s = draftStory(topic);
-    applyAction({type:'addStory', ...s});
-    addMsg('ai', `Added "${s.title}" to The Latest. Want me to rewrite the headline or the blurb?`);
-    return;
-  }
-
-  /* — newsletter draft — */
-  if(/(draft|write).*(newsletter|issue|email)/.test(t) || /newsletter (about|on)/.test(t)){
-    const topic=(text.match(/(?:about|on)\s+(.+)/i)||[])[1]||'this week in money';
-    addMsg('ai', draftNewsletter(topic)); return;
-  }
-
-  /* — money calculators — */
-  if(m = t.match(/compound\s+\$?([\d,\.]+)\s+at\s+([\d\.]+)%\s+(?:for|over)\s+(\d+)\s*(?:years|yrs|y)/)){
-    const P=parseFloat(m[1].replace(/,/g,'')), r=parseFloat(m[2])/100, n=parseInt(m[3]);
-    const A=P*Math.pow(1+r,n);
-    addMsg('ai', `$${P.toLocaleString()} at ${m[2]}% compounded yearly for ${n} years → $${A.toLocaleString(undefined,{maximumFractionDigits:0})}.\nGrowth: $${(A-P).toLocaleString(undefined,{maximumFractionDigits:0})}. That's compounding doing the heavy lifting.`); return;
-  }
-  if(m = t.match(/([\d\.]+)%\s+of\s+\$?([\d,\.]+)/)){
-    const p=parseFloat(m[1]), v=parseFloat(m[2].replace(/,/g,''));
-    addMsg('ai', `${m[1]}% of ${v.toLocaleString()} is ${(p/100*v).toLocaleString(undefined,{maximumFractionDigits:2})}.`); return;
-  }
-
-  /* — glossary Q&A — */
-  const gkey = Object.keys(GLOSSARY).find(k=>t.includes(k));
-  if(gkey && /(what|explain|define|mean|difference|\?)/.test(t)){
-    const g=GLOSSARY[gkey];
-    addMsg('ai', `${g.term}: ${g.def}`); return;
-  }
-  if(gkey){ const g=GLOSSARY[gkey]; addMsg('ai', `${g.term} — ${g.def}\n\nWant a story or newsletter section on this? Just say "add a story about ${gkey}".`); return; }
-
-  /* — site help / FAQ — */
-  if(/(password|log ?in|sign ?in)/.test(t)){
-    addMsg('ai', `Logging in: footer "✦ Studio" link, or add #admin to the address, or Ctrl/Cmd+Shift+A — then the password.\n\nChanging the password: tell me "make a hash for YourNewPassword" and I'll print the fingerprint to paste into CONFIG.adminPassHash in the site file. The password itself is never written in the code.`); return;
-  }
-  if(/(rss|feed|substack|beehiiv)/.test(t)){
-    addMsg('ai', `To connect her real newsletter: open the site file, find RSS_FEEDS near the top of the <script>, and paste the feed link inside the brackets in quotes — e.g. "https://hername.substack.com/feed". Save, refresh, and The Latest pulls live posts (newest first). Multiple feeds? Separate with commas.`); return;
-  }
-  if(/(deploy|publish|host|godaddy|domain|online)/.test(t)){
-    addMsg('ai', `Getting it online:\n1. Host the HTML free — drag it into Netlify Drop, or use Cloudflare Pages.\n2. In GoDaddy, point the domain's DNS at that host (both give you exact instructions — usually one CNAME record).\n3. For the real AI on the live site, deploy claude-proxy-worker.js (Cloudflare Workers, free), set its two secrets, and paste its URL into CONFIG.AI_PROXY_URL.`); return;
-  }
-  if(/(ticker|market data|stock price)/.test(t)){
-    addMsg('ai', `The ticker numbers are illustrative placeholders — edit them in the TICKER list in the file. Live prices need a market-data API (e.g. Finnhub or Twelve Data have free tiers) plus a small fetch script; happy topic for version 3.`); return;
-  }
-  if(/(subscribe|email list|collect email)/.test(t)){
-    addMsg('ai', `The Subscribe box is a demo. To collect real emails, create a free Substack/Buttondown/ConvertKit account and either embed their form here or link the button to her signup page — then every subscriber lands in a real list she can email.`); return;
-  }
-  if(/(persist|save|visitors see|everyone see|not saving)/.test(t)){
-    addMsg('ai', `Edits from this chat save in THIS browser (they'll survive refresh here). Visitors see the CONFIG defaults until there's a backend/CMS. For permanent changes today: copy the change into CONFIG in the file. A tiny backend that saves for everyone is the natural next step.`); return;
-  }
-  if(/^help|what can you do|commands/.test(t)){
-    addMsg('ai', `I can:\n• Edit the site — "make the accent purple", "change the headline to: …", "add a story about crypto", "reset the site"\n• Explain finance — "what's a yield curve?", "APR vs APY?"\n• Draft — "draft a newsletter on inflation"\n• Calculate — "compound $1000 at 7% for 10 years", "15% of 240"\n• Site help — passwords, RSS feeds, deploying, the ticker, subscriptions`); return;
-  }
-  if(/(hi|hello|hey)\b/.test(t)){ addMsg('ai', `Hey! What are we doing today — editing the site, drafting something, or decoding some finance?`); return; }
-
-  /* — default — */
-  addMsg('ai', `I'm running on my built-in brain right now (no live AI connection), so I handle: site edits, finance definitions, newsletter drafts, money math, and site help — type "help" for examples. For open-ended conversation, connect the AI proxy (ask me "how do I deploy?" for the steps).`);
+})();
+function holdingSignup(e){
+  e.preventDefault();
+  const note = el('subNote');
+  note.textContent = 'Connect your Substack in CONFIG to start collecting these for real.';
+  note.style.color = 'rgba(246,242,234,.85)';
+  return false;
 }
 
-/* topic-aware story templates for the Local Brain */
-function draftStory(topic){
-  const s = topic.toLowerCase();
-  if(/fed|rate|interest/.test(s)) return {tag:"Explainer",title:"The Fed Moved (Or Didn't). Here's the Part That Touches Your Wallet.",summary:"Skip the podium drama. What the decision on "+topic+" actually changes for loans, savings accounts, and the price of waiting.",read:"5 min"};
-  if(/inflation|price|cpi/.test(s)) return {tag:"Macro",title:"What "+titleCase(topic)+" Really Means for Your Next Receipt",summary:"The official number is an average; your basket isn't. Here's the gap — and the one habit that protects you from it.",read:"5 min"};
-  if(/crypto|bitcoin|btc|eth/.test(s)) return {tag:"Markets",title:titleCase(topic)+", Explained Like You're Smart but Busy",summary:"Past the hype and the doom: what's actually being traded, why it swings, and the questions to ask before a single dollar moves.",read:"6 min"};
-  if(/etf|fund|invest|stock/.test(s)) return {tag:"Your Money",title:"A Beginner's Honest Map to "+titleCase(topic),summary:"No gurus, no jargon. What it is, what it costs, where people get burned, and the boring version that tends to win.",read:"5 min"};
-  if(/budget|save|saving|debt/.test(s)) return {tag:"Your Money",title:titleCase(topic)+": The System That Works When Motivation Doesn't",summary:"Forget willpower. A plain setup you do once — then your money behaves even in the weeks you don't look at it.",read:"4 min"};
-  return {tag:"Explainer",title:titleCase(topic)+": What It Means for You",summary:"A plain-English take on "+topic+" — the context, the stakes, and the takeaway you can actually use.",read:"5 min"};
-}
-function titleCase(s){ return s.replace(/\w\S*/g,w=>w[0].toUpperCase()+w.slice(1)); }
-
-function draftNewsletter(topic){
-  const T = titleCase(topic);
-  return `Draft — ${SITE.brand} Dispatch on ${T}
-
-SUBJECT OPTIONS
-1) ${T}: the 5-minute version
-2) What nobody tells you about ${topic}
-
-HOOK
-You've seen ${topic} in every headline this week. Here's the version that fits in a coffee break — no jargon, no panic.
-
-THE BIG ONE
-Open with the single most important development in ${topic} and why it happened. One paragraph, one idea.
-
-THREE NUMBERS
-Pick three figures that tell the story of ${topic} — one surprising, one contextual, one personal (what it means per household).
-
-ONE IDEA TO KEEP
-The takeaway a reader repeats at dinner: a one-sentence principle about ${topic} that outlives this news cycle.
-
-SIGN-OFF
-"That's the whole story — see you Thursday."
-
-Want me to fill in a specific section, or turn this into a site story too?`;
-}
-
-/* ============================================================
-   3D HERO FIELD (Three.js) — glowing data-surface, mouse parallax
-   ============================================================ */
-let camera,scene,renderer,geo,mesh,tick=0;
-const AX=64,AY=64,SEP=26; let mx=0,my=0;
-const reduced=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-function initHero(){
-  if(!window.THREE) return;
-  const canvas=document.getElementById('bg');
-  camera=new THREE.PerspectiveCamera(72,innerWidth/innerHeight,1,8000);
-  camera.position.set(0,210,560);
-  scene=new THREE.Scene();
-  const n=AX*AY,pos=new Float32Array(n*3),col=new Float32Array(n*3);
-  const gold=new THREE.Color(SITE.accent),rose=new THREE.Color('#F2B8A2'),grn=new THREE.Color(SITE.accent2);
-  let i=0;
-  for(let ix=0;ix<AX;ix++)for(let iy=0;iy<AY;iy++){
-    pos[i]=ix*SEP-(AX*SEP)/2; pos[i+1]=0; pos[i+2]=iy*SEP-(AY*SEP)/2;
-    const tt=ix/AX, c=tt<.5?gold.clone().lerp(rose,tt*2):rose.clone().lerp(grn,(tt-.5)*2);
-    col[i]=c.r;col[i+1]=c.g;col[i+2]=c.b;i+=3;
-  }
-  geo=new THREE.BufferGeometry();
-  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-  geo.setAttribute('color',new THREE.BufferAttribute(col,3));
-  const mat=new THREE.PointsMaterial({size:7,map:dotTexture(),transparent:true,depthWrite:false,
-    blending:THREE.AdditiveBlending,vertexColors:true,opacity:.9,sizeAttenuation:true});
-  mesh=new THREE.Points(geo,mat); scene.add(mesh);
-  renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
-  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-  renderer.setSize(innerWidth,innerHeight);
-  window.addEventListener('mousemove',e=>{mx=e.clientX-innerWidth/2;my=e.clientY-innerHeight/2;});
-  window.addEventListener('resize',onResize);
-  animate();
-}
-function dotTexture(){const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');
-  const g=x.createRadialGradient(32,32,0,32,32,32);
-  g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.35,'rgba(255,255,255,.5)');g.addColorStop(1,'rgba(255,255,255,0)');
-  x.fillStyle=g;x.fillRect(0,0,64,64);const t=new THREE.Texture(c);t.needsUpdate=true;return t;}
-function animate(){
-  requestAnimationFrame(animate);
-  const p=geo.attributes.position.array; let i=0;
-  for(let ix=0;ix<AX;ix++)for(let iy=0;iy<AY;iy++){
-    p[i+1]=Math.sin((ix+tick)*.3)*16+Math.sin((iy+tick)*.4)*16; i+=3;
-  }
-  geo.attributes.position.needsUpdate=true;
-  camera.position.x+=(mx*.35-camera.position.x)*.03;
-  camera.position.y+=(-my*.2+210-camera.position.y)*.03;
-  camera.lookAt(0,0,0);
-  renderer.render(scene,camera);
-  tick+=reduced?.012:.055;
-}
-function onResize(){if(!renderer)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);}
-
-if(!('ontouchstart' in window)&&!reduced){
-  const cur=document.getElementById('cursor');
-  window.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';cur.style.opacity=1;});
-}
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-/* ---- start ---- */
-boot();
-renderTicker();
-setStories(SAMPLE_STORIES);
-renderDecoder();
-loadFeeds();
-initHero();
+/* ---------- reveal on scroll ---------- */
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(n => io.observe(n));
 </script>
 </body>
 </html>
