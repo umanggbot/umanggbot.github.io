@@ -83,6 +83,8 @@
     --paper:#F6F2EA; --paper-2:#EFE9DD; --paper-3:#E7DFD1;
     --ink:#14110E; --ink-soft:#5A534A;
     --accent:#7A1F2B; --accent-soft:#A8434F; --accent-tint:rgba(122,31,43,.07);
+    /* One deliberate flourish, used on a single word in the headline. Nothing else. */
+    --hot:#D81B60;
     --up:#1F5D3F; --down:#9E2B2B;
     --rule:rgba(20,17,14,.14); --rule-soft:rgba(20,17,14,.08);
     --serif:"Instrument Serif", Georgia, "Times New Roman", serif;
@@ -144,7 +146,8 @@
   .hero{padding:clamp(64px,10vw,124px) 0 clamp(56px,8vw,96px)}
   .hero-grid{display:block}
   .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.4rem,5.6vw,4.4rem);line-height:1.06;letter-spacing:-.02em;margin:18px 0 26px;max-width:26ch}
-  .hero h1 em{font-style:italic;color:var(--accent)}
+  .hero h1 em{font-style:italic;color:var(--hot)}
+  .hero h1 .pause{color:var(--ink-soft);font-style:normal;letter-spacing:.02em;padding:0 .06em}
   .hero .deck{font-size:clamp(1.02rem,1.6vw,1.2rem);color:var(--ink-soft);max-width:46ch;margin-bottom:36px}
   .hero-cta{display:flex;gap:24px;flex-wrap:wrap;align-items:center}
   .link-quiet{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink-soft);
@@ -167,6 +170,14 @@
     .promise{grid-template-columns:1fr;gap:0}
     .promise-row{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
     .promise-row:last-child{border-bottom:none}}
+
+  /* ---------------- Market line (ornament) ---------------- */
+  .zig{padding:clamp(30px,5vw,56px) 0 clamp(4px,1vw,10px);line-height:0}
+  .zig svg{display:block;width:100%;height:clamp(66px,9vw,130px);overflow:visible}
+  .zig polyline{fill:none;stroke-width:1.25;stroke-linejoin:round;stroke-linecap:round;
+    vector-effect:non-scaling-stroke}
+  .zig .zig-run{stroke:var(--ink);stroke-opacity:.26}
+  .zig .zig-fall{stroke:var(--accent);stroke-opacity:.85}
 
   /* ---------------- Sections ---------------- */
   section{padding:clamp(52px,7vw,86px) 0;border-top:1px solid var(--rule)}
@@ -345,7 +356,7 @@
       <div class="hero-grid">
         <div>
           <span class="label">The weekly column</span>
-          <h1>You don't need more finance news. You need someone to say which parts <em>mattered</em>.</h1>
+          <h1>You don't need more finance news. You need someone to say which parts <span class="pause">…</span> <em>mattered</em>.</h1>
           <p class="deck">Five hundred words, once a week, on markets, money, and the companies quietly running your life. Written for people who can already read a balance sheet and still can't work out why the market cared.</p>
           <div class="hero-cta">
             <a class="btn btn-solid" href="#subscribe">Get it weekly</a>
@@ -359,6 +370,20 @@
         </aside>
       </div>
     </section>
+  </div>
+
+  <!-- ============ MARKET LINE ============
+       Decorative lead-in to the simulator. Deliberately unlabelled and with no
+       axis or figures — it is an ornament, not a chart, and must never be given
+       numbers that imply real data. The final leg falls, which is the argument
+       the simulator then makes line by line. ============ -->
+  <div class="wrap">
+    <div class="zig" aria-hidden="true">
+      <svg viewBox="0 0 1200 130" preserveAspectRatio="none" focusable="false" role="presentation">
+        <polyline class="zig-run" points="0,96 86,78 172,92 258,56 344,72 430,40 516,54 602,28 688,46 774,22 860,38 946,16"/>
+        <polyline class="zig-fall" points="946,16 1020,62 1094,98 1200,118"/>
+      </svg>
+    </div>
   </div>
 
   <!-- ================= THE SIMULATOR ================= -->
