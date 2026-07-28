@@ -222,6 +222,26 @@
   .sec-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.9rem,4vw,3rem);line-height:1.05;letter-spacing:-.015em}
   .sec-head .note{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
 
+  /* ---------------- Side headers ----------------
+     The section heading as a vertical spine on the left instead of a row on
+     top. The signature 2px rule rotates with it. Currently on The Column only —
+     extend to other sections once the editor confirms the treatment. */
+  .side{display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,4vw,56px);align-items:stretch}
+  .side .side-rail{display:flex;flex-direction:column;align-items:center;gap:16px;
+    border-right:2px solid var(--ink);padding-right:clamp(14px,2vw,24px)}
+  .side .side-rail h2,.side .side-rail .label{writing-mode:vertical-rl;transform:rotate(180deg)}
+  .side .side-rail h2{font-family:var(--serif);font-weight:400;
+    font-size:clamp(1.9rem,4vw,3rem);line-height:1;letter-spacing:-.015em}
+  .side .side-note{display:flex;justify-content:flex-end;padding-bottom:14px;
+    margin-bottom:28px;border-bottom:1px solid var(--rule)}
+  @media(max-width:700px){
+    /* a side rail on a phone would crush the content, so it folds back flat */
+    .side{display:block}
+    .side .side-rail{flex-direction:row;align-items:flex-end;justify-content:flex-start;gap:14px;
+      border-right:none;border-bottom:2px solid var(--ink);padding:0 0 14px;margin-bottom:26px}
+    .side .side-rail h2,.side .side-rail .label{writing-mode:horizontal-tb;transform:none}
+  }
+
   /* ---------------- Simulator ---------------- */
   /* The centrepiece. Understated, but given more vertical room than any other
      section so the eye settles here rather than on the copy above it. */
@@ -629,15 +649,15 @@
 
   <!-- ================= LATEST ================= -->
   <div class="wrap">
-    <section id="latest" class="reveal" style="border-top:none">
-      <div class="sec-head">
-        <div>
-          <span class="label quiet">Most recent</span>
-          <h2>The Column</h2>
-        </div>
-        <span class="note" id="feedNote">Updated weekly</span>
+    <section id="latest" class="reveal side" style="border-top:none">
+      <div class="side-rail">
+        <span class="label quiet">Most recent</span>
+        <h2>The Column</h2>
       </div>
-      <div id="storyArea"></div>
+      <div>
+        <div class="side-note"><span class="note" id="feedNote">Updated weekly</span></div>
+        <div id="storyArea"></div>
+      </div>
     </section>
   </div>
 
