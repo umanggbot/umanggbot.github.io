@@ -88,7 +88,7 @@
     /* Deepened twice on the editor's ask (2026-07-27). At this depth the olive
        is separated from the near-black simulator mostly by the hairline rule
        between them — going darker than this makes the two bands one mass. */
-    --olive:#141B04; --olive-deep:#0C1103; --olive-lift:#1D2610;
+    --olive:#141B04; --olive-lift:#1D2610;
     --cream:#F2ECDC; --cream-mid:rgba(242,236,220,.70); --cream-dim:rgba(242,236,220,.60);
     --olive-line:rgba(242,236,220,.17); --olive-line-soft:rgba(242,236,220,.10);
     /* Terminal-screen green: the overture accent AND the market-up tone — the
@@ -136,10 +136,16 @@
     letter-spacing:.08em;border:1px solid var(--cream)}
   .skip-link:focus-visible{transform:none;outline-color:var(--cream)}
 
-  /* ---------------- Live tape ---------------- */
+  /* ---------------- Live tape ----------------
+     A fixed ticker along the BOTTOM edge — the terminal position. Same ink as
+     the nav rail, so rail + tape read as one piece of chrome framing the page.
+     Hidden entirely unless real data arrives. */
   .tape{display:none;background:var(--ink);color:var(--paper);overflow:hidden;white-space:nowrap;
-    border-bottom:1px solid var(--ink);position:relative}
+    position:fixed;left:0;right:0;bottom:0;z-index:70;
+    border-top:1px solid rgba(246,242,234,.14)}
   .tape.on{display:block}
+  /* the last band gets breathing room so the ticker never sits on the footer text */
+  .foot-base{padding-bottom:46px}
   .tape-track{display:inline-block;padding:9px 0;animation:slide 48s linear infinite;font-size:12px;font-weight:500}
   /* pause must be reachable without a mouse (WCAG 2.2.2) — the tape is
      focusable and keyboard focus pauses it just like hover */
@@ -471,9 +477,6 @@
 
   /* market line, now drawn on olive */
 
-  /* tape sits above the masthead, one shade deeper than the olive. No flag, no
-     chip — the scrolling figures ARE the marquee. */
-  .tape{background:var(--olive-deep);color:var(--cream)}
 
   /* crisp edge where olive meets the near-black simulator */
   .sim{border-top:1px solid var(--olive-line)}
@@ -489,10 +492,7 @@
   .nav-burger{display:none}
   @media(min-width:1100px){
     body{padding-left:64px}
-    /* the marquee spans the full viewport width — indented behind the rail it
-       looked like it started halfway across the top */
-    .tape{position:relative;z-index:70;margin-left:-64px}
-    .nav-burger{margin-top:48px}
+    .nav-burger{margin-top:10px}
     nav.sections,.overture nav.sections{position:fixed;left:0;top:0;bottom:0;width:64px;z-index:60;
       background:var(--ink);border-top:none;border-bottom:none;
       border-right:1px solid rgba(246,242,234,.14)}
