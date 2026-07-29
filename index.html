@@ -80,15 +80,9 @@
 
 <style>
   :root{
-    --paper:#F6F2EA; --paper-2:#EFE9DD; --paper-3:#E7DFD1;
+    --paper:#F6F2EA; --paper-2:#EFE9DD;
     --ink:#14110E; --ink-soft:#5A534A;
-    --accent:#7A1F2B; --accent-soft:#A8434F; --accent-tint:rgba(122,31,43,.07);
-    /* The flourish is a deep maroon GROUND, not maroon type. A dark tone as text
-       on this olive can never be both deep and legible — #8C2340 reads 2.04:1 and
-       anything that passes drifts pink. Behind cream text the same maroon gives
-       7.33:1, so the word sits in a maroon block instead. Also the LIVE chip and
-       the full stop after "Value". */
-    --maroon:#8C2340;
+    --accent:#7A1F2B; --accent-soft:#A8434F;
     /* The overture — everything above the simulator. Deep olive, cream, rose.
        Same logic as the subscribe band: dark ground, cream type, rose accent. */
     /* Deepened one step from #1A2308 on the editor's ask (2026-07-27) — quieter,
@@ -124,6 +118,11 @@
   a{color:inherit;text-decoration:none}
   ::selection{background:var(--accent);color:var(--paper)}
   :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+  /* Oxblood is invisible as a focus ring on the dark grounds (~1.9:1 on ink,
+     ~1.6:1 on olive). Cream clears 13:1+ on both, so keyboard focus is actually
+     visible on the nav rail, the overture, the simulator and the dark bands. */
+  .overture :focus-visible,.sim :focus-visible,.subscribe :focus-visible,
+  footer :focus-visible,nav.sections :focus-visible,.tape:focus-visible{outline-color:var(--cream)}
   body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E")}
   .layer{position:relative;z-index:1}
@@ -131,13 +130,20 @@
   .num{font-variant-numeric:tabular-nums;letter-spacing:-.01em}
   .label{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
   .label.quiet{color:var(--ink-soft)}
+  /* visually hidden until focused; cream on ink so it is legible over any band */
+  .skip-link{position:fixed;left:12px;top:12px;z-index:100;transform:translateY(-200%);
+    background:var(--ink);color:var(--cream);padding:10px 18px;font-size:13px;font-weight:600;
+    letter-spacing:.08em;border:1px solid var(--cream)}
+  .skip-link:focus-visible{transform:none;outline-color:var(--cream)}
 
   /* ---------------- Live tape ---------------- */
   .tape{display:none;background:var(--ink);color:var(--paper);overflow:hidden;white-space:nowrap;
     border-bottom:1px solid var(--ink);position:relative}
   .tape.on{display:block}
   .tape-track{display:inline-block;padding:9px 0;animation:slide 48s linear infinite;font-size:12px;font-weight:500}
-  .tape:hover .tape-track{animation-play-state:paused}
+  /* pause must be reachable without a mouse (WCAG 2.2.2) — the tape is
+     focusable and keyboard focus pauses it just like hover */
+  .tape:hover .tape-track,.tape:focus-within .tape-track,.tape:focus .tape-track{animation-play-state:paused}
   .tk{padding:0 20px;color:rgba(246,242,234,.55);font-variant-numeric:tabular-nums}
   .tk b{color:var(--paper);font-weight:600}
   .tk .up{color:var(--up)}.tk .down{color:var(--down)}
@@ -154,7 +160,11 @@
   .masthead-rule{display:flex;align-items:center;gap:18px;margin-top:16px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-soft)}
   .masthead-rule::before,.masthead-rule::after{content:"";flex:1;height:1px;background:var(--rule)}
   nav.sections{border-top:1px solid var(--rule)}
-  nav.sections .wrap{display:flex;align-items:center;justify-content:center;gap:clamp(14px,3.4vw,36px);
+  /* "safe center": centred when it fits, left-anchored and scrollable when it
+     overflows. Plain center + overflow clips the START of the row unreachably —
+     on a phone "The Column" was simply gone, with the scrollbar hidden. */
+  nav.sections .wrap{display:flex;align-items:center;justify-content:center;justify-content:safe center;
+    gap:clamp(14px,3.4vw,36px);
     padding:13px clamp(20px,5vw,56px);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;
     overflow-x:auto;scrollbar-width:none}
   nav.sections .wrap::-webkit-scrollbar{display:none}
@@ -165,7 +175,6 @@
   /* ---------------- Hero ---------------- */
   /* One statement, plenty of air. No competing column. */
   .hero{padding:clamp(44px,7vw,84px) 0 clamp(36px,5vw,60px)}
-  .hero-grid{display:block}
   .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.4rem,5.6vw,4.4rem);line-height:1.06;letter-spacing:-.02em;margin:18px 0 26px;max-width:26ch}
   /* Emphasis carried by the italic alone. No block, no colour — the restraint
      is the point, and it stops the headline competing with the simulator. */
@@ -217,7 +226,9 @@
   section{padding:clamp(52px,7vw,86px) 0;border-top:1px solid var(--rule)}
   .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding-bottom:16px;margin-bottom:34px;border-bottom:2px solid var(--ink)}
   .sec-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.9rem,4vw,3rem);line-height:1.05;letter-spacing:-.015em}
-  .sec-head .note{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
+  /* .side-note .note included so spine sections' notes keep the small-caps
+     treatment — the spine conversion left feedNote unstyled at body size */
+  .sec-head .note,.side-note .note{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
 
   /* ---------------- Side headers ----------------
      The section heading as a vertical spine on the left instead of a row on
@@ -246,7 +257,7 @@
     padding:clamp(66px,9vw,116px) 0}
   .sim .sec-head{border-bottom-color:rgba(246,242,234,.28)}
   .sim .sec-head h2{color:var(--paper)}
-  .sim .sec-head .note,.sim .label.quiet{color:rgba(246,242,234,.5)}
+  .sim .sec-head .note{color:rgba(246,242,234,.5)}
   .sim .label{color:var(--accent-soft)}
   .sim-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(30px,5vw,60px);align-items:start}
   @media(max-width:900px){.sim-grid{grid-template-columns:1fr;gap:38px}}
@@ -334,7 +345,7 @@
   .specimen .sp-top{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:12px;border-bottom:2px solid var(--ink);margin-bottom:20px}
   .specimen .sp-name{font-family:var(--serif);font-size:1.35rem}
   .specimen .sp-no{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
-  .specimen h4{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3vw,2rem);line-height:1.1;margin-bottom:18px}
+  .specimen h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3vw,2rem);line-height:1.1;margin-bottom:18px}
   .specimen .sp-sec{margin-bottom:18px}
   .specimen .sp-k{font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
   .specimen .sp-sec p{font-size:15px;color:var(--ink-soft);line-height:1.6}
@@ -361,9 +372,8 @@
   .issue-band .specimen .sp-k{color:var(--ink)}
   .issue-band .issue-copy p{color:#4A443C}
   .issue-band .specimen .sp-sec p{color:#4A443C}
-  .issue-band .label.quiet,.issue-band .sec-head .note{color:#6B645A}
+  .issue-band .label.quiet{color:#6B645A}
   .issue-band .specimen .sp-no,.issue-band .specimen .sp-foot{color:#6B645A}
-  .about-band .colophon{background:#FFFFFF}
   .about-band .about-def b{color:var(--ink)}
   .about-band .colophon dt{color:var(--ink)}
   .about-band .colophon dd{color:#4A443C}
@@ -372,10 +382,10 @@
   .about-band .colophon a{color:var(--ink);border-bottom:1px solid var(--rule);padding-bottom:1px}
   .about-band .colophon a:hover{border-bottom-color:var(--ink)}
   /* Colophon as a factsheet panel — the spec, stated plainly. This is the part
-     that signals the work is edited rather than posted. On white it takes the
-     faint bone tint so the panel still separates from the band. */
+     that signals the work is edited rather than posted. White on white,
+     separated by its hairline border and 2px top rule alone. */
   .colophon{border:1px solid var(--rule);border-top:2px solid var(--ink);
-    background:var(--paper);padding:clamp(20px,3vw,26px) clamp(18px,2.6vw,24px)}
+    background:#FFFFFF;padding:clamp(20px,3vw,26px) clamp(18px,2.6vw,24px)}
   .colophon dt{font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);
     margin-top:16px;padding-top:14px;border-top:1px solid var(--rule-soft)}
   .colophon dt:first-child{margin-top:0;padding-top:0;border-top:none}
@@ -403,7 +413,7 @@
   @media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:30px}}
   .foot-brand{font-family:var(--serif);font-size:1.8rem;color:var(--paper);margin-bottom:10px}
   .foot-grid p{font-size:14px;max-width:36ch}
-  .foot-grid h5{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-soft);margin-bottom:14px}
+  .foot-grid h3{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-soft);margin-bottom:14px}
   .foot-grid a{display:block;font-size:14px;padding:5px 0;transition:color .18s}
   .foot-grid a:hover{color:var(--paper)}
   .foot-base{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding-top:22px;border-top:1px solid rgba(246,242,234,.14);font-size:12px;letter-spacing:.06em}
@@ -479,7 +489,8 @@
     .nav-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
     nav.sections .wrap{position:fixed;left:64px;top:0;bottom:0;width:264px;z-index:55;
       background:var(--ink);border-right:1px solid rgba(246,242,234,.14);
-      display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:28px;
+      display:flex;flex-direction:column;justify-content:center;justify-content:safe center;
+      align-items:flex-start;gap:28px;
       padding:40px 36px;max-width:none;overflow-y:auto;scrollbar-width:none;
       visibility:hidden;transform:translateX(-100%);
       transition:transform .3s cubic-bezier(.3,.7,.3,1),visibility .3s}
@@ -508,8 +519,11 @@
 </head>
 <body>
 
+<!-- keyboard users get past the fixed nav without crossing every link -->
+<a class="skip-link" href="#latest">Skip to content</a>
+
 <!-- ================= LIVE TAPE (hides itself if real data can't be fetched) ================= -->
-<div class="tape" id="tape" aria-label="Live market rates">
+<div class="tape" id="tape" role="marquee" tabindex="0" aria-label="Live market rates">
   <div class="tape-track" id="tapeTrack"></div>
 </div>
 
@@ -625,13 +639,17 @@
           <button class="sim-reset" onclick="resetSim()">↺ Reset to the classic case</button>
         </div>
 
-        <div class="readout" aria-live="polite">
+        <div class="readout">
           <div class="readout-top">
             <span class="rl">Share price reaction</span>
             <span class="rl" id="dayTag">Day one</span>
           </div>
-          <div class="verdict num neg" id="verdict">−8.6%</div>
-          <div class="verdict-cap" id="verdictCap">A solid beat, erased by a two percent trim to the outlook.</div>
+          <!-- live region kept to the verdict alone: announcing the whole readout
+               on every slider tick buries a screen-reader user in repetition -->
+          <div aria-live="polite">
+            <div class="verdict num neg" id="verdict">−8.6%</div>
+            <div class="verdict-cap" id="verdictCap">A solid beat, erased by a two percent trim to the outlook.</div>
+          </div>
 
           <div class="bars">
             <div class="bar-row">
@@ -707,7 +725,7 @@
             <span class="sp-name" id="spName">Terminal Value</span>
             <span class="sp-no">Issue № 001</span>
           </div>
-          <h4>The quarter was fine. The guidance was the story.</h4>
+          <h3>The quarter was fine. The guidance was the story.</h3>
           <div class="sp-sec"><div class="sp-k">The move</div><p>Revenue beat. The stock fell nine percent anyway. That gap between "good quarter" and "bad day" is where most of the actual information lives.</p></div>
           <div class="sp-sec"><div class="sp-k">The number</div><p>Next quarter's guide came in two percent under consensus. Two percent. That was the entire nine.</p></div>
           <div class="sp-sec"><div class="sp-k">Worth keeping</div><p>Markets don't price what happened. They price the revision to what they expected to happen.</p></div>
@@ -773,14 +791,14 @@
           <p id="footBlurb">Independent financial journalism. What it's worth when the noise stops.</p>
         </div>
         <div>
-          <h5>Read</h5>
+          <h3>Read</h3>
           <a href="#latest">The Column</a>
           <a href="#simulator">The Simulator</a>
           <a href="#issue">Inside an Issue</a>
           <a href="#about">About</a>
         </div>
         <div>
-          <h5>Elsewhere</h5>
+          <h3>Elsewhere</h3>
           <a href="#subscribe">Subscribe</a>
           <a href="#" id="footMail">Contact</a>
           <a href="#" id="footArchive">Archive</a>
@@ -893,6 +911,10 @@ function runSim(){
   el('revOut').textContent   = fmt(rev)   + '%';
   el('guideOut').textContent = fmt(guide) + '%';
   el('multOut').textContent  = fmt(mult)  + '%';
+  /* screen readers hear the same formatted value sighted users see */
+  el('rev').setAttribute('aria-valuetext',   fmt(rev)   + '%');
+  el('guide').setAttribute('aria-valuetext', fmt(guide) + '%');
+  el('mult').setAttribute('aria-valuetext',  fmt(mult)  + '%');
 
   const cRev = rev * W.rev, cGuide = guide * W.guide, cMult = mult * W.mult;
   const total = cRev + cGuide + cMult;
@@ -958,8 +980,11 @@ async function loadTape(){
     const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
     const d = await r.json();
     const add = (label, o) => {
-      if(!o || o.usd == null) return;
+      if(!o || typeof o.usd !== 'number' || !isFinite(o.usd)) return;
       const ch = o.usd_24h_change;
+      /* no real change figure -> skip the entry entirely; the tape never
+         renders a NaN or an invented number */
+      if(typeof ch !== 'number' || !isFinite(ch)) return;
       const cls = ch >= 0 ? 'up' : 'down';
       const sign = ch >= 0 ? '+' : '−';
       items.push('<span class="tk">' + label + ' <b>$' +
@@ -984,8 +1009,19 @@ async function loadTape(){
 
   if(!items.length) return;             // nothing real to show → tape stays hidden
   const row = items.join('');
-  document.getElementById('tapeTrack').innerHTML = row + row;
-  document.getElementById('tape').classList.add('on');
+  /* Repeat the row until one half of the track covers the viewport — with only
+     the crypto group alive, a single copy is ~400px and a doubled track left
+     most of a wide screen as blank ink. Copies are duplicates of real data, so
+     everything after the first copy is aria-hidden: a screen reader hears each
+     quote once. Halves stay identical, keeping the -50% loop seamless. */
+  const track = document.getElementById('tapeTrack');
+  const tape  = document.getElementById('tape');
+  track.innerHTML = row;
+  tape.classList.add('on');
+  const w = Math.max(track.scrollWidth, 1);
+  const perHalf = Math.max(1, Math.ceil(window.innerWidth / w));
+  const extra = perHalf * 2 - 1;
+  track.innerHTML = row + '<span aria-hidden="true">' + row.repeat(extra) + '</span>';
 }
 loadTape();
 
@@ -1052,8 +1088,11 @@ loadChart();
    ============================================================================ */
 const storyArea = el('storyArea'), feedNote = el('feedNote');
 const esc = s => String(s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const stripHtml = h => { const d=document.createElement('div'); d.innerHTML=h||''; return (d.textContent||'').trim(); };
+/* DOMParser documents are inert — no resource loads, no event handlers — so
+   feed HTML can never execute anything while being stripped to text. */
+const stripHtml = h => new DOMParser().parseFromString(h||'', 'text/html').body.textContent.trim();
 function timeAgo(d){
+  if(isNaN(d)) return '';               // bad date degrades to nothing, never "Invalid Date"
   const s=(Date.now()-d)/1000;
   if(s<86400) return 'Today';
   const days=Math.round(s/86400);
@@ -1070,7 +1109,7 @@ function renderAwaiting(){
       '<span class="label">Not yet published</span>' +
       '<h3>The first issue is being written.</h3>' +
       '<p>Rather than fill this page with placeholder headlines, it\'s staying empty until there\'s something real on it. ' +
-      'The first edition ships shortly — put your email below and it lands in your inbox that morning.</p>' +
+      'The first edition ships shortly — subscribers get it the morning it lands.</p>' +
       '<a class="btn btn-solid" href="#subscribe">Get issue № 001</a>' +
     '</div>';
 }
@@ -1100,7 +1139,7 @@ async function loadColumn(){
         kicker: (it.categories && it.categories[0]) || 'The Column',
         title: it.title,
         summary: text.slice(0,160).trim() + '…',
-        time: timeAgo(new Date(it.pubDate)),
+        time: timeAgo(new Date(String(it.pubDate||'').replace(' ','T') + 'Z')),
         read: Math.max(2, Math.round(text.split(/\s+/).length/200)) + ' min',
         link: it.link
       };
@@ -1120,13 +1159,15 @@ loadColumn();
       '<form class="fallback-form" onsubmit="return holdingSignup(event)">' +
         '<input type="email" required placeholder="you@email.com" aria-label="Your email address" />' +
         '<button type="submit">Notify me</button></form>';
-    note.textContent = 'The first issue is being written. Leave your email and you\'ll get it the day it ships.';
+    note.textContent = 'The first issue is being written. The list opens the day it ships.';
   }
 })();
 function holdingSignup(e){
   e.preventDefault();
   const note = el('subNote');
-  note.textContent = 'Connect your Substack in CONFIG to start collecting these for real.';
+  /* honest: nothing is stored yet, so the reader is told exactly that —
+     builder instructions stay in code comments, never on the page */
+  note.textContent = 'The list isn\'t open yet — issue № 001 is still being written.';
   note.style.color = 'rgba(246,242,234,.85)';
   return false;
 }
