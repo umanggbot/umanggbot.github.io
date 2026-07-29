@@ -133,25 +133,19 @@
   .tape{display:none;background:var(--ink);color:var(--paper);overflow:hidden;white-space:nowrap;
     border-bottom:1px solid var(--ink);position:relative}
   .tape.on{display:block}
-  .tape-flag{position:absolute;left:0;top:0;bottom:0;z-index:2;display:flex;align-items:center;gap:7px;
-    padding:0 16px;background:var(--accent);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
-  .tape-flag i{width:6px;height:6px;border-radius:50%;background:var(--paper);animation:blip 1.9s infinite}
-  @keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
-  .tape-track{display:inline-block;padding:9px 0 9px 120px;animation:slide 48s linear infinite;font-size:12px;font-weight:500}
+  .tape-track{display:inline-block;padding:9px 0;animation:slide 48s linear infinite;font-size:12px;font-weight:500}
   .tape:hover .tape-track{animation-play-state:paused}
   .tk{padding:0 20px;color:rgba(246,242,234,.55);font-variant-numeric:tabular-nums}
   .tk b{color:var(--paper);font-weight:600}
   .tk .up{color:var(--up)}.tk .down{color:var(--down)}
   @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  @media(max-width:600px){.tape-flag{display:none}.tape-track{padding-left:0}}
 
   /* ---------------- Masthead ---------------- */
+  /* No dateline row, no status chips — the wordmark and tagline carry it alone.
+     The small-text clutter above the brand was removed deliberately; the tape
+     is the only strip of small type allowed above the masthead. */
   .masthead{border-bottom:1px solid var(--ink);background:var(--paper)}
-  .masthead-top{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:13px 0;
-    border-bottom:1px solid var(--rule-soft);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);font-weight:500}
-  .masthead-top .issue{color:var(--accent);font-weight:600}
-  @media(max-width:640px){.masthead-top .dateline{display:none}}
-  .masthead-main{padding:32px 0 24px;text-align:center}
+  .masthead-main{padding:clamp(38px,6vw,58px) 0 26px;text-align:center}
   .wordmark{font-family:var(--serif);font-size:clamp(2.6rem,9vw,5.6rem);line-height:.95;letter-spacing:-.015em;display:block}
   .wordmark .tv-dot{color:var(--accent)}
   .masthead-rule{display:flex;align-items:center;gap:18px;margin-top:16px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-soft)}
@@ -419,17 +413,8 @@
   .overture{background:var(--olive);color:var(--cream)}
   .overture .hero{border-top:none}
 
-  /* dateline / masthead rules */
+  /* masthead on olive */
   .overture .masthead{background:var(--olive);border-bottom:1px solid var(--olive-line)}
-  .overture .masthead-top{border-bottom-color:var(--olive-line-soft);color:var(--cream-dim)}
-  .overture .dateline{color:var(--cream-dim)}
-  /* GTA TEST — one element only, deliberately reversible.
-     "Independent · Weekly" becomes a hard-edged neon HUD chip: filled electric
-     green, near-black type, no radius. If the direction is wrong, replace this
-     rule with `color:var(--electric)` and it returns to plain neon text. */
-  .overture .masthead-top .issue{background:var(--electric);color:var(--olive-deep);
-    font-weight:700;letter-spacing:.2em;font-size:10px;line-height:1;
-    padding:6px 11px 5px;border-radius:0;display:inline-block}
   .overture .masthead-rule{color:var(--cream-dim)}
   .overture .masthead-rule::before,.overture .masthead-rule::after{background:var(--olive-line)}
   .overture .wordmark{color:var(--cream)}
@@ -461,11 +446,9 @@
 
   /* market line, now drawn on olive */
 
-  /* tape sits above the masthead, one shade deeper than the olive. The LIVE
-     sticker keeps its deep maroon ground — that chip is the financial vibe. */
+  /* tape sits above the masthead, one shade deeper than the olive. No flag, no
+     chip — the scrolling figures ARE the marquee. */
   .tape{background:var(--olive-deep);color:var(--cream)}
-  .tape-flag{background:var(--maroon);color:var(--cream)}
-  .tape-flag i{background:var(--cream)}
 
   /* crisp edge where olive meets the near-black simulator */
   .sim{border-top:1px solid var(--olive-line)}
@@ -487,7 +470,6 @@
 
 <!-- ================= LIVE TAPE (hides itself if real data can't be fetched) ================= -->
 <div class="tape" id="tape" aria-label="Live market rates">
-  <span class="tape-flag"><i></i> Live</span>
   <div class="tape-track" id="tapeTrack"></div>
 </div>
 
@@ -500,11 +482,6 @@
   <!-- ================= MASTHEAD ================= -->
   <header class="masthead" id="top">
     <div class="wrap">
-      <div class="masthead-top">
-        <span class="dateline" id="dateline">—</span>
-        <span class="issue">Independent · Weekly</span>
-        <span class="dateline">Est. 2026</span>
-      </div>
       <div class="masthead-main">
         <a href="#top" class="wordmark" id="wordmark">Terminal Value<span class="tv-dot">.</span></a>
         <div class="masthead-rule"><span id="taglineEl">What it's worth when the noise stops</span></div>
@@ -818,9 +795,6 @@ try{
 
 
 /* ---------- masthead ---------- */
-document.getElementById('dateline').textContent =
-  new Date().toLocaleDateString('en-US',{weekday:'long', month:'long', day:'numeric', year:'numeric'});
-
 (function applyConfig(){
   document.getElementById('wordmark').innerHTML = CONFIG.brand + '<span class="tv-dot">.</span>';
   document.getElementById('taglineEl').textContent = CONFIG.tagline;
