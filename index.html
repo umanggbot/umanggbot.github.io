@@ -91,7 +91,10 @@
     --maroon:#8C2340;
     /* The overture — everything above the simulator. Deep olive, cream, rose.
        Same logic as the subscribe band: dark ground, cream type, rose accent. */
-    --olive:#1A2308; --olive-deep:#12190A; --olive-lift:#25301A;
+    /* Deepened one step from #1A2308 on the editor's ask (2026-07-27) — quieter,
+       sits back. One step further (#161E05) starts merging with the near-black
+       simulator band, so this is the floor. */
+    --olive:#182007; --olive-deep:#101607; --olive-lift:#222C15;
     --cream:#F2ECDC; --cream-mid:rgba(242,236,220,.70); --cream-dim:rgba(242,236,220,.60);
     --olive-line:rgba(242,236,220,.17); --olive-line-soft:rgba(242,236,220,.10);
     /* Terminal-screen green: the overture accent AND the market-up tone — the
@@ -418,10 +421,10 @@
   .overture .masthead-rule{color:var(--cream-dim)}
   .overture .masthead-rule::before,.overture .masthead-rule::after{background:var(--olive-line)}
   .overture .wordmark{color:var(--cream)}
-  /* Deep maroon full stop. At 2.04:1 on olive this reads as a tonal mark rather
-     than a pop — deliberate, since a maroon dark enough to satisfy "deep" cannot
-     also be bright here. It is decorative punctuation in the logotype. */
-  .overture .wordmark .tv-dot{color:var(--maroon)}
+  /* Pure white full stop — one notch brighter than the cream wordmark. Black
+     was the other candidate and cannot work here: 1.15:1 on the olive, i.e.
+     invisible. Editor's call, 2026-07-27. */
+  .overture .wordmark .tv-dot{color:#FFFFFF}
 
   /* nav band */
   .overture nav.sections{background:var(--olive-lift);border-top:1px solid var(--olive-line-soft);
@@ -454,25 +457,40 @@
   .sim{border-top:1px solid var(--olive-line)}
 
   /* ---------------- Side navigation (desktop) ----------------
-     The section links leave the masthead and live on a fixed ink rail down the
-     left edge, spine-style — the same book-spine language as The Column's side
-     header. The rail keeps one constant near-black ground so link contrast
-     never depends on which band happens to be scrolling behind it. Below
-     1100px it folds back to the horizontal bar, which side rails cannot
-     survive on small screens. This block sits AFTER the overture nav rules on
-     purpose: same specificity, so source order is what lets it win. */
+     First look is just a burger — three cream lines on a fixed ink rail down
+     the left edge. Clicking it slides out a flyout with the five section
+     links, and the burger becomes a cross. One constant near-black ground so
+     contrast never depends on which band is scrolling behind it. Below 1100px
+     everything folds back to the plain horizontal bar. This block sits AFTER
+     the overture nav rules on purpose: same specificity, so source order is
+     what lets it win. */
+  .nav-burger{display:none}
   @media(min-width:1100px){
     body{padding-left:64px}
     nav.sections,.overture nav.sections{position:fixed;left:0;top:0;bottom:0;width:64px;z-index:60;
       background:var(--ink);border-top:none;border-bottom:none;
       border-right:1px solid rgba(246,242,234,.14)}
-    nav.sections .wrap{flex-direction:column;justify-content:center;gap:36px;height:100%;
-      max-width:none;padding:28px 0;overflow-y:auto;overflow-x:visible;scrollbar-width:none}
-    nav.sections a,.overture nav.sections a{writing-mode:vertical-rl;transform:rotate(180deg);
-      color:rgba(246,242,234,.6);font-size:10.5px;letter-spacing:.24em;
-      border-bottom:none;padding:0}
-    nav.sections a:hover,.overture nav.sections a:hover{color:var(--cream);border-bottom:none}
+    .nav-burger{display:flex;flex-direction:column;gap:5px;align-items:center;justify-content:center;
+      width:64px;height:64px;margin-top:4px;background:none;border:none;cursor:pointer}
+    .nav-burger span{display:block;width:20px;height:2px;background:var(--cream);
+      transition:transform .25s,opacity .25s}
+    .nav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .nav-burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+    .nav-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    nav.sections .wrap{position:fixed;left:64px;top:0;bottom:0;width:264px;z-index:55;
+      background:var(--ink);border-right:1px solid rgba(246,242,234,.14);
+      display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:28px;
+      padding:40px 36px;max-width:none;overflow-y:auto;scrollbar-width:none;
+      visibility:hidden;transform:translateX(-100%);
+      transition:transform .3s cubic-bezier(.3,.7,.3,1),visibility .3s}
+    nav.sections.open .wrap{visibility:visible;transform:none}
+    nav.sections a,.overture nav.sections a{color:rgba(246,242,234,.72);font-size:13px;
+      letter-spacing:.2em;border-bottom:1px solid transparent;padding-bottom:3px}
+    nav.sections a:hover,.overture nav.sections a:hover{color:var(--cream);border-bottom-color:var(--cream)}
     nav.sections a.cta,.overture nav.sections a.cta{color:var(--electric)}
+  }
+  @media(prefers-reduced-motion:reduce){
+    nav.sections .wrap,.nav-burger span{transition:none}
   }
 
   /* Scoped to .js so that if the script never runs, nothing is ever hidden.
@@ -510,7 +528,10 @@
       </div>
     </div>
     <nav class="sections" aria-label="Sections">
-      <div class="wrap">
+      <button class="nav-burger" id="navBurger" aria-label="Open sections menu" aria-expanded="false" aria-controls="navMenu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="wrap" id="navMenu">
         <a href="#latest">The Column</a>
         <a href="#simulator">The Simulator</a>
         <a href="#issue">Inside an Issue</a>
@@ -834,6 +855,23 @@ try{
   const arch = document.getElementById('footArchive');
   if(CONFIG.substack){ arch.href = CONFIG.substack.replace(/\/$/,'') + '/archive'; arch.target='_blank'; arch.rel='noopener'; }
   else { arch.style.display = 'none'; }
+})();
+
+
+/* ---------- side-rail burger menu (desktop only; the button is hidden and
+   inert below 1100px, where the nav is a plain horizontal bar) ---------- */
+(function(){
+  const nav = document.querySelector('nav.sections');
+  const burger = document.getElementById('navBurger');
+  if(!nav || !burger) return;
+  const set = open => {
+    nav.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', String(open));
+  };
+  burger.addEventListener('click', e => { e.stopPropagation(); set(!nav.classList.contains('open')); });
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => set(false)));
+  document.addEventListener('click', e => { if(!nav.contains(e.target)) set(false); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') set(false); });
 })();
 
 
