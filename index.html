@@ -85,10 +85,10 @@
     --accent:#7A1F2B; --accent-soft:#A8434F;
     /* The overture — everything above the simulator. Deep olive, cream, rose.
        Same logic as the subscribe band: dark ground, cream type, rose accent. */
-    /* Deepened one step from #1A2308 on the editor's ask (2026-07-27) — quieter,
-       sits back. One step further (#161E05) starts merging with the near-black
-       simulator band, so this is the floor. */
-    --olive:#182007; --olive-deep:#101607; --olive-lift:#222C15;
+    /* Deepened twice on the editor's ask (2026-07-27). At this depth the olive
+       is separated from the near-black simulator mostly by the hairline rule
+       between them — going darker than this makes the two bands one mass. */
+    --olive:#141B04; --olive-deep:#0C1103; --olive-lift:#1D2610;
     --cream:#F2ECDC; --cream-mid:rgba(242,236,220,.70); --cream-dim:rgba(242,236,220,.60);
     --olive-line:rgba(242,236,220,.17); --olive-line-soft:rgba(242,236,220,.10);
     /* Terminal-screen green: the overture accent AND the market-up tone — the
@@ -235,11 +235,11 @@
      top. The signature 2px rule rotates with it. Currently on The Column only —
      extend to other sections once the editor confirms the treatment. */
   .side{display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,4vw,56px);align-items:stretch}
-  .side .side-rail{display:flex;flex-direction:column;align-items:center;gap:16px;
-    border-right:2px solid var(--ink);padding-right:clamp(14px,2vw,24px)}
+  .side .side-rail{display:flex;flex-direction:column;align-items:center;gap:20px;
+    border-right:2px solid var(--ink);padding-right:clamp(16px,2.2vw,28px)}
   .side .side-rail h2,.side .side-rail .label{writing-mode:vertical-rl;transform:rotate(180deg)}
   .side .side-rail h2{font-family:var(--serif);font-weight:400;
-    font-size:clamp(1.9rem,4vw,3rem);line-height:1;letter-spacing:-.015em}
+    font-size:clamp(2.5rem,4.8vw,3.9rem);line-height:1;letter-spacing:-.015em}
   .side .side-note{display:flex;justify-content:flex-end;padding-bottom:14px;
     margin-bottom:28px;border-bottom:1px solid var(--rule)}
   @media(max-width:700px){
@@ -477,26 +477,30 @@
   .nav-burger{display:none}
   @media(min-width:1100px){
     body{padding-left:64px}
+    /* the marquee spans the full viewport width — indented behind the rail it
+       looked like it started halfway across the top */
+    .tape{position:relative;z-index:70;margin-left:-64px}
+    .nav-burger{margin-top:48px}
     nav.sections,.overture nav.sections{position:fixed;left:0;top:0;bottom:0;width:64px;z-index:60;
       background:var(--ink);border-top:none;border-bottom:none;
       border-right:1px solid rgba(246,242,234,.14)}
     .nav-burger{display:flex;flex-direction:column;gap:5px;align-items:center;justify-content:center;
-      width:64px;height:64px;margin-top:4px;background:none;border:none;cursor:pointer}
+      width:64px;height:64px;background:none;border:none;cursor:pointer}
     .nav-burger span{display:block;width:20px;height:2px;background:var(--cream);
       transition:transform .25s,opacity .25s}
     .nav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
     .nav-burger[aria-expanded="true"] span:nth-child(2){opacity:0}
     .nav-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-    nav.sections .wrap{position:fixed;left:64px;top:0;bottom:0;width:264px;z-index:55;
+    nav.sections .wrap{position:fixed;left:64px;top:0;bottom:0;width:clamp(300px,26vw,390px);z-index:55;
       background:var(--ink);border-right:1px solid rgba(246,242,234,.14);
       display:flex;flex-direction:column;justify-content:center;justify-content:safe center;
-      align-items:flex-start;gap:28px;
-      padding:40px 36px;max-width:none;overflow-y:auto;scrollbar-width:none;
+      align-items:flex-start;gap:34px;
+      padding:52px 46px;max-width:none;overflow-y:auto;scrollbar-width:none;
       visibility:hidden;transform:translateX(-100%);
       transition:transform .3s cubic-bezier(.3,.7,.3,1),visibility .3s}
     nav.sections.open .wrap{visibility:visible;transform:none}
-    nav.sections a,.overture nav.sections a{color:rgba(246,242,234,.72);font-size:13px;
-      letter-spacing:.2em;border-bottom:1px solid transparent;padding-bottom:3px}
+    nav.sections a,.overture nav.sections a{color:rgba(246,242,234,.72);font-size:14.5px;
+      letter-spacing:.22em;border-bottom:1px solid transparent;padding-bottom:5px}
     nav.sections a:hover,.overture nav.sections a:hover{color:var(--cream);border-bottom-color:var(--cream)}
     nav.sections a.cta,.overture nav.sections a.cta{color:var(--electric)}
   }
