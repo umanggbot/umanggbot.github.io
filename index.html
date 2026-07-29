@@ -141,7 +141,7 @@
      the nav rail, so rail + tape read as one piece of chrome framing the page.
      Hidden entirely unless real data arrives. */
   .tape{display:none;background:var(--ink);color:var(--paper);overflow:hidden;white-space:nowrap;
-    position:fixed;left:0;right:0;bottom:0;z-index:70;
+    position:fixed;left:0;right:0;bottom:0;z-index:50;
     border-top:1px solid rgba(246,242,234,.14)}
   .tape.on{display:block}
   /* the last band gets breathing room so the ticker never sits on the footer text */
@@ -300,7 +300,7 @@
   .verdict.pos{color:#5FCF9A}.verdict.neg{color:#EE8B8B}
   .verdict-cap{font-size:13.5px;color:rgba(246,242,234,.55);margin-bottom:24px}
   .bars{display:flex;flex-direction:column;gap:11px;margin-bottom:22px}
-  .bar-row{display:grid;grid-template-columns:112px 1fr 62px;align-items:center;gap:12px;font-size:12px}
+  .bar-row{display:grid;grid-template-columns:132px 1fr 62px;align-items:center;gap:12px;font-size:12px}
   .bar-row .bl{color:rgba(246,242,234,.6);letter-spacing:.04em}
   .bar-track{height:9px;background:rgba(246,242,234,.1);position:relative;overflow:hidden}
   .bar-fill{position:absolute;top:0;bottom:0;left:50%;transition:width .35s cubic-bezier(.3,.8,.3,1),left .35s cubic-bezier(.3,.8,.3,1)}
@@ -459,7 +459,7 @@
     border-bottom:1px solid var(--olive-line-soft)}
   .overture nav.sections a{color:var(--cream-mid)}
   .overture nav.sections a:hover{color:var(--cream);border-bottom-color:var(--cream)}
-  .overture nav.sections a.cta{color:var(--electric)}
+  .overture nav.sections a.cta{color:var(--cream);font-weight:600}
 
   /* hero */
   .overture .label{color:var(--cream-mid)}
@@ -514,7 +514,10 @@
     nav.sections a,.overture nav.sections a{color:rgba(246,242,234,.72);font-size:14.5px;
       letter-spacing:.22em;border-bottom:1px solid transparent;padding-bottom:5px}
     nav.sections a:hover,.overture nav.sections a:hover{color:var(--cream);border-bottom-color:var(--cream)}
-    nav.sections a.cta,.overture nav.sections a.cta{color:var(--electric)}
+    /* Subscribe: distinct by TYPE, not by neon — the serif italic the editor
+       likes, a step larger, full cream. Green is reserved for market data. */
+    nav.sections a.cta,.overture nav.sections a.cta{font-family:var(--serif);font-style:italic;
+      text-transform:none;letter-spacing:.02em;font-size:1.35rem;color:var(--cream)}
   }
   @media(prefers-reduced-motion:reduce){
     nav.sections .wrap,.nav-burger span{transition:none}
@@ -537,11 +540,6 @@
 
 <!-- keyboard users get past the fixed nav without crossing every link -->
 <a class="skip-link" href="#latest">Skip to content</a>
-
-<!-- ================= LIVE TAPE (hides itself if real data can't be fetched) ================= -->
-<div class="tape" id="tape" role="marquee" tabindex="0" aria-label="Live market rates">
-  <div class="tape-track" id="tapeTrack"></div>
-</div>
 
 <div class="layer">
 
@@ -679,17 +677,17 @@
 
           <div class="bars">
             <div class="bar-row">
-              <span class="bl">Revenue beat <span class="bw num">×0.8</span></span>
+              <span class="bl">Revenue beat <span class="bw num" id="bwRev"></span></span>
               <span class="bar-track"><span class="bar-fill pos" id="barRev"></span></span>
               <span class="bv num" id="valRev">+2.4</span>
             </div>
             <div class="bar-row">
-              <span class="bl">Guidance <span class="bw num">×5.5</span></span>
+              <span class="bl">Guidance <span class="bw num" id="bwGuide"></span></span>
               <span class="bar-track"><span class="bar-fill neg" id="barGuide"></span></span>
               <span class="bv num" id="valGuide">−11.0</span>
             </div>
             <div class="bar-row">
-              <span class="bl">Re-rating <span class="bw num">×1.0</span></span>
+              <span class="bl">Re-rating <span class="bw num" id="bwMult"></span></span>
               <span class="bar-track"><span class="bar-fill pos" id="barMult"></span></span>
               <span class="bv num" id="valMult">0.0</span>
             </div>
@@ -846,6 +844,15 @@
       </div>
     </div>
   </footer>
+
+<!-- ================= LIVE TAPE =================
+     Fixed to the bottom edge; lives at the END of the DOM so reading and focus
+     order match visual order, and INSIDE .layer so the rail (60) and flyout
+     (55) stack above its z-50 — the menu covers the ticker, never the reverse.
+     Hides itself if real data can't be fetched. -->
+<div class="tape" id="tape" role="marquee" tabindex="0" aria-label="Live market rates">
+  <div class="tape-track" id="tapeTrack"></div>
+</div>
 </div>
 
 <script>
@@ -863,8 +870,8 @@ const CONFIG = {
      Filling this in turns on BOTH the live post feed and the real subscribe box. */
   substack: "",
 
-  /* Live tape at the very top. Real data only — if the fetch fails the tape
-     hides itself rather than showing invented numbers. Set to false to remove. */
+  /* Live tape along the bottom edge. Real data only — if the fetch fails the
+     tape hides itself rather than showing invented numbers. Set false to remove. */
   showTape: true
 };
 /* ========================================================================== */
@@ -937,11 +944,17 @@ try{
 const W = { rev: 0.8, guide: 5.5, mult: 1.0 };   // sensitivity weights
 
 const el = id => document.getElementById(id);
-const fmt = n => (n > 0 ? '+' : n < 0 ? '−' : '') + Math.abs(n).toFixed(1);
+const fmt = n => { n = Math.round(n * 10) / 10;   /* sign follows the DISPLAYED value, so no red −0.0% */
+  return (n > 0 ? '+' : n < 0 ? '−' : '') + Math.abs(n).toFixed(1); };
 
 /* Load a named case: set all three dials, mark the chip active, run.
    To add a case, copy a button in the markup — no JS changes needed unless
    the dial pattern is new, in which case extend the verdict chain below. */
+/* the printed weights come from W itself, so they can never drift from it */
+el('bwRev').textContent   = '×' + W.rev.toFixed(1);
+el('bwGuide').textContent = '×' + W.guide.toFixed(1);
+el('bwMult').textContent  = '×' + W.mult.toFixed(1);
+
 function setCase(btn, rev, guide, mult){
   el('rev').value = rev; el('guide').value = guide; el('mult').value = mult;
   document.querySelectorAll('.sim-case').forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
@@ -965,11 +978,11 @@ function runSim(){
   const total = cRev + cGuide + cMult;
 
   /* built from W, so this line can never drift from the actual weights */
-  el('mathLine').textContent = '(' + fmt(rev) + ' × ' + W.rev + ') + (' + fmt(guide) + ' × ' + W.guide + ') + (' + fmt(mult) + ' × ' + W.mult + ') = ' + fmt(total);
+  el('mathLine').textContent = '(' + fmt(rev) + ' × ' + W.rev.toFixed(1) + ') + (' + fmt(guide) + ' × ' + W.guide.toFixed(1) + ') + (' + fmt(mult) + ' × ' + W.mult.toFixed(1) + ') = ' + fmt(total);
 
   const v = el('verdict');
   v.textContent = fmt(total) + '%';
-  v.className = 'verdict num ' + (total >= 0 ? 'pos' : 'neg');
+  v.className = 'verdict num ' + (Math.round(total * 10) / 10 >= 0 ? 'pos' : 'neg');
 
   const MAX = 44;   // scale for the bars
   [['barRev','valRev',cRev],['barGuide','valGuide',cGuide],['barMult','valMult',cMult]].forEach(([bar,val,c])=>{
@@ -985,7 +998,7 @@ function runSim(){
   const cap = el('verdictCap'), take = el('takeaway');
   const beat = rev > 0.4, miss = rev < -0.4, cut = guide < -0.4, raise = guide > 0.4;
 
-  if(beat && cut){
+  if(beat && cut && Math.abs(cGuide) >= Math.abs(cMult)){
     cap.textContent = 'A solid beat, erased by a ' + Math.abs(guide).toFixed(1) + ' percent trim to the outlook.';
     take.textContent = 'This is the case that confuses everyone. The quarter was good; the forecast got worse. Markets pay for the second one.';
   } else if(miss && raise){
@@ -1000,6 +1013,9 @@ function runSim(){
   } else if(miss && cut){
     cap.textContent = 'Missed, then guided lower. No ambiguity here.';
     take.textContent = 'Both levers pulling down. The only question left is whether the multiple falls too — and it usually does.';
+  } else if(total < 0 && (beat || miss || cut || raise) && Math.abs(cMult) > Math.abs(cGuide) && Math.abs(cMult) >= Math.abs(cRev)){
+    cap.textContent = 'Down — but not because of the quarter.';
+    take.textContent = 'The results held up; the price of each dollar of profit didn\'t. When the multiple moves more than the facts, the mood is the story.';
   } else if(Math.abs(mult) > 5){
     cap.textContent = 'The results barely moved. The mood did.';
     take.textContent = 'Sometimes nothing about the business changed at all and the price still moved — that is the multiple, which is really just sentiment with a number attached.';
@@ -1011,7 +1027,7 @@ function runSim(){
   /* the counterfactual: what revenue alone would need to do. The number is a
      model output — same honesty class as the verdict; the sentences are fixed. */
   const wi = el('whatIf');
-  if(cut && total < 0){
+  if(cut && total < 0 && Math.abs(cGuide) > cRev){
     const needed = Math.abs(cGuide) / W.rev;
     wi.textContent = needed > 10
       ? 'To offset that guidance cut with revenue alone, the beat would need to be ' + fmt(needed) + '% — past the end of the dial.'
