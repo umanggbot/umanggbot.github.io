@@ -453,6 +453,28 @@
   /* crisp edge where olive meets the near-black simulator */
   .sim{border-top:1px solid var(--olive-line)}
 
+  /* ---------------- Side navigation (desktop) ----------------
+     The section links leave the masthead and live on a fixed ink rail down the
+     left edge, spine-style — the same book-spine language as The Column's side
+     header. The rail keeps one constant near-black ground so link contrast
+     never depends on which band happens to be scrolling behind it. Below
+     1100px it folds back to the horizontal bar, which side rails cannot
+     survive on small screens. This block sits AFTER the overture nav rules on
+     purpose: same specificity, so source order is what lets it win. */
+  @media(min-width:1100px){
+    body{padding-left:64px}
+    nav.sections,.overture nav.sections{position:fixed;left:0;top:0;bottom:0;width:64px;z-index:60;
+      background:var(--ink);border-top:none;border-bottom:none;
+      border-right:1px solid rgba(246,242,234,.14)}
+    nav.sections .wrap{flex-direction:column;justify-content:center;gap:36px;height:100%;
+      max-width:none;padding:28px 0;overflow-y:auto;overflow-x:visible;scrollbar-width:none}
+    nav.sections a,.overture nav.sections a{writing-mode:vertical-rl;transform:rotate(180deg);
+      color:rgba(246,242,234,.6);font-size:10.5px;letter-spacing:.24em;
+      border-bottom:none;padding:0}
+    nav.sections a:hover,.overture nav.sections a:hover{color:var(--cream);border-bottom:none}
+    nav.sections a.cta,.overture nav.sections a.cta{color:var(--electric)}
+  }
+
   /* Scoped to .js so that if the script never runs, nothing is ever hidden.
      Without this guard a single early error leaves whole sections invisible. */
   .js .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
