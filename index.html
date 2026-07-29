@@ -302,9 +302,18 @@
   .bar-row .bv{text-align:right;font-variant-numeric:tabular-nums;color:var(--paper);font-weight:600}
   .takeaway{border-left:2px solid var(--accent-soft);padding:14px 0 14px 18px;font-size:14.5px;color:rgba(246,242,234,.8);line-height:1.6}
   .sim-disclaimer{font-size:12px;color:rgba(246,242,234,.38);margin-top:22px;line-height:1.6;max-width:62ch}
-  .sim-reset{background:none;border:none;color:var(--accent-soft);font-family:var(--sans);font-size:12.5px;
-    font-weight:600;letter-spacing:.06em;cursor:pointer;padding:0;margin-top:16px;text-transform:uppercase}
-  .sim-reset:hover{color:var(--paper)}
+  /* case chips: quiet text-buttons, the active one carries a hairline */
+  .sim-cases{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;margin-top:4px}
+  .sim-cases .sc-l{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(246,242,234,.5)}
+  .sim-case{background:none;border:none;padding:0 0 2px;cursor:pointer;font-family:var(--sans);font-size:12.5px;color:var(--accent-soft);border-bottom:1px solid transparent}
+  .sim-case:hover{color:var(--paper)}
+  .sim-case[aria-pressed="true"]{color:var(--paper);border-bottom-color:var(--accent-soft)}
+  /* the weights, printed where the suspicion occurs */
+  .bl .bw{opacity:.55;font-size:10.5px;letter-spacing:.06em}
+  .sim-whatif{font-size:12.5px;color:rgba(246,242,234,.55);line-height:1.6;margin-top:8px;padding-left:20px}
+  .sim-math{margin-top:18px}
+  .sim-math summary{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(246,242,234,.5);cursor:pointer}
+  .sim-math p{font-size:12.5px;color:rgba(246,242,234,.6);line-height:1.6;margin-top:10px}
 
   /* ---------------- Story grid ---------------- */
   .stories{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
@@ -350,6 +359,9 @@
   .specimen .sp-k{font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
   .specimen .sp-sec p{font-size:15px;color:var(--ink-soft);line-height:1.6}
   .specimen .sp-foot{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);padding-top:16px;border-top:1px solid var(--rule)}
+  .specimen .sp-run{padding-top:14px}
+  .specimen .sp-run a{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--rule)}
+  .specimen .sp-run a:hover{border-bottom-color:var(--accent)}
 
   /* ---------------- About ---------------- */
   .about-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(30px,5vw,60px);align-items:start}
@@ -640,7 +652,17 @@
             <div class="dial-sub">Whether investors are willing to pay more or less for each dollar of profit — the mood, essentially.</div>
           </div>
 
-          <button class="sim-reset" onclick="resetSim()">↺ Reset to the classic case</button>
+          <!-- Named archetypes, no company names — the labels are market
+               vocabulary and the values land on hand-written verdict branches.
+               To add a case: copy one button line, pick dial values, and if the
+               pattern is new add an else-if to the verdict chain in runSim. -->
+          <div class="sim-cases" role="group" aria-label="Load a case">
+            <span class="sc-l">Load a case</span>
+            <button class="sim-case" id="caseClassic" onclick="setCase(this,3,-2,0)" aria-pressed="true">The classic trap</button>
+            <button class="sim-case" onclick="setCase(this,-4,-5,-6)" aria-pressed="false">The kitchen sink</button>
+            <button class="sim-case" onclick="setCase(this,8,1,-15)" aria-pressed="false">Priced for perfection</button>
+            <button class="sim-case" onclick="setCase(this,0,0,-8)" aria-pressed="false">Mood swing</button>
+          </div>
         </div>
 
         <div class="readout">
@@ -657,23 +679,30 @@
 
           <div class="bars">
             <div class="bar-row">
-              <span class="bl">Revenue beat</span>
+              <span class="bl">Revenue beat <span class="bw num">×0.8</span></span>
               <span class="bar-track"><span class="bar-fill pos" id="barRev"></span></span>
               <span class="bv num" id="valRev">+2.4</span>
             </div>
             <div class="bar-row">
-              <span class="bl">Guidance</span>
+              <span class="bl">Guidance <span class="bw num">×5.5</span></span>
               <span class="bar-track"><span class="bar-fill neg" id="barGuide"></span></span>
               <span class="bv num" id="valGuide">−11.0</span>
             </div>
             <div class="bar-row">
-              <span class="bl">Re-rating</span>
+              <span class="bl">Re-rating <span class="bw num">×1.0</span></span>
               <span class="bar-track"><span class="bar-fill pos" id="barMult"></span></span>
               <span class="bv num" id="valMult">0.0</span>
             </div>
           </div>
 
           <div class="takeaway" id="takeaway">Guidance is weighted far more heavily than the quarter itself. That's the entire trick — and it's why "beat and fell" headlines aren't a contradiction.</div>
+          <div class="sim-whatif num" id="whatIf" hidden></div>
+
+          <details class="sim-math">
+            <summary>Show the arithmetic</summary>
+            <p class="num" id="mathLine"></p>
+            <p>Guidance is weighted about seven times revenue. That ratio is the whole model — and roughly the whole market. The exact numbers are illustrative; the imbalance is not.</p>
+          </details>
 
           <p class="sim-disclaimer">This is a teaching model, not a forecast. Real reactions depend on positioning, sector, rates and what management said on the call. The weightings here are illustrative and deliberately simple — the point is the relative size of the levers, not a number to trade on.</p>
         </div>
@@ -733,6 +762,9 @@
           <div class="sp-sec"><div class="sp-k">The move</div><p>Revenue beat. The stock fell nine percent anyway. That gap between "good quarter" and "bad day" is where most of the actual information lives.</p></div>
           <div class="sp-sec"><div class="sp-k">The number</div><p>Next quarter's guide came in two percent under consensus. Two percent. That was the entire nine.</p></div>
           <div class="sp-sec"><div class="sp-k">Worth keeping</div><p>Markets don't price what happened. They price the revision to what they expected to happen.</p></div>
+          <!-- the specimen and the simulator's default case are the same quarter
+               on purpose — this link makes that visible -->
+          <div class="sp-run"><a href="#simulator" onclick="el('caseClassic').click()">Run this quarter through the simulator ↑</a></div>
           <div class="sp-foot"><span>5 min read</span><span id="spDomain">terminalvalue.com</span></div>
         </div>
       </div>
@@ -907,6 +939,15 @@ const W = { rev: 0.8, guide: 5.5, mult: 1.0 };   // sensitivity weights
 const el = id => document.getElementById(id);
 const fmt = n => (n > 0 ? '+' : n < 0 ? '−' : '') + Math.abs(n).toFixed(1);
 
+/* Load a named case: set all three dials, mark the chip active, run.
+   To add a case, copy a button in the markup — no JS changes needed unless
+   the dial pattern is new, in which case extend the verdict chain below. */
+function setCase(btn, rev, guide, mult){
+  el('rev').value = rev; el('guide').value = guide; el('mult').value = mult;
+  document.querySelectorAll('.sim-case').forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+  runSim();
+}
+
 function runSim(){
   const rev   = parseFloat(el('rev').value);
   const guide = parseFloat(el('guide').value);
@@ -922,6 +963,9 @@ function runSim(){
 
   const cRev = rev * W.rev, cGuide = guide * W.guide, cMult = mult * W.mult;
   const total = cRev + cGuide + cMult;
+
+  /* built from W, so this line can never drift from the actual weights */
+  el('mathLine').textContent = '(' + fmt(rev) + ' × ' + W.rev + ') + (' + fmt(guide) + ' × ' + W.guide + ') + (' + fmt(mult) + ' × ' + W.mult + ') = ' + fmt(total);
 
   const v = el('verdict');
   v.textContent = fmt(total) + '%';
@@ -947,6 +991,9 @@ function runSim(){
   } else if(miss && raise){
     cap.textContent = 'A weak quarter, forgiven because the outlook went up.';
     take.textContent = 'The mirror image, and just as common. A bad three months matters far less than a better-looking next twelve.';
+  } else if(beat && raise && total < 0){
+    cap.textContent = 'Beat, raised — and still fell.';
+    take.textContent = 'When a stock is priced for perfection, a good quarter is the minimum, not a reward. The multiple hands back what optimism advanced.';
   } else if(beat && raise){
     cap.textContent = 'Beat and raised. The rare clean one.';
     take.textContent = 'When both dials point the same way there is nothing to explain — which is exactly why these quarters make dull reading.';
@@ -960,13 +1007,24 @@ function runSim(){
     cap.textContent = 'Roughly in line. The market shrugs.';
     take.textContent = 'In-line quarters are the majority and they rarely make headlines, which tells you something about what headlines select for.';
   }
+
+  /* the counterfactual: what revenue alone would need to do. The number is a
+     model output — same honesty class as the verdict; the sentences are fixed. */
+  const wi = el('whatIf');
+  if(cut && total < 0){
+    const needed = Math.abs(cGuide) / W.rev;
+    wi.textContent = needed > 10
+      ? 'To offset that guidance cut with revenue alone, the beat would need to be ' + fmt(needed) + '% — past the end of the dial.'
+      : 'To offset that guidance cut with revenue alone, the beat would need to be ' + fmt(needed) + '%. The dial reaches; most quarters don’t.';
+    wi.hidden = false;
+  } else { wi.hidden = true; }
 }
 
-function resetSim(){
-  el('rev').value = 3; el('guide').value = -2; el('mult').value = 0;
+/* a manual drag means the reader has left the named case — clear the chip */
+['rev','guide','mult'].forEach(id => el(id).addEventListener('input', () => {
+  document.querySelectorAll('.sim-case').forEach(b => b.setAttribute('aria-pressed','false'));
   runSim();
-}
-['rev','guide','mult'].forEach(id => el(id).addEventListener('input', runSim));
+}));
 runSim();
 
 
