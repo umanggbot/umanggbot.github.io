@@ -13,7 +13,7 @@
 
 <title>Terminal Value — weekly financial journalism, 500 words</title>
 <meta name="description" content="Terminal Value is a weekly column on markets, money and the companies quietly running your life. Five hundred words, once a week, no jargon and no homework." />
-<link rel="canonical" href="https://terminalvalue.com/" />
+<link rel="canonical" href="https://umanggbot.github.io/" />
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 <meta name="author" content="Terminal Value" />
 
@@ -21,7 +21,7 @@
 <meta property="og:site_name" content="Terminal Value" />
 <meta property="og:title" content="Terminal Value — what it's worth when the noise stops" />
 <meta property="og:description" content="A weekly column on markets, money and the companies quietly running your life. 500 words. Once a week." />
-<meta property="og:url" content="https://terminalvalue.com/" />
+<meta property="og:url" content="https://umanggbot.github.io/" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Terminal Value — what it's worth when the noise stops" />
 <meta name="twitter:description" content="A weekly column on markets, money and the companies quietly running your life. 500 words. Once a week." />
@@ -33,35 +33,35 @@
   "@graph": [
     {
       "@type": "NewsMediaOrganization",
-      "@id": "https://terminalvalue.com/#org",
+      "@id": "https://umanggbot.github.io/#org",
       "name": "Terminal Value",
-      "url": "https://terminalvalue.com/",
+      "url": "https://umanggbot.github.io/",
       "slogan": "What it's worth when the noise stops.",
       "description": "Terminal Value is an independent weekly column of financial journalism. Each issue explains one thing that actually moved markets, in about five hundred words, without jargon.",
       "foundingDate": "2026",
       "knowsAbout": ["equity markets","macroeconomics","company earnings","valuation","central bank policy","technology companies","personal finance"],
-      "publishingPrinciples": "https://terminalvalue.com/#about"
+      "publishingPrinciples": "https://umanggbot.github.io/#about"
     },
     {
       "@type": "WebSite",
-      "@id": "https://terminalvalue.com/#website",
-      "url": "https://terminalvalue.com/",
+      "@id": "https://umanggbot.github.io/#website",
+      "url": "https://umanggbot.github.io/",
       "name": "Terminal Value",
-      "publisher": { "@id": "https://terminalvalue.com/#org" },
+      "publisher": { "@id": "https://umanggbot.github.io/#org" },
       "inLanguage": "en"
     },
     {
       "@type": "LearningResource",
-      "@id": "https://terminalvalue.com/#simulator",
+      "@id": "https://umanggbot.github.io/#simulator",
       "name": "The Earnings Simulator",
       "description": "An interactive teaching model showing why a company can beat on revenue and still see its share price fall — because markets price the revision to expectations, not the quarter itself.",
       "learningResourceType": "interactive simulation",
       "educationalLevel": "intermediate",
-      "isPartOf": { "@id": "https://terminalvalue.com/#website" }
+      "isPartOf": { "@id": "https://umanggbot.github.io/#website" }
     },
     {
       "@type": "FAQPage",
-      "@id": "https://terminalvalue.com/#faq",
+      "@id": "https://umanggbot.github.io/#faq",
       "mainEntity": [
         {"@type":"Question","name":"What is Terminal Value?","acceptedAnswer":{"@type":"Answer","text":"Terminal Value is an independent weekly column of financial journalism. Each issue takes one thing that actually moved the market — an earnings report, a rate decision, a number buried in a filing — and explains what it meant, in about five hundred words."}},
         {"@type":"Question","name":"How often does Terminal Value publish?","acceptedAnswer":{"@type":"Answer","text":"Once a week, every week. Around 500 words, a five-minute read."}},
@@ -564,6 +564,7 @@
         <a href="#simulator">The Simulator</a>
         <a href="#issue">Inside an Issue</a>
         <a href="#about">About</a>
+        <a href="archive.html">Archive</a>
         <a href="#subscribe" class="cta">Subscribe</a>
       </div>
     </nav>
@@ -763,7 +764,7 @@
           <!-- the specimen and the simulator's default case are the same quarter
                on purpose — this link makes that visible -->
           <div class="sp-run"><a href="#simulator" onclick="el('caseClassic').click()">Run this quarter through the simulator ↑</a></div>
-          <div class="sp-foot"><span>5 min read</span><span id="spDomain">terminalvalue.com</span></div>
+          <div class="sp-foot"><span>5 min read</span><span id="spDomain">umanggbot.github.io</span></div>
         </div>
       </div>
         </div>
@@ -830,12 +831,13 @@
           <a href="#simulator">The Simulator</a>
           <a href="#issue">Inside an Issue</a>
           <a href="#about">About</a>
+          <a href="archive.html">Archive</a>
         </div>
         <div>
           <h3>Elsewhere</h3>
           <a href="#subscribe">Subscribe</a>
           <a href="#" id="footMail">Contact</a>
-          <a href="#" id="footArchive">Archive</a>
+          <a href="#" id="footArchive">On Substack</a>
         </div>
       </div>
       <div class="foot-base">
@@ -862,8 +864,8 @@
 const CONFIG = {
   brand:    "Terminal Value",
   tagline:  "What it's worth when the noise stops",
-  domain:   "terminalvalue.com",
-  contact:  "hello@terminalvalue.com",     // ← your real new email
+  domain:   "umanggbot.github.io",
+  contact:  "",                            // ← real inbox only. Empty hides the Contact links entirely.
 
   /* Your Substack. Leave "" until it exists.
      Example: "https://terminalvalue.substack.com"
@@ -909,9 +911,20 @@ try{
   document.getElementById('footCopy').textContent = '© ' + new Date().getFullYear() + ' ' + CONFIG.brand;
   document.title = CONFIG.brand + ' — weekly financial journalism, 500 words';
 
-  const mail = 'mailto:' + CONFIG.contact;
-  const am = document.getElementById('aboutMail'); am.textContent = CONFIG.contact; am.href = mail;
-  const fm = document.getElementById('footMail');  fm.textContent = 'Email'; fm.href = mail;
+  const am = document.getElementById('aboutMail');
+  const fm = document.getElementById('footMail');
+  if(CONFIG.contact){
+    const mail = 'mailto:' + CONFIG.contact;
+    am.textContent = CONFIG.contact; am.href = mail;
+    fm.textContent = 'Email';        fm.href = mail;
+  } else {
+    /* No inbox yet: hide the Contact row and the footer link rather than
+       publish a mailto that bounces. Same honesty rule as the tape and the
+       archive link — nothing on the live site that does not work. */
+    const dd = am.closest('dd');
+    if(dd){ const dt = dd.previousElementSibling; if(dt && dt.tagName==='DT') dt.style.display='none'; dd.style.display='none'; }
+    fm.style.display = 'none';
+  }
 
   const arch = document.getElementById('footArchive');
   if(CONFIG.substack){ arch.href = CONFIG.substack.replace(/\/$/,'') + '/archive'; arch.target='_blank'; arch.rel='noopener'; }

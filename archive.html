@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- ==========================================================================
+     TERMINAL VALUE — THE ARCHIVE
+     Second page. Same rules as index.html: one self-contained file, no build
+     step, no framework, two fonts. Everything you edit lives in the ARCHIVE
+     block near the bottom. Look for "EDIT ME".
+     ========================================================================== -->
+
+<title>The Archive — Terminal Value</title>
+<meta name="description" content="Every issue of Terminal Value in one place, including the handwritten notebooks that came before the column, digitised and transcribed." />
+<link rel="canonical" href="https://umanggbot.github.io/archive.html" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<meta name="author" content="Terminal Value" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Terminal Value" />
+<meta property="og:title" content="The Archive — Terminal Value" />
+<meta property="og:description" content="Every issue in one place, including the handwritten notebooks that came before the column." />
+<meta property="og:url" content="https://umanggbot.github.io/archive.html" />
+<meta name="theme-color" content="#F6F2EA" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  /* ---------- tokens: copied verbatim from index.html, do not diverge ---------- */
+  :root{
+    --paper:#F6F2EA; --paper-2:#EFE9DD;
+    --ink:#14110E; --ink-soft:#5A534A;
+    --accent:#7A1F2B; --accent-soft:#A8434F;
+    --olive:#141B04; --olive-lift:#1D2610;
+    --cream:#F2ECDC; --cream-mid:rgba(242,236,220,.70); --cream-dim:rgba(242,236,220,.60);
+    --olive-line:rgba(242,236,220,.17); --olive-line-soft:rgba(242,236,220,.10);
+    --electric:#00F5A0;
+    --butter:#FBF2C9;
+    --rule:rgba(20,17,14,.14); --rule-soft:rgba(20,17,14,.08);
+    --serif:"Instrument Serif", Georgia, "Times New Roman", serif;
+    --sans:"Inter", -apple-system, system-ui, sans-serif;
+    --wrap:1180px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  [id]{scroll-margin-top:18px}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 clamp(20px,5vw,56px)}
+  .num{font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .label{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+  .label.quiet{color:var(--ink-soft)}
+  .skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:var(--cream);padding:12px 18px;z-index:99}
+  .skip:focus{left:12px;top:12px}
+  :focus-visible{outline:2px solid var(--accent-soft);outline-offset:3px}
+
+  /* ---------- preview banner: visible ONLY while PREVIEW is true ---------- */
+  .preview-flag{background:var(--butter);color:var(--ink);border-bottom:1px solid rgba(20,17,14,.2);
+    font-size:12.5px;letter-spacing:.04em;padding:10px 0}
+  .preview-flag .wrap{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+  .preview-flag strong{font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:11px}
+
+  /* ---------- overture: compact olive band, same ground as the home page ---------- */
+  .overture{background:var(--olive);color:var(--cream);padding:clamp(22px,3vw,30px) 0}
+  .top-row{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap}
+  .wordmark{font-family:var(--serif);font-size:clamp(1.7rem,3.4vw,2.3rem);line-height:1;color:var(--cream)}
+  .wordmark .tv-dot{color:#fff}
+  .back{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream-dim);transition:color .18s}
+  .back:hover{color:var(--cream)}
+
+  /* ---------- nav: same rules, links resolve back to the home page ---------- */
+  nav.sections{background:var(--olive-lift);border-top:1px solid var(--olive-line);
+    border-bottom:1px solid var(--olive-line);position:sticky;top:0;z-index:40}
+  nav.sections .wrap{display:flex;gap:clamp(16px,2.4vw,32px);align-items:center;flex-wrap:wrap;padding-top:13px;padding-bottom:13px}
+  nav.sections a{font-size:13px;letter-spacing:.06em;color:var(--cream-dim);transition:color .18s}
+  nav.sections a:hover,nav.sections a[aria-current]{color:var(--cream)}
+  nav.sections a[aria-current]{border-bottom:1px solid var(--accent-soft);padding-bottom:2px}
+  nav.sections a.cta{margin-left:auto;font-family:var(--serif);font-style:italic;font-size:16px;color:var(--cream)}
+
+  /* ---------- the spine header, matching The Column ---------- */
+  .archive-band{padding:clamp(54px,7vw,88px) 0}
+  .side{display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,4vw,56px);align-items:stretch}
+  .side .side-rail{display:flex;flex-direction:column;align-items:center;gap:20px;
+    border-right:2px solid var(--ink);padding-right:clamp(16px,2.2vw,28px)}
+  .side .side-rail h2,.side .side-rail .label{writing-mode:vertical-rl;transform:rotate(180deg)}
+  .side .side-rail h2{font-family:var(--serif);font-weight:400;
+    font-size:clamp(2.5rem,4.8vw,3.9rem);line-height:1;letter-spacing:-.015em}
+  .side .side-note{display:flex;justify-content:flex-end;padding-bottom:14px;
+    margin-bottom:28px;border-bottom:1px solid var(--rule)}
+  .side-note .note{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
+  @media(max-width:700px){
+    .side{display:block}
+    .side .side-rail{flex-direction:row;align-items:flex-end;justify-content:flex-start;gap:14px;
+      border-right:none;border-bottom:2px solid var(--ink);padding:0 0 14px;margin-bottom:26px}
+    .side .side-rail h2,.side .side-rail .label{writing-mode:horizontal-tb;transform:none}
+  }
+
+  /* ---------- filters ---------- */
+  .controls{display:flex;gap:26px;align-items:flex-end;flex-wrap:wrap;
+    padding-bottom:18px;margin-bottom:30px;border-bottom:1px solid var(--rule)}
+  .filter-set{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .filter-set .set-label{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-soft);margin-right:4px}
+  .chip{font-family:var(--sans);font-size:12.5px;letter-spacing:.04em;color:var(--ink-soft);
+    background:none;border:1px solid var(--rule);padding:6px 13px;cursor:pointer;
+    transition:background .16s,color .16s,border-color .16s}
+  .chip:hover{border-color:var(--ink);color:var(--ink)}
+  .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .search{margin-left:auto;position:relative}
+  .search input{font-family:var(--sans);font-size:13.5px;color:var(--ink);background:none;
+    border:none;border-bottom:1px solid var(--rule);padding:7px 4px 7px 0;width:210px;outline:none}
+  .search input:focus{border-bottom-color:var(--ink)}
+  .search input::placeholder{color:var(--ink-soft)}
+
+  .count{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:22px}
+
+  /* ---------- the grid ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:1px;background:var(--rule)}
+  .card{background:var(--paper);padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;
+    gap:12px;text-align:left;font:inherit;color:inherit;border:none;cursor:pointer;
+    transition:background .18s;min-height:230px}
+  .card:hover{background:var(--paper-2)}
+  .card.is-link{cursor:pointer}
+  .card-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .card-date{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);
+    font-variant-numeric:tabular-nums}
+  .pill{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    padding:3px 8px;border:1px solid var(--rule);color:var(--ink-soft);white-space:nowrap}
+  .pill.ink{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .pill.pending{background:var(--butter);border-color:rgba(20,17,14,.2);color:var(--ink)}
+  .card h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.35rem,2.2vw,1.7rem);
+    line-height:1.15;letter-spacing:-.01em}
+  .card p{font-size:14.5px;color:var(--ink-soft);line-height:1.55;flex:1}
+  .card-foot{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);
+    display:flex;align-items:center;gap:7px}
+  .card-foot .arrow{transition:transform .18s}
+  .card:hover .card-foot .arrow{transform:translateX(4px)}
+
+  /* the paper stand-in for a notebook page that has no scan uploaded yet —
+     drawn in CSS on purpose: never a broken image, never a fake photograph */
+  .leaf{height:104px;border:1px solid var(--rule);position:relative;overflow:hidden;
+    background:
+      repeating-linear-gradient(to bottom,transparent 0 17px,rgba(20,17,14,.09) 17px 18px),
+      linear-gradient(#FBF8F0,#F1EBDD)}
+  .leaf::after{content:"";position:absolute;left:26px;top:0;bottom:0;width:1px;background:rgba(122,31,43,.28)}
+  .leaf .leaf-note{position:absolute;right:9px;bottom:7px;font-size:9.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-soft);background:var(--paper);padding:2px 6px}
+  .leaf img{height:100%;width:100%;object-fit:cover}
+
+  /* ---------- empty state ---------- */
+  .empty{border:1px solid var(--rule);padding:clamp(34px,5vw,58px);text-align:center}
+  .empty h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3vw,2.1rem);margin-bottom:12px}
+  .empty p{color:var(--ink-soft);max-width:44ch;margin:0 auto;font-size:15px}
+
+  /* ---------- reader ---------- */
+  dialog.reader{border:none;padding:0;max-width:min(1020px,94vw);width:100%;background:var(--paper);
+    color:var(--ink);max-height:90vh}
+  dialog.reader::backdrop{background:rgba(20,17,14,.72)}
+  .reader-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;
+    padding:clamp(20px,3vw,30px) clamp(20px,3.4vw,36px) 16px;border-bottom:1px solid var(--rule)}
+  .reader-head h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.1}
+  .reader-close{background:none;border:1px solid var(--rule);font:inherit;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-soft);padding:7px 13px;cursor:pointer;white-space:nowrap}
+  .reader-close:hover{border-color:var(--ink);color:var(--ink)}
+  .reader-body{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,3vw,34px);
+    padding:clamp(20px,3vw,30px) clamp(20px,3.4vw,36px) clamp(24px,3.4vw,36px);
+    overflow-y:auto;max-height:calc(90vh - 110px)}
+  @media(max-width:820px){.reader-body{grid-template-columns:1fr}}
+  .scan-col .leaf{height:auto;min-height:340px}
+  .scan-col figcaption{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-soft);margin-top:10px}
+  .transcript h4{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:14px}
+  .transcript p{margin-bottom:14px;font-size:16px;line-height:1.68}
+  .transcript .pending-note{color:var(--ink-soft);font-size:14.5px}
+
+  /* ---------- footer: matches index.html ---------- */
+  footer{background:var(--ink);color:rgba(246,242,234,.6);padding:0 0 34px;margin-top:clamp(40px,6vw,80px)}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px;padding:50px 0 34px;border-top:1px solid rgba(246,242,234,.14)}
+  @media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:30px}}
+  .foot-brand{font-family:var(--serif);font-size:1.8rem;color:var(--paper);margin-bottom:10px}
+  .foot-grid p{font-size:14px;max-width:36ch}
+  .foot-grid h3{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-soft);margin-bottom:14px}
+  .foot-grid a{display:block;font-size:14px;padding:5px 0;transition:color .18s}
+  .foot-grid a:hover{color:var(--paper)}
+  .foot-base{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
+    padding-top:22px;border-top:1px solid rgba(246,242,234,.14);font-size:12px;letter-spacing:.06em}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the archive</a>
+
+<div class="preview-flag" id="previewFlag" hidden>
+  <div class="wrap">
+    <strong>Preview</strong>
+    <span>The entries below are placeholders showing the layout only — not real articles. Set <code>PREVIEW = false</code> before this page goes near the live site.</span>
+  </div>
+</div>
+
+<header class="overture">
+  <div class="wrap">
+    <div class="top-row">
+      <a class="wordmark" href="index.html">Terminal Value<span class="tv-dot">.</span></a>
+      <a class="back" href="index.html">← Back to the front page</a>
+    </div>
+  </div>
+</header>
+
+<nav class="sections" aria-label="Sections">
+  <div class="wrap">
+    <a href="index.html#latest">The Column</a>
+    <a href="index.html#simulator">The Simulator</a>
+    <a href="index.html#issue">Inside an Issue</a>
+    <a href="index.html#about">About</a>
+    <a href="archive.html" aria-current="page">Archive</a>
+    <a href="index.html#subscribe" class="cta">Subscribe</a>
+  </div>
+</nav>
+
+<main id="main" class="archive-band">
+  <div class="wrap side">
+    <div class="side-rail">
+      <h2>The Archive</h2>
+      <span class="label">Est. 2026</span>
+    </div>
+
+    <div>
+      <div class="side-note"><span class="note" id="rangeNote">&nbsp;</span></div>
+
+      <div class="controls">
+        <div class="filter-set" role="group" aria-label="Filter by year" id="yearSet">
+          <span class="set-label">Year</span>
+        </div>
+        <div class="search">
+          <label class="skip" for="q">Search the archive</label>
+          <input id="q" type="search" placeholder="Search titles…" autocomplete="off" />
+        </div>
+      </div>
+
+      <p class="count" id="count">&nbsp;</p>
+      <div class="grid" id="grid"></div>
+      <div id="emptySlot"></div>
+    </div>
+  </div>
+</main>
+
+<dialog class="reader" id="reader" aria-labelledby="readerTitle">
+  <div class="reader-head">
+    <div>
+      <p class="label quiet" id="readerMeta"></p>
+      <h3 id="readerTitle"></h3>
+    </div>
+    <button class="reader-close" id="readerClose">Close</button>
+  </div>
+  <div class="reader-body">
+    <figure class="scan-col">
+      <div class="leaf" id="readerLeaf"><span class="leaf-note">Notebook page</span></div>
+      <figcaption id="readerCaption"></figcaption>
+    </figure>
+    <div class="transcript">
+      <h4>Transcript</h4>
+      <div id="readerText"></div>
+    </div>
+  </div>
+</dialog>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">Terminal Value</div>
+        <p>Independent financial journalism. What it's worth when the noise stops.</p>
+      </div>
+      <div>
+        <h3>Read</h3>
+        <a href="index.html#latest">The Column</a>
+        <a href="index.html#simulator">The Simulator</a>
+        <a href="index.html#issue">Inside an Issue</a>
+        <a href="archive.html">Archive</a>
+      </div>
+      <div>
+        <h3>Elsewhere</h3>
+        <a href="index.html#subscribe">Subscribe</a>
+        <a href="index.html#about">About</a>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span id="footCopy">© 2026 Terminal Value</span>
+      <span>Written and edited independently.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ==========================================================================
+   EDIT ME — everything below is the archive's contents.
+   ========================================================================== */
+
+/* PREVIEW = true shows the placeholder entries and the amber banner, so a
+   layout draft can never be mistaken for real work. Set it to false and the
+   page reads ONLY from ARCHIVE — which is empty until real pieces go in.
+   Same honesty rule as the ticker: nothing invented, ever, on a live page. */
+const PREVIEW = false;
+
+/* One object per piece.
+     date        "2026-08-08"  — ISO, used for sorting and the year filter
+     title       the headline
+     kind        "handwritten" | "digital"
+     dek         one line of description (optional)
+     url         where a digital issue lives (optional)
+     scan        path to the scanned page image, e.g. "scans/2024-03-notebook.jpg"
+                 leave out and a drawn paper stand-in is shown instead
+     transcript  array of paragraphs — the digitised text
+                 leave out and the piece is marked "transcript pending"       */
+const ARCHIVE = [
+  /* real entries go here */
+];
+
+const SAMPLE = [
+  {date:"2026-08-08", title:"Placeholder — a recent digital issue", kind:"digital",
+   dek:"This card shows how a published weekly issue appears once it exists.", url:"#"},
+  {date:"2026-08-01", title:"Placeholder — another digital issue", kind:"digital",
+   dek:"Title, date, one line, and a link out to where it was published."},
+  {date:"2025-11-14", title:"Placeholder — a transcribed notebook page", kind:"handwritten",
+   dek:"Handwritten pieces open a reader with the scan beside the typed text.",
+   transcript:["This is where the digitised text of a handwritten page appears, paragraph by paragraph, exactly as written.",
+               "The scan sits on the left; the transcript runs down the right. Both are the same piece — one is the record, the other is what a search engine and a reader on a phone can actually use."]},
+  {date:"2025-09-02", title:"Placeholder — a scan awaiting transcription", kind:"handwritten",
+   dek:"A page that has been photographed but not yet typed up is marked, not hidden."}
+];
+
+/* ========================================================================== */
+
+(function(){
+  const src = PREVIEW ? SAMPLE : ARCHIVE;
+  const flag = document.getElementById('previewFlag');
+  if(PREVIEW) flag.hidden = false;
+
+  const grid = document.getElementById('grid');
+  const emptySlot = document.getElementById('emptySlot');
+  const countEl = document.getElementById('count');
+  const rangeNote = document.getElementById('rangeNote');
+  const yearSet = document.getElementById('yearSet');
+  const q = document.getElementById('q');
+
+  document.getElementById('footCopy').textContent = '© ' + new Date().getFullYear() + ' Terminal Value';
+
+  const items = src.slice().sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+  let yearFilter = 'all', query = '';
+
+  const fmt = iso => {
+    const d = new Date(iso + 'T00:00:00');
+    if(isNaN(d)) return iso || '';
+    return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  };
+  const yearOf = it => (it.date||'').slice(0,4);
+
+  /* year chips, built from the data rather than hard-coded */
+  const years = [...new Set(items.map(yearOf).filter(Boolean))].sort().reverse();
+  if(years.length > 1){
+    const mk = (val,text,pressed)=>{
+      const b=document.createElement('button');
+      b.className='chip'; b.dataset.year=val; b.textContent=text;
+      b.setAttribute('aria-pressed', pressed ? 'true':'false');
+      yearSet.appendChild(b); return b;
+    };
+    mk('all','All',true);
+    years.forEach(y=>mk(y,y,false));
+  } else {
+    yearSet.style.display='none';
+  }
+
+  if(items.length){
+    const first = yearOf(items[items.length-1]), last = yearOf(items[0]);
+    rangeNote.textContent = first === last ? first : first + ' — ' + last;
+  }
+
+  function matches(it){
+    if(yearFilter !== 'all' && yearOf(it) !== yearFilter) return false;
+    if(query && !(it.title||'').toLowerCase().includes(query) && !(it.dek||'').toLowerCase().includes(query)) return false;
+    return true;
+  }
+
+  function leafHTML(it){
+    if(it.scan) return '<div class="leaf"><img src="'+it.scan+'" alt="Scanned notebook page: '+esc(it.title)+'" loading="lazy" /></div>';
+    return '<div class="leaf"><span class="leaf-note">Scan to come</span></div>';
+  }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function render(){
+    const shown = items.filter(matches);
+    grid.innerHTML = '';
+    emptySlot.innerHTML = '';
+
+    if(!items.length){
+      countEl.textContent = '';
+      emptySlot.innerHTML = '<div class="empty"><h3>The archive opens with issue № 001.</h3>'
+        + '<p>Nothing is listed here yet, and nothing invented will be. Published issues and digitised notebook pages appear as they exist.</p></div>';
+      return;
+    }
+    if(!shown.length){
+      countEl.textContent = '';
+      emptySlot.innerHTML = '<div class="empty"><h3>Nothing matches that.</h3><p>Try a different year, or clear the search.</p></div>';
+      return;
+    }
+
+    countEl.textContent = shown.length + (shown.length === 1 ? ' piece' : ' pieces');
+
+    shown.forEach(it=>{
+      const hand = it.kind === 'handwritten';
+      const hasText = Array.isArray(it.transcript) && it.transcript.length;
+      const el = document.createElement(hand ? 'button' : (it.url ? 'a' : 'div'));
+      el.className = 'card';
+      if(hand){ el.type='button'; el.addEventListener('click', ()=>openReader(it)); }
+      else if(it.url){ el.href = it.url; el.className='card is-link';
+        if(/^https?:/.test(it.url)){ el.target='_blank'; el.rel='noopener'; } }
+
+      const pill = hand
+        ? (hasText ? '<span class="pill ink">Digitised</span>' : '<span class="pill pending">Transcript pending</span>')
+        : '<span class="pill">Issue</span>';
+
+      el.innerHTML =
+        (hand ? leafHTML(it) : '')
+        + '<div class="card-top"><span class="card-date num">'+esc(fmt(it.date))+'</span>'+pill+'</div>'
+        + '<h3>'+esc(it.title)+'</h3>'
+        + (it.dek ? '<p>'+esc(it.dek)+'</p>' : '<p></p>')
+        + '<span class="card-foot">'
+          + (hand ? (hasText ? 'Read the transcript' : 'View the page') : (it.url ? 'Read the issue' : 'Not yet online'))
+          + (hand || it.url ? ' <span class="arrow">→</span>' : '')
+        + '</span>';
+      grid.appendChild(el);
+    });
+  }
+
+  /* ---------- reader ---------- */
+  const reader = document.getElementById('reader');
+  function openReader(it){
+    document.getElementById('readerMeta').textContent = fmt(it.date) + ' · Notebook';
+    document.getElementById('readerTitle').textContent = it.title || '';
+    const leaf = document.getElementById('readerLeaf');
+    leaf.innerHTML = it.scan
+      ? '<img src="'+it.scan+'" alt="Scanned notebook page: '+esc(it.title)+'" />'
+      : '<span class="leaf-note">Scan to come</span>';
+    document.getElementById('readerCaption').textContent = it.scan ? 'Original page, as written.' : 'The original page has not been scanned yet.';
+    const text = document.getElementById('readerText');
+    if(Array.isArray(it.transcript) && it.transcript.length){
+      text.innerHTML = it.transcript.map(p=>'<p>'+esc(p)+'</p>').join('');
+    } else {
+      text.innerHTML = '<p class="pending-note">This page has not been transcribed yet. It is listed here so the record stays complete rather than tidy.</p>';
+    }
+    if(typeof reader.showModal === 'function') reader.showModal(); else reader.setAttribute('open','');
+  }
+  document.getElementById('readerClose').addEventListener('click', ()=> reader.close());
+  reader.addEventListener('click', e => { if(e.target === reader) reader.close(); });
+
+  /* ---------- filter wiring ---------- */
+  yearSet.addEventListener('click', e=>{
+    const b = e.target.closest('.chip[data-year]'); if(!b) return;
+    yearFilter = b.dataset.year;
+    yearSet.querySelectorAll('.chip[data-year]').forEach(o=>o.setAttribute('aria-pressed', String(o===b)));
+    render();
+  });
+  q.addEventListener('input', ()=>{ query = q.value.trim().toLowerCase(); render(); });
+
+  render();
+})();
+</script>
+</body>
+</html>
