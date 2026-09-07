@@ -15,7 +15,7 @@
 <meta name="description" content="Every issue of Terminal Value in one place, including the handwritten notebooks that came before the column, digitised and transcribed." />
 <link rel="canonical" href="https://umanggbot.github.io/archive.html" />
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
-<meta name="author" content="Terminal Value" />
+<meta name="author" content="Umang" />
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Terminal Value" />
@@ -125,6 +125,7 @@
   .card:hover{background:var(--paper-2)}
   .card.is-link{cursor:pointer}
   .card-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .card-read{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
   .card-date{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);
     font-variant-numeric:tabular-nums}
   .pill{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
@@ -136,6 +137,7 @@
   .card p{font-size:14.5px;color:var(--ink-soft);line-height:1.55;flex:1}
   .card-foot{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);
     display:flex;align-items:center;gap:7px}
+  .card-foot .card-read{margin-left:auto}
   .card-foot .arrow{transition:transform .18s}
   .card:hover .card-foot .arrow{transform:translateX(4px)}
 
@@ -155,26 +157,68 @@
   .empty h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3vw,2.1rem);margin-bottom:12px}
   .empty p{color:var(--ink-soft);max-width:44ch;margin:0 auto;font-size:15px}
 
+  /* ---------- every piece, in full (in-page, crawlable) ---------- */
+  .fulltext{margin-top:70px;border-top:1px solid var(--rule);padding-top:26px}
+  .fulltext-h{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink-soft);margin-bottom:6px}
+  .fulltext details{border-bottom:1px solid var(--rule-soft)}
+  .fulltext summary{cursor:pointer;list-style:none;padding:15px 0;display:flex;
+    justify-content:space-between;align-items:baseline;gap:18px}
+  .fulltext summary::-webkit-details-marker{display:none}
+  .fulltext summary:hover .ft-t{color:var(--accent)}
+  .fulltext .ft-t{font-family:var(--serif);font-size:1.25rem;line-height:1.25}
+  .fulltext .ft-d{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-soft);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .fulltext .ft-body{padding:2px 0 30px}
+
   /* ---------- reader ---------- */
   dialog.reader{border:none;padding:0;max-width:min(1020px,94vw);width:100%;background:var(--paper);
-    color:var(--ink);max-height:90vh}
+    color:var(--ink);max-height:90vh;display:flex;flex-direction:column}
+  dialog.reader:not([open]){display:none}
   dialog.reader::backdrop{background:rgba(20,17,14,.72)}
   .reader-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;
-    padding:clamp(20px,3vw,30px) clamp(20px,3.4vw,36px) 16px;border-bottom:1px solid var(--rule)}
+    padding:clamp(20px,3vw,30px) clamp(20px,3.4vw,36px) 16px;border-bottom:1px solid var(--rule);
+    flex:0 0 auto}
   .reader-head h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.1}
+  .reader-tools{display:flex;gap:8px;flex-shrink:0}
+  .reader-nav{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border-top:1px solid var(--rule);
+    flex:0 0 auto}
+  .reader-step{background:var(--paper);border:none;font:inherit;text-align:left;padding:16px clamp(20px,3.4vw,36px);
+    cursor:pointer;display:flex;flex-direction:column;gap:4px;transition:background .16s;min-width:0}
+  .reader-step:hover:not(:disabled){background:var(--paper-2)}
+  .reader-step:disabled{opacity:.35;cursor:default}
+  .reader-step.next{text-align:right;align-items:flex-end}
+  .reader-step .dir{font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .reader-step .ttl{font-family:var(--serif);font-size:1.05rem;line-height:1.2;color:var(--ink);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
   .reader-close{background:none;border:1px solid var(--rule);font:inherit;font-size:12px;letter-spacing:.14em;
     text-transform:uppercase;color:var(--ink-soft);padding:7px 13px;cursor:pointer;white-space:nowrap}
   .reader-close:hover{border-color:var(--ink);color:var(--ink)}
   .reader-body{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,3vw,34px);
     padding:clamp(20px,3vw,30px) clamp(20px,3.4vw,36px) clamp(24px,3.4vw,36px);
-    overflow-y:auto;max-height:calc(90vh - 110px)}
+    overflow-y:auto;flex:1 1 auto;min-height:0}
   @media(max-width:820px){.reader-body{grid-template-columns:1fr}}
   .scan-col .leaf{height:auto;min-height:340px}
   .scan-col figcaption{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
     color:var(--ink-soft);margin-top:10px}
-  .transcript h4{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  /* The kicker ("The piece" / "Transcript") is ONE element, addressed by id.
+     It used to be styled as `.transcript h4`, which also caught every '##'
+     section heading the renderer emits — so an essay's own section breaks came
+     out as 11px accent-red small caps, smaller than the body text they divide. */
+  #readerKind{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
     color:var(--accent);margin-bottom:14px}
-  .transcript p{margin-bottom:14px;font-size:16px;line-height:1.68}
+  .transcript p{margin-bottom:14px;font-size:16px;line-height:1.68;max-width:68ch}
+  #readerKind+p{margin-top:0}
+  /* real section headings inside a piece */
+  .transcript h4{font-family:var(--serif);font-weight:400;font-size:1.45rem;line-height:1.2;margin:30px 0 10px}
+  .transcript h5{font-family:var(--serif);font-weight:400;font-size:1.4rem;line-height:1.2;margin:26px 0 10px}
+  .transcript h6{font-family:var(--serif);font-weight:400;font-size:1.2rem;margin:22px 0 8px}
+  .transcript blockquote{border-left:2px solid var(--accent);padding-left:18px;margin:18px 0;color:var(--ink-soft);font-style:italic}
+  .transcript ul,.transcript ol{margin:0 0 14px 22px}
+  .transcript li{margin-bottom:7px;font-size:16px;line-height:1.6}
+  .transcript em{font-style:italic}
+  .transcript a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+  .transcript hr{border:none;border-top:1px solid var(--rule);margin:30px 0 22px;max-width:68ch}
   .transcript .pending-note{color:var(--ink-soft);font-size:14.5px}
 
   /* ---------- footer: matches index.html ---------- */
@@ -240,9 +284,21 @@
         </div>
       </div>
 
-      <p class="count" id="count">&nbsp;</p>
+      <p class="count" id="count" role="status" aria-live="polite" aria-atomic="true">&nbsp;</p>
       <div class="grid" id="grid"></div>
       <div id="emptySlot"></div>
+
+      <!-- Every piece, in full, in the page itself.
+           The reader dialog injects an article's prose only when a card is
+           clicked, so until now not one word of the writing was ever in the
+           document a crawler or a reader-mode parser sees — 17 essays that
+           existed only as headlines. These <details> carry the same text into
+           the page at load. Collapsed by default, so the grid above stays the
+           way in. -->
+      <section class="fulltext" id="fulltext" hidden>
+        <h3 class="fulltext-h">Every piece, in full</h3>
+        <div id="fulltextBody"></div>
+      </section>
     </div>
   </div>
 </main>
@@ -253,7 +309,10 @@
       <p class="label quiet" id="readerMeta"></p>
       <h3 id="readerTitle"></h3>
     </div>
-    <button class="reader-close" id="readerClose">Close</button>
+    <div class="reader-tools">
+      <button class="reader-close" id="readerCopy" title="Copy a link to this piece">Copy link</button>
+      <button class="reader-close" id="readerClose">Close</button>
+    </div>
   </div>
   <div class="reader-body">
     <figure class="scan-col">
@@ -261,10 +320,14 @@
       <figcaption id="readerCaption"></figcaption>
     </figure>
     <div class="transcript">
-      <h4>Transcript</h4>
+      <h4 id="readerKind">Transcript</h4>
       <div id="readerText"></div>
     </div>
   </div>
+  <nav class="reader-nav" aria-label="Other pieces">
+    <button class="reader-step" id="readerPrev"><span class="dir">← Earlier</span><span class="ttl"></span></button>
+    <button class="reader-step next" id="readerNext"><span class="dir">Later →</span><span class="ttl"></span></button>
+  </nav>
 </dialog>
 
 <footer>
@@ -301,20 +364,22 @@
 
 /* PREVIEW = true shows the placeholder entries and the amber banner, so a
    layout draft can never be mistaken for real work. Set it to false and the
-   page reads ONLY from ARCHIVE — which is empty until real pieces go in.
+   page reads ONLY from data/archive.json (and the ARCHIVE list below).
    Same honesty rule as the ticker: nothing invented, ever, on a live page. */
 const PREVIEW = false;
 
-/* One object per piece.
+/* One object per piece. Normally you never touch this — the writing desk at
+   /admin saves everything into data/archive.json instead. This list is the
+   fallback, and anything here is shown in addition to that file.
      date        "2026-08-08"  — ISO, used for sorting and the year filter
      title       the headline
      kind        "handwritten" | "digital"
      dek         one line of description (optional)
-     url         where a digital issue lives (optional)
-     scan        path to the scanned page image, e.g. "scans/2024-03-notebook.jpg"
+     url         where a piece lives if it is hosted elsewhere (optional)
+     body        the piece itself, in markdown (optional)
+     scan        path to a scanned page image, e.g. "scans/2024-03.jpg"
                  leave out and a drawn paper stand-in is shown instead
-     transcript  array of paragraphs — the digitised text
-                 leave out and the piece is marked "transcript pending"       */
+     transcript  array of paragraphs — an older way of holding digitised text */
 const ARCHIVE = [
   /* real entries go here */
 ];
@@ -334,8 +399,54 @@ const SAMPLE = [
 
 /* ========================================================================== */
 
-(function(){
-  const src = PREVIEW ? SAMPLE : ARCHIVE;
+/* Articles written at the desk (/admin) are saved to data/archive.json.
+   This page reads that file if it is there, and falls back to the ARCHIVE
+   list above if it is not — so the page works whether or not the desk is
+   in use, and never depends on a build step. */
+async function loadEntries(){
+  if(PREVIEW) return SAMPLE;
+  try{
+    const r = await fetch('data/archive.json', {cache:'no-store'});
+    if(r.ok){
+      const d = await r.json();
+      const list = Array.isArray(d) ? d : (Array.isArray(d.items) ? d.items : null);
+      if(list) return list.filter(it => it && it.published !== false).concat(ARCHIVE);
+    }
+  }catch(e){ /* file absent or unreadable — fall through to the inline list */ }
+  return ARCHIVE;
+}
+
+/* A very small markdown renderer. Everything is escaped FIRST and only then
+   given inline formatting, so text written at the desk can never inject
+   markup into this page. Handles what a column actually needs: paragraphs,
+   headings, blockquotes, lists, bold, italic, links. */
+function mdToHTML(md){
+  const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const inline = t => esc(t)
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/(^|[^*])\*([^*]+)\*/g,'$1<em>$2</em>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  const out = [];
+  String(md||'').replace(/\r\n/g,'\n').split(/\n{2,}/).forEach(block => {
+    const b = block.trim(); if(!b) return;
+    const h = b.match(/^(#{1,3})\s+(.*)$/);
+    if(h){ const n = h[1].length + 2; out.push('<h'+n+'>'+inline(h[2])+'</h'+n+'>'); return; }
+    /* thematic break: every piece uses '---' to fence off its sources note */
+    if(/^(?:-{3,}|\*{3,}|_{3,})$/.test(b)){ out.push('<hr />'); return; }
+    if(/^>\s?/.test(b)){ out.push('<blockquote>'+inline(b.replace(/^>\s?/gm,''))+'</blockquote>'); return; }
+    if(/^([-*]|\d+\.)\s/.test(b)){
+      const ordered = /^\d+\./.test(b), tag = ordered ? 'ol' : 'ul';
+      const li = b.split('\n').map(l => l.replace(/^([-*]|\d+\.)\s+/,'').trim())
+                  .filter(Boolean).map(l => '<li>'+inline(l)+'</li>').join('');
+      out.push('<'+tag+'>'+li+'</'+tag+'>'); return;
+    }
+    out.push('<p>'+inline(b).replace(/\n/g,'<br />')+'</p>');
+  });
+  return out.join('');
+}
+
+(async function(){
+  const src = await loadEntries();
   const flag = document.getElementById('previewFlag');
   if(PREVIEW) flag.hidden = false;
 
@@ -357,6 +468,11 @@ const SAMPLE = [
     return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
   };
   const yearOf = it => (it.date||'').slice(0,4);
+  const slugOf = it => (it.title||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const readTime = it => {
+    const w = String(it.body||'').trim().split(/\s+/).filter(Boolean).length;
+    return w ? Math.max(1, Math.round(w/220)) + ' min' : '';
+  };
 
   /* year chips, built from the data rather than hard-coded */
   const years = [...new Set(items.map(yearOf).filter(Boolean))].sort().reverse();
@@ -380,7 +496,10 @@ const SAMPLE = [
 
   function matches(it){
     if(yearFilter !== 'all' && yearOf(it) !== yearFilter) return false;
-    if(query && !(it.title||'').toLowerCase().includes(query) && !(it.dek||'').toLowerCase().includes(query)) return false;
+    if(query){
+      const hay = ((it.title||'')+' '+(it.dek||'')+' '+(it.body||'')).toLowerCase();
+      if(!hay.includes(query)) return false;
+    }
     return true;
   }
 
@@ -402,7 +521,7 @@ const SAMPLE = [
       return;
     }
     if(!shown.length){
-      countEl.textContent = '';
+      countEl.textContent = 'Nothing matches that.';
       emptySlot.innerHTML = '<div class="empty"><h3>Nothing matches that.</h3><p>Try a different year, or clear the search.</p></div>';
       return;
     }
@@ -410,51 +529,160 @@ const SAMPLE = [
     countEl.textContent = shown.length + (shown.length === 1 ? ' piece' : ' pieces');
 
     shown.forEach(it=>{
-      const hand = it.kind === 'handwritten';
-      const hasText = Array.isArray(it.transcript) && it.transcript.length;
+      const notebook = it.kind === 'handwritten' || !!it.scan;
+      const hand = notebook || (!it.url && it.body && it.body.trim());
+      const hasText = (Array.isArray(it.transcript) && it.transcript.length) || !!(it.body && it.body.trim());
       const el = document.createElement(hand ? 'button' : (it.url ? 'a' : 'div'));
       el.className = 'card';
       if(hand){ el.type='button'; el.addEventListener('click', ()=>openReader(it)); }
       else if(it.url){ el.href = it.url; el.className='card is-link';
         if(/^https?:/.test(it.url)){ el.target='_blank'; el.rel='noopener'; } }
 
-      const pill = hand
+      const pill = notebook
         ? (hasText ? '<span class="pill ink">Digitised</span>' : '<span class="pill pending">Transcript pending</span>')
         : '<span class="pill">Issue</span>';
 
       el.innerHTML =
-        (hand ? leafHTML(it) : '')
+        (notebook ? leafHTML(it) : '')
         + '<div class="card-top"><span class="card-date num">'+esc(fmt(it.date))+'</span>'+pill+'</div>'
         + '<h3>'+esc(it.title)+'</h3>'
         + (it.dek ? '<p>'+esc(it.dek)+'</p>' : '<p></p>')
         + '<span class="card-foot">'
-          + (hand ? (hasText ? 'Read the transcript' : 'View the page') : (it.url ? 'Read the issue' : 'Not yet online'))
+          + (notebook ? (hasText ? 'Read the transcript' : 'View the page') : (hasText ? 'Read the piece' : (it.url ? 'Read the issue' : 'Not yet online')))
           + (hand || it.url ? ' <span class="arrow">→</span>' : '')
+          + (readTime(it) ? '<span class="card-read">'+readTime(it)+'</span>' : '')
         + '</span>';
       grid.appendChild(el);
     });
+
+    /* the same pieces, expanded in the page, so the writing is actually in the
+       document rather than only in a dialog that has to be clicked open */
+    const ft = document.getElementById('fulltext'), ftb = document.getElementById('fulltextBody');
+    const readable = shown.filter(it => it.body && it.body.trim());
+    ft.hidden = !readable.length;
+    ftb.innerHTML = readable.map(it =>
+      '<details id="full-' + esc(slugOf(it)) + '">'
+      + '<summary><span class="ft-t">' + esc(it.title) + '</span>'
+      + '<span class="ft-d">Umang · ' + esc(fmt(it.date)) + (readTime(it) ? ' · ' + esc(readTime(it)) : '') + '</span></summary>'
+      + '<div class="ft-body transcript">' + mdToHTML(it.body) + '</div>'
+      + '</details>').join('');
   }
 
   /* ---------- reader ---------- */
   const reader = document.getElementById('reader');
-  function openReader(it){
-    document.getElementById('readerMeta').textContent = fmt(it.date) + ' · Notebook';
+  let current = -1;
+
+  function openReader(it, push){
+    current = items.indexOf(it);
+    const isNotebook = it.kind === 'handwritten' || !!it.scan;
+    const rt = readTime(it);
+    document.getElementById('readerMeta').textContent =
+      'Umang · ' + fmt(it.date) + (isNotebook ? ' · Notebook' : '') + (rt ? ' · ' + rt + ' read' : '');
     document.getElementById('readerTitle').textContent = it.title || '';
+    document.querySelector('.scan-col').style.display = isNotebook ? '' : 'none';
+    document.querySelector('.reader-body').style.gridTemplateColumns = isNotebook ? '' : '1fr';
     const leaf = document.getElementById('readerLeaf');
     leaf.innerHTML = it.scan
       ? '<img src="'+it.scan+'" alt="Scanned notebook page: '+esc(it.title)+'" />'
       : '<span class="leaf-note">Scan to come</span>';
     document.getElementById('readerCaption').textContent = it.scan ? 'Original page, as written.' : 'The original page has not been scanned yet.';
+    document.getElementById('readerKind').textContent = isNotebook ? 'Transcript' : 'The piece';
     const text = document.getElementById('readerText');
-    if(Array.isArray(it.transcript) && it.transcript.length){
+    if(it.body && it.body.trim()){
+      text.innerHTML = mdToHTML(it.body);
+    } else if(Array.isArray(it.transcript) && it.transcript.length){
       text.innerHTML = it.transcript.map(p=>'<p>'+esc(p)+'</p>').join('');
     } else {
       text.innerHTML = '<p class="pending-note">This page has not been transcribed yet. It is listed here so the record stays complete rather than tidy.</p>';
     }
-    if(typeof reader.showModal === 'function') reader.showModal(); else reader.setAttribute('open','');
+    /* older piece is further down the list (sorted newest-first), later is up */
+    const step = (btn, idx, label) => {
+      const t = items[idx];
+      btn.disabled = !t;
+      btn.querySelector('.ttl').textContent = t ? t.title : '';
+      btn.setAttribute('aria-label', t ? label + ': ' + t.title : label);
+    };
+    step(document.getElementById('readerPrev'), current + 1, 'Earlier piece');
+    step(document.getElementById('readerNext'), current - 1, 'Later piece');
+
+    reader.querySelector('.reader-body').scrollTop = 0;
+
+    /* every piece gets its own address, so it can be linked to and shared */
+    const slug = slugOf(it);
+    if(push !== false){
+      try{ history.pushState({slug}, '', '#' + slug); }catch(e){}
+    }
+
+    if(!reader.open){
+      if(typeof reader.showModal === 'function') reader.showModal(); else reader.setAttribute('open','');
+    }
   }
-  document.getElementById('readerClose').addEventListener('click', ()=> reader.close());
-  reader.addEventListener('click', e => { if(e.target === reader) reader.close(); });
+
+  function closeReader(){
+    if(reader.open) reader.close();
+  }
+  document.getElementById('readerClose').addEventListener('click', closeReader);
+  reader.addEventListener('click', e => { if(e.target === reader) closeReader(); });
+
+  document.getElementById('readerPrev').addEventListener('click', ()=>{ if(items[current+1]) openReader(items[current+1]); });
+  document.getElementById('readerNext').addEventListener('click', ()=>{ if(items[current-1]) openReader(items[current-1]); });
+
+  document.getElementById('readerCopy').addEventListener('click', function(){
+    const url = location.origin + location.pathname + '#' + slugOf(items[current]);
+    const done = () => { const b=this; const t=b.textContent; b.textContent='Copied'; setTimeout(()=>b.textContent=t,1400); };
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done.bind(this), ()=>{}); }
+  });
+
+  /* Closing returns the address bar to the archive. replaceState, not pushState:
+     pushing added a second entry, so Back from a closed reader re-opened the very
+     piece the reader had just dismissed. */
+  reader.addEventListener('close', ()=>{
+    if(location.hash){ try{ history.replaceState(null,'','' + location.pathname); }catch(e){} }
+  });
+
+  window.addEventListener('popstate', ()=>{
+    const slug = location.hash.replace(/^#/,'');
+    const target = slug && items.find(it => slugOf(it) === slug);
+    if(target) openReader(target, false); else closeReader();
+  });
+
+  /* arriving on a direct link opens that piece straight away */
+  function openFromHash(){
+    const slug = location.hash.replace(/^#/,'');
+    if(!slug) return;
+    const target = items.find(it => slugOf(it) === slug);
+    if(target) openReader(target, false);
+  }
+
+  /* structured data for every piece — this is what a search engine or an
+     assistant reads when it is asked what this publication has written */
+  function publishStructuredData(){
+    if(!items.length) return;
+    const base = location.origin + location.pathname;
+    const g = {
+      "@context":"https://schema.org",
+      "@type":"Blog",
+      "name":"Terminal Value",
+      "url": base,
+      "blogPost": items.filter(it=>it.body).map(it=>({
+        "@type":"BlogPosting",
+        "headline": it.title,
+        "datePublished": it.date,
+        "url": base + '#' + slugOf(it),
+        "description": it.dek || undefined,
+        "wordCount": String(it.body).trim().split(/\s+/).filter(Boolean).length,
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "mainEntityOfPage": {"@type":"WebPage","@id": base + '#' + slugOf(it)},
+        "author": {"@type":"Person","name":"Umang"},
+        "publisher": {"@type":"Organization","name":"Terminal Value"}
+      }))
+    };
+    const el = document.createElement('script');
+    el.type = 'application/ld+json';
+    el.textContent = JSON.stringify(g);
+    document.head.appendChild(el);
+  }
 
   /* ---------- filter wiring ---------- */
   yearSet.addEventListener('click', e=>{
@@ -466,6 +694,8 @@ const SAMPLE = [
   q.addEventListener('input', ()=>{ query = q.value.trim().toLowerCase(); render(); });
 
   render();
+  publishStructuredData();
+  openFromHash();
 })();
 </script>
 </body>

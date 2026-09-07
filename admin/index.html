@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Writing desk — Terminal Value</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* Holding screen shown while the editor loads, and if it never does.
+     Same palette as the site so the desk feels like part of the building. */
+  body{margin:0;background:#F6F2EA;color:#14110E;
+       font-family:"Inter",-apple-system,system-ui,sans-serif}
+  #boot{max-width:560px;margin:0 auto;padding:14vh 24px 0}
+  h1{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:2.6rem;
+     line-height:1;letter-spacing:-.02em;margin:0 0 6px}
+  .dot{color:#7A1F2B}
+  p{color:#5A534A;font-size:15px;line-height:1.6;margin:14px 0 0;max-width:46ch}
+  code{background:#EFE9DD;padding:2px 6px;font-size:13px}
+  a{color:#7A1F2B}
+</style>
+</head>
+<body>
+<div id="boot">
+  <h1>The writing desk<span class="dot">.</span></h1>
+  <p>Loading the editor. You will be asked to sign in with GitHub — that is the lock on this door, and only accounts with write access to the site repository can get through.</p>
+  <p id="hint" hidden>If this screen does not move, the sign-in service is not connected yet. Set <code>base_url</code> in <code>admin/config.yml</code> to the OAuth worker's address. Nothing is broken on the public site — this page is not linked from it.</p>
+  <p><a href="../index.html">← Back to the front page</a></p>
+</div>
+
+<!-- The editor. This is the one page on the site that loads a third-party
+     script; the public pages stay dependency-free per the one-file rule.
+
+     It is loaded ONLY once config.yml has a real sign-in address. Previously
+     the editor loaded unconditionally, so the desk showed a "Login with
+     GitHub" button that could never succeed — the placeholder base_url sends
+     the popup to REPLACE-ME.workers.dev. Better to say so than to offer a
+     door that does not open. The version is pinned, not a caret range: this
+     page holds write access to the repository, so it should not silently
+     take whatever unpkg serves next. -->
+<script>
+  (function () {
+    var hint = document.getElementById('hint');
+    function stop(msg) { if (hint) { if (msg) hint.textContent = msg; hint.hidden = false; } }
+
+    fetch('config.yml', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.text() : ''; })
+      .then(function (cfg) {
+        if (!cfg || /REPLACE-ME/.test(cfg)) {
+          stop('The sign-in service is not connected yet, so the editor has not been loaded. '
+             + 'Deploy the OAuth worker, then put its address into base_url in admin/config.yml. '
+             + 'Nothing is broken on the public site — this page is not linked from it.');
+          return;
+        }
+        var s = document.createElement('script');
+        s.src = 'https://unpkg.com/decap-cms@3.8.4/dist/decap-cms.js';
+        s.onerror = function () { stop('The editor failed to load from unpkg. Check your connection and reload.'); };
+        document.body.appendChild(s);
+        setTimeout(function () {
+          if (!document.querySelector('[class*="cms"], #nc-root')) stop();
+        }, 8000);
+      })
+      .catch(function () { stop('Could not read admin/config.yml, so the editor was not loaded.'); });
+  })();
+</script>
+</body>
+</html>

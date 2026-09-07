@@ -1,0 +1,56 @@
+# ===========================================================================
+#  Terminal Value — the writing desk
+#
+#  Who can get in:  anyone with write access to this repository, and nobody
+#  else. GitHub does the checking, not this file. There is no password here
+#  because a password in a public repository is not a password.
+#
+#  BEFORE THIS WORKS: base_url below must point at the OAuth worker.
+#  Until then the desk loads but cannot sign anyone in. That is the only
+#  outstanding step.
+# ===========================================================================
+
+backend:
+  name: github
+  repo: umanggbot/umanggbot.github.io
+  branch: main
+  # ↓↓↓ REPLACE with the worker address, e.g. https://tv-auth.umang.workers.dev
+  base_url: https://REPLACE-ME.workers.dev
+  auth_endpoint: auth
+  commit_messages:
+    create: 'New piece: {{slug}}'
+    update: 'Revise: {{slug}}'
+    delete: 'Withdraw: {{slug}}'
+    uploadMedia: 'Add scan: {{path}}'
+    deleteMedia: 'Remove scan: {{path}}'
+
+# Scans and images land here, beside the site, and are referenced with a
+# root-relative path so they resolve from any page.
+media_folder: "scans"
+public_folder: "/scans"
+
+# Drafts stay out of the live archive until you tick Published.
+publish_mode: simple
+
+collections:
+  - name: "archive"
+    label: "The Archive"
+    files:
+      - name: "articles"
+        label: "Articles"
+        file: "data/archive.json"
+        description: "Everything the archive page lists. Newest first is handled for you — order here does not matter."
+        fields:
+          - label: "Articles"
+            name: "items"
+            widget: "list"
+            label_singular: "article"
+            summary: "{{fields.date}} — {{fields.title}}"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+              - { label: "Published", name: "published", widget: "boolean", default: true, hint: "Untick to keep it off the live archive while you work on it." }
+              - { label: "One line", name: "dek", widget: "string", required: false, hint: "The single sentence under the headline." }
+              - { label: "Article", name: "body", widget: "markdown", required: false, hint: "The piece itself. Older handwritten work goes here once typed up." }
+              - { label: "Scan of the original", name: "scan", widget: "image", required: false, hint: "For handwritten pieces. Leave empty and a drawn paper stand-in is shown." }
+              - { label: "Published elsewhere (link)", name: "url", widget: "string", required: false, hint: "If the piece lives on Substack or another site, put the address here." }

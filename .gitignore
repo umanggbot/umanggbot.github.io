@@ -3,3 +3,14 @@ CLAUDE.md
 SETUP-GUIDE.md
 backup-index-*.html
 .DS_Store
+
+# The sign-in worker is deployed to Cloudflare, not served from the site.
+tv-oauth-worker.js
+
+# The project home (article masters, build script, notes, style bible) lives at
+# ~/terminal-value and is deliberately not published.
+notes/
+writing/
+articles/
+build-archive.py
+START-HERE.md
