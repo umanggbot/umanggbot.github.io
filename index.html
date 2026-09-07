@@ -22,9 +22,14 @@
 <meta property="og:title" content="Terminal Value — what it's worth when the noise stops" />
 <meta property="og:description" content="An independent column on markets, money and the companies quietly running your life. About 1,800 words. Twice a week." />
 <meta property="og:url" content="https://umanggbot.github.io/" />
+<meta property="og:image" content="https://umanggbot.github.io/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Terminal Value — what it’s worth when the noise stops." />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Terminal Value — what it's worth when the noise stops" />
 <meta name="twitter:description" content="An independent column on markets, money and the companies quietly running your life. About 1,800 words. Twice a week." />
+<meta name="twitter:image" content="https://umanggbot.github.io/og-image.png" />
 <meta name="theme-color" content="#F6F2EA" />
 
 <script type="application/ld+json">
@@ -1241,7 +1246,7 @@ async function loadFromArchive(){
     return {
       kicker: 'The Column',
       title: it.title,
-      link: it.url || ('archive.html#' + slugOf(it.title)),
+      link: it.url || ('p/' + slugOf(it.title) + '/'),
       external: !!it.url,
       summary: (it.dek || String(it.body||'').slice(0,160)).trim(),
       time: timeAgo(new Date(it.date + 'T00:00:00')),

@@ -22,6 +22,13 @@
 <meta property="og:title" content="The Archive — Terminal Value" />
 <meta property="og:description" content="Every issue in one place, including the handwritten notebooks that came before the column." />
 <meta property="og:url" content="https://umanggbot.github.io/archive.html" />
+<meta property="og:image" content="https://umanggbot.github.io/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="The Archive — Terminal Value" />
+<meta name="twitter:description" content="Every piece of Terminal Value in one place." />
+<meta name="twitter:image" content="https://umanggbot.github.io/og-image.png" />
 <meta name="theme-color" content="#F6F2EA" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -170,6 +177,9 @@
   .fulltext .ft-d{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
     color:var(--ink-soft);white-space:nowrap;font-variant-numeric:tabular-nums}
   .fulltext .ft-body{padding:2px 0 30px}
+  .fulltext .ft-link{margin-bottom:16px}
+  .fulltext .ft-link a{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);border-bottom:1px solid var(--rule);padding-bottom:3px}
 
   /* ---------- reader ---------- */
   dialog.reader{border:none;padding:0;max-width:min(1020px,94vw);width:100%;background:var(--paper);
@@ -310,6 +320,7 @@
       <h3 id="readerTitle"></h3>
     </div>
     <div class="reader-tools">
+      <a class="reader-close" id="readerOpen" href="#" title="Open this piece on its own page">Open page</a>
       <button class="reader-close" id="readerCopy" title="Copy a link to this piece">Copy link</button>
       <button class="reader-close" id="readerClose">Close</button>
     </div>
@@ -564,7 +575,9 @@ function mdToHTML(md){
       '<details id="full-' + esc(slugOf(it)) + '">'
       + '<summary><span class="ft-t">' + esc(it.title) + '</span>'
       + '<span class="ft-d">Umang · ' + esc(fmt(it.date)) + (readTime(it) ? ' · ' + esc(readTime(it)) : '') + '</span></summary>'
-      + '<div class="ft-body transcript">' + mdToHTML(it.body) + '</div>'
+      + '<div class="ft-body transcript">'
+      +   '<p class="ft-link"><a href="p/' + esc(slugOf(it)) + '/">Open as its own page →</a></p>'
+      +   mdToHTML(it.body) + '</div>'
       + '</details>').join('');
   }
 
@@ -605,6 +618,8 @@ function mdToHTML(md){
     step(document.getElementById('readerPrev'), current + 1, 'Earlier piece');
     step(document.getElementById('readerNext'), current - 1, 'Later piece');
 
+    document.getElementById('readerOpen').href = 'p/' + slugOf(it) + '/';
+
     reader.querySelector('.reader-body').scrollTop = 0;
 
     /* every piece gets its own address, so it can be linked to and shared */
@@ -628,7 +643,7 @@ function mdToHTML(md){
   document.getElementById('readerNext').addEventListener('click', ()=>{ if(items[current-1]) openReader(items[current-1]); });
 
   document.getElementById('readerCopy').addEventListener('click', function(){
-    const url = location.origin + location.pathname + '#' + slugOf(items[current]);
+    const url = location.origin + location.pathname.replace(/archive\.html$/,'') + 'p/' + slugOf(items[current]) + '/';
     const done = () => { const b=this; const t=b.textContent; b.textContent='Copied'; setTimeout(()=>b.textContent=t,1400); };
     if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done.bind(this), ()=>{}); }
   });
@@ -668,12 +683,12 @@ function mdToHTML(md){
         "@type":"BlogPosting",
         "headline": it.title,
         "datePublished": it.date,
-        "url": base + '#' + slugOf(it),
+        "url": base.replace(/archive\.html$/,'') + 'p/' + slugOf(it) + '/',
         "description": it.dek || undefined,
         "wordCount": String(it.body).trim().split(/\s+/).filter(Boolean).length,
         "inLanguage": "en",
         "isAccessibleForFree": true,
-        "mainEntityOfPage": {"@type":"WebPage","@id": base + '#' + slugOf(it)},
+        "mainEntityOfPage": {"@type":"WebPage","@id": base.replace(/archive\.html$/,'') + 'p/' + slugOf(it) + '/'},
         "author": {"@type":"Person","name":"Umang"},
         "publisher": {"@type":"Organization","name":"Terminal Value"}
       }))

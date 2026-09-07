@@ -13,4 +13,5 @@ notes/
 writing/
 articles/
 build-archive.py
+render_pages.py
 START-HERE.md
