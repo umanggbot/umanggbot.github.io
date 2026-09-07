@@ -14,6 +14,7 @@
 <title>Terminal Value — independent financial journalism, twice a week</title>
 <meta name="description" content="Terminal Value is an independent column on markets, money and the companies quietly running your life. About 1,800 words, twice a week, no jargon and no homework." />
 <link rel="canonical" href="https://umanggbot.github.io/" />
+<link rel="alternate" type="application/rss+xml" title="Terminal Value" href="https://umanggbot.github.io/feed.xml" />
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 <meta name="author" content="Umang" />
 
@@ -156,6 +157,8 @@
      focusable and keyboard focus pauses it just like hover */
   .tape:hover .tape-track,.tape:focus-within .tape-track,.tape:focus .tape-track{animation-play-state:paused}
   .tk{padding:0 20px;color:rgba(246,242,234,.55);font-variant-numeric:tabular-nums}
+  /* the attribution for the FX group — quieter than a quote, and not a number */
+  .tk-src{color:rgba(246,242,234,.34);letter-spacing:.1em;text-transform:uppercase;font-size:10.5px}
   .tk b{color:var(--paper);font-weight:600}
   .tk .up{color:var(--up)}.tk .down{color:var(--down)}
   @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -439,7 +442,9 @@
   @media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:30px}}
   .foot-brand{font-family:var(--serif);font-size:1.8rem;color:var(--paper);margin-bottom:10px}
   .foot-grid p{font-size:14px;max-width:36ch}
-  .foot-grid h3{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-soft);margin-bottom:14px}
+  /* was --accent-soft (#A8434F) on the ink footer: 3.21:1, below the 4.5:1
+     that 11px/600 needs. #C9707A is the same hue at 5.45:1. */
+  .foot-grid h3{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#C9707A;margin-bottom:14px}
   .foot-grid a{display:block;font-size:14px;padding:5px 0;transition:color .18s}
   .foot-grid a:hover{color:var(--paper)}
   .foot-base{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding-top:22px;border-top:1px solid rgba(246,242,234,.14);font-size:12px;letter-spacing:.06em}
@@ -846,6 +851,7 @@
           <a href="#subscribe">Subscribe</a>
           <a href="#" id="footMail">Contact</a>
           <a href="#" id="footArchive">On Substack</a>
+          <a href="feed.xml">RSS</a>
         </div>
       </div>
       <div class="foot-base">
@@ -860,7 +866,7 @@
      order match visual order, and INSIDE .layer so the rail (60) and flyout
      (55) stack above its z-50 — the menu covers the ticker, never the reverse.
      Hides itself if real data can't be fetched. -->
-<div class="tape" id="tape" role="marquee" tabindex="0" aria-label="Live market rates">
+<div class="tape" id="tape" role="marquee" tabindex="0" aria-label="Market rates: live crypto, and the European Central Bank's daily reference rates">
   <div class="tape-track" id="tapeTrack"></div>
 </div>
 </div>
@@ -1093,16 +1099,35 @@ async function loadTape(){
     add('BTC', d.bitcoin); add('ETH', d.ethereum);
   }catch(e){ /* skip crypto */ }
 
-  /* FX levels */
+  /* FX levels.
+     exchangerate.host, used here until now, began requiring an API key: it
+     answers HTTP 200 with {"success":false,"error":{"code":101}}, so d.rates
+     was always undefined and this whole group silently vanished — the tape has
+     been crypto-only for months. Frankfurter serves the European Central Bank's
+     published reference rates, needs no key and sends Access-Control-Allow-
+     Origin: *.
+     These are official daily rates, not a live quote, so the group is labelled
+     with the ECB's own publication date. Same rule as everything else here:
+     show a real number, and say exactly what it is. */
   try{
-    const r = await fetch('https://api.exchangerate.host/latest?base=USD&symbols=EUR,GBP,JPY,INR');
+    const r = await fetch('https://api.frankfurter.dev/v1/latest?base=USD&symbols=EUR,GBP,JPY,INR');
     const d = await r.json();
+    const num = v => typeof v === 'number' && isFinite(v) && v > 0;
     if(d && d.rates){
-      const pairs = [['EUR/USD', d.rates.EUR ? (1/d.rates.EUR).toFixed(4) : null],
-                     ['GBP/USD', d.rates.GBP ? (1/d.rates.GBP).toFixed(4) : null],
-                     ['USD/JPY', d.rates.JPY ? d.rates.JPY.toFixed(2) : null],
-                     ['USD/INR', d.rates.INR ? d.rates.INR.toFixed(2) : null]];
-      pairs.forEach(([k,v]) => { if(v) items.push('<span class="tk">' + k + ' <b>' + v + '</b></span>'); });
+      const pairs = [['EUR/USD', num(d.rates.EUR) ? (1/d.rates.EUR).toFixed(4) : null],
+                     ['GBP/USD', num(d.rates.GBP) ? (1/d.rates.GBP).toFixed(4) : null],
+                     ['USD/JPY', num(d.rates.JPY) ? d.rates.JPY.toFixed(2) : null],
+                     ['USD/INR', num(d.rates.INR) ? d.rates.INR.toFixed(2) : null]];
+      const live = pairs.filter(([,v]) => v);
+      if(live.length){
+        live.forEach(([k,v]) => items.push('<span class="tk">' + k + ' <b>' + v + '</b></span>'));
+        /* attribute the group, and only if a real date came back with it */
+        if(/^\d{4}-\d{2}-\d{2}$/.test(String(d.date||''))){
+          const dt = new Date(d.date + 'T00:00:00Z');
+          items.push('<span class="tk tk-src">ECB reference · ' +
+            dt.toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'}) + '</span>');
+        }
+      }
     }
   }catch(e){ /* skip fx */ }
 
@@ -1246,7 +1271,8 @@ async function loadFromArchive(){
     return {
       kicker: 'The Column',
       title: it.title,
-      link: it.url || ('p/' + slugOf(it.title) + '/'),
+      link: (/^(https?:\/\/|\/|#)/i.test(String(it.url||'').trim()) ? String(it.url).trim() : '')
+            || ('p/' + slugOf(it.title) + '/'),
       external: !!it.url,
       summary: (it.dek || String(it.body||'').slice(0,160)).trim(),
       time: timeAgo(new Date(it.date + 'T00:00:00')),

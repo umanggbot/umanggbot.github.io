@@ -14,6 +14,7 @@
 <title>The Archive — Terminal Value</title>
 <meta name="description" content="Every issue of Terminal Value in one place, including the handwritten notebooks that came before the column, digitised and transcribed." />
 <link rel="canonical" href="https://umanggbot.github.io/archive.html" />
+<link rel="alternate" type="application/rss+xml" title="Terminal Value" href="https://umanggbot.github.io/feed.xml" />
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 <meta name="author" content="Umang" />
 
@@ -92,8 +93,8 @@
   .side{display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,4vw,56px);align-items:stretch}
   .side .side-rail{display:flex;flex-direction:column;align-items:center;gap:20px;
     border-right:2px solid var(--ink);padding-right:clamp(16px,2.2vw,28px)}
-  .side .side-rail h2,.side .side-rail .label{writing-mode:vertical-rl;transform:rotate(180deg)}
-  .side .side-rail h2{font-family:var(--serif);font-weight:400;
+  .side .side-rail h1,.side .side-rail h2,.side .side-rail .label{writing-mode:vertical-rl;transform:rotate(180deg)}
+  .side .side-rail h1,.side .side-rail h2{font-family:var(--serif);font-weight:400;
     font-size:clamp(2.5rem,4.8vw,3.9rem);line-height:1;letter-spacing:-.015em}
   .side .side-note{display:flex;justify-content:flex-end;padding-bottom:14px;
     margin-bottom:28px;border-bottom:1px solid var(--rule)}
@@ -102,7 +103,7 @@
     .side{display:block}
     .side .side-rail{flex-direction:row;align-items:flex-end;justify-content:flex-start;gap:14px;
       border-right:none;border-bottom:2px solid var(--ink);padding:0 0 14px;margin-bottom:26px}
-    .side .side-rail h2,.side .side-rail .label{writing-mode:horizontal-tb;transform:none}
+    .side .side-rail h1,.side .side-rail h2,.side .side-rail .label{writing-mode:horizontal-tb;transform:none}
   }
 
   /* ---------- filters ---------- */
@@ -217,7 +218,10 @@
      out as 11px accent-red small caps, smaller than the body text they divide. */
   #readerKind{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
     color:var(--accent);margin-bottom:14px}
-  .transcript p{margin-bottom:14px;font-size:16px;line-height:1.68;max-width:68ch}
+  /* 34em, not 68ch: `ch` is the advance of "0", and Inter's zero is wide
+     relative to its lowercase, so 68ch came out at ~82 characters a line. */
+  .transcript p,.transcript li,.transcript blockquote{max-width:34em}
+  .transcript p{margin-bottom:14px;font-size:16px;line-height:1.68}
   #readerKind+p{margin-top:0}
   /* real section headings inside a piece */
   .transcript h4{font-family:var(--serif);font-weight:400;font-size:1.45rem;line-height:1.2;margin:30px 0 10px}
@@ -228,7 +232,7 @@
   .transcript li{margin-bottom:7px;font-size:16px;line-height:1.6}
   .transcript em{font-style:italic}
   .transcript a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
-  .transcript hr{border:none;border-top:1px solid var(--rule);margin:30px 0 22px;max-width:68ch}
+  .transcript hr{border:none;border-top:1px solid var(--rule);margin:30px 0 22px;max-width:34em}
   .transcript .pending-note{color:var(--ink-soft);font-size:14.5px}
 
   /* ---------- footer: matches index.html ---------- */
@@ -237,7 +241,9 @@
   @media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:30px}}
   .foot-brand{font-family:var(--serif);font-size:1.8rem;color:var(--paper);margin-bottom:10px}
   .foot-grid p{font-size:14px;max-width:36ch}
-  .foot-grid h3{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-soft);margin-bottom:14px}
+  /* was --accent-soft (#A8434F) on the ink footer: 3.21:1, below the 4.5:1
+     that 11px/600 needs. #C9707A is the same hue at 5.45:1. */
+  .foot-grid h3{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#C9707A;margin-bottom:14px}
   .foot-grid a{display:block;font-size:14px;padding:5px 0;transition:color .18s}
   .foot-grid a:hover{color:var(--paper)}
   .foot-base{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
@@ -277,7 +283,7 @@
 <main id="main" class="archive-band">
   <div class="wrap side">
     <div class="side-rail">
-      <h2>The Archive</h2>
+      <h1>The Archive</h1>
       <span class="label">Est. 2026</span>
     </div>
 
@@ -359,6 +365,7 @@
         <h3>Elsewhere</h3>
         <a href="index.html#subscribe">Subscribe</a>
         <a href="index.html#about">About</a>
+        <a href="feed.xml">RSS</a>
       </div>
     </div>
     <div class="foot-base">
@@ -480,6 +487,10 @@ function mdToHTML(md){
   };
   const yearOf = it => (it.date||'').slice(0,4);
   const slugOf = it => (it.title||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  /* A piece's `url` is a free-text field at /admin. Anything that is not http(s)
+     or site-relative is dropped rather than written into an href. */
+  const safeUrl = u => /^(https?:\/\/|\/|#)/i.test(String(u||'').trim()) ? String(u).trim() : '';
+
   const readTime = it => {
     const w = String(it.body||'').trim().split(/\s+/).filter(Boolean).length;
     return w ? Math.max(1, Math.round(w/220)) + ' min' : '';
@@ -546,7 +557,7 @@ function mdToHTML(md){
       const el = document.createElement(hand ? 'button' : (it.url ? 'a' : 'div'));
       el.className = 'card';
       if(hand){ el.type='button'; el.addEventListener('click', ()=>openReader(it)); }
-      else if(it.url){ el.href = it.url; el.className='card is-link';
+      else if(safeUrl(it.url)){ el.href = safeUrl(it.url); el.className='card is-link';
         if(/^https?:/.test(it.url)){ el.target='_blank'; el.rel='noopener'; } }
 
       const pill = notebook
@@ -629,7 +640,11 @@ function mdToHTML(md){
     }
 
     if(!reader.open){
-      if(typeof reader.showModal === 'function') reader.showModal(); else reader.setAttribute('open','');
+      /* An engine without showModal has no HTMLDialogElement at all, so <dialog>
+         parses as an unknown element: setting [open] painted the reader inline
+         with no way to close it. Send those readers to the piece's own page. */
+      if(typeof reader.showModal === 'function'){ reader.showModal(); }
+      else { location.href = 'p/' + slugOf(it) + '/'; return; }
     }
   }
 
